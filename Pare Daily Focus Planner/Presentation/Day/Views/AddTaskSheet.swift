@@ -42,12 +42,12 @@ struct AddTaskSheet: View {
 
                     divider
 
-                    // ── Date picker
+                    // ── Date strip horizontal
                     dateSection
 
                     divider
 
-                    // ── Time toggle + picker
+                    // ── Time toggle + compact picker
                     timeSection
 
                     divider
@@ -96,7 +96,7 @@ struct AddTaskSheet: View {
         .presentationCornerRadius(20)
     }
 
-    // MARK: - Sections
+    // MARK: - Title section
 
     private var titleSection: some View {
         CardSection {
@@ -108,6 +108,8 @@ struct AddTaskSheet: View {
                 .lineLimit(1...3)
         }
     }
+
+    // MARK: - Priority section
 
     private var prioritySection: some View {
         CardSection(header: "Priority") {
@@ -121,18 +123,39 @@ struct AddTaskSheet: View {
         }
     }
 
+    // MARK: - Date section — strip horizontal de días
+
     private var dateSection: some View {
         CardSection(header: "Date") {
-            DatePicker(
-                "",
-                selection: $scheduledDate,
-                displayedComponents: .date
-            )
-            .labelsHidden()
-            .datePickerStyle(.graphical)
-            .tint(Color.pareGreen)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(nextDays(60), id: \.self) { day in
+                            DayChip(
+                                date: day,
+                                isSelected: Calendar.current.isDate(day, inSameDayAs: scheduledDate)
+                            ) {
+                                withAnimation(.spring(duration: 0.25)) {
+                                    scheduledDate = day
+                                }
+                            }
+                            .id(day)
+                        }
+                    }
+                    .padding(.horizontal, 2)
+                    .padding(.vertical, 4)
+                }
+                .onAppear {
+                    proxy.scrollTo(
+                        Calendar.current.startOfDay(for: scheduledDate),
+                        anchor: .leading
+                    )
+                }
+            }
         }
     }
+
+    // MARK: - Time section — compact picker
 
     private var timeSection: some View {
         CardSection(header: "Time") {
@@ -150,12 +173,14 @@ struct AddTaskSheet: View {
                     displayedComponents: .hourAndMinute
                 )
                 .labelsHidden()
-                .datePickerStyle(.wheel)
-                .frame(maxWidth: .infinity)
+                .datePickerStyle(.compact)
+                .tint(Color.pareGreen)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }
+
+    // MARK: - Recurrence section
 
     private var recurrenceSection: some View {
         CardSection(header: "Repeat") {
@@ -167,17 +192,38 @@ struct AddTaskSheet: View {
             .tint(Color.pareGreen)
 
             if hasRecurrence {
-                Picker("Repeat", selection: $recurrence) {
-                    Text("Daily").tag(Recurrence.daily)
-                    Text("Weekly").tag(Recurrence.weekly(days: [1, 2, 3, 4, 5]))
-                    Text("Monthly").tag(Recurrence.monthly(day: Calendar.current.component(.day, from: scheduledDate)))
-                    Text("Every 2 days").tag(Recurrence.custom(intervalDays: 2))
+                VStack(spacing: 0) {
+                    ForEach(recurrenceOptions, id: \.label) { option in
+                        Button {
+                            withAnimation { recurrence = option }
+                        } label: {
+                            HStack {
+                                Text(option.label)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                if recurrence == option {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(Color.pareGreen)
+                                        .fontWeight(.semibold)
+                                        .font(.subheadline)
+                                }
+                            }
+                            .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.plain)
+
+                        if option.label != recurrenceOptions.last?.label {
+                            Divider()
+                        }
+                    }
                 }
-                .pickerStyle(.segmented)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }
+
+    // MARK: - Notes section
 
     private var notesSection: some View {
         CardSection(header: "Notes") {
@@ -187,6 +233,8 @@ struct AddTaskSheet: View {
                 .lineLimit(3...6)
         }
     }
+
+    // MARK: - Delete section
 
     private var deleteSection: some View {
         Button(role: .destructive) {
@@ -207,10 +255,31 @@ struct AddTaskSheet: View {
         .padding(.top, 24)
     }
 
+    // MARK: - Divider
+
     private var divider: some View {
         Color(.separator)
             .frame(height: 0.5)
             .padding(.horizontal, 16)
+    }
+
+    // MARK: - Helpers
+
+    private func nextDays(_ count: Int) -> [Date] {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        return (0..<count).compactMap { cal.date(byAdding: .day, value: $0, to: today) }
+    }
+
+    private var recurrenceOptions: [Recurrence] {
+        [
+            .daily,
+            .weekly(days: [1, 2, 3, 4, 5]),
+            .weekly(days: [1, 2, 3, 4, 5, 6, 7]),
+            .monthly(day: Calendar.current.component(.day, from: scheduledDate)),
+            .custom(intervalDays: 2),
+            .custom(intervalDays: 7)
+        ]
     }
 
     // MARK: - Actions
@@ -220,7 +289,6 @@ struct AddTaskSheet: View {
         guard !trimmed.isEmpty else { return }
 
         if let task = editingTask {
-            // Edit mode
             task.title         = trimmed
             task.notes         = notes.isEmpty ? nil : notes
             task.scheduledDate = scheduledDate
@@ -229,7 +297,6 @@ struct AddTaskSheet: View {
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
             dayVM.reschedule(task, to: scheduledDate)
         } else {
-            // Create mode
             let task = PareTask(
                 title: trimmed,
                 scheduledDate: scheduledDate,
@@ -247,10 +314,10 @@ struct AddTaskSheet: View {
         let cal = Calendar.current
         let timeComps = cal.dateComponents([.hour, .minute], from: scheduledTime)
         return cal.date(
-            bySettingHour:   timeComps.hour   ?? 9,
-            minute:          timeComps.minute ?? 0,
-            second:          0,
-            of:              scheduledDate
+            bySettingHour: timeComps.hour   ?? 9,
+            minute:        timeComps.minute ?? 0,
+            second:        0,
+            of:            scheduledDate
         ) ?? scheduledDate
     }
 
@@ -270,8 +337,6 @@ struct AddTaskSheet: View {
         }
     }
 
-    // MARK: - Recurrence Codable helpers
-
     private func encodeRecurrence(_ r: Recurrence) -> String? {
         try? String(data: JSONEncoder().encode(r), encoding: .utf8)
     }
@@ -279,6 +344,58 @@ struct AddTaskSheet: View {
     private func decodeRecurrence(_ raw: String) -> Recurrence? {
         guard let data = raw.data(using: .utf8) else { return nil }
         return try? JSONDecoder().decode(Recurrence.self, from: data)
+    }
+}
+
+// MARK: - DayChip
+
+private struct DayChip: View {
+    let date: Date
+    let isSelected: Bool
+    let action: () -> Void
+
+    private var cal: Calendar { Calendar.current }
+    private var isToday: Bool { cal.isDateInToday(date) }
+    private var isTomorrow: Bool { cal.isDateInTomorrow(date) }
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Text(date.formatted(.dateTime.weekday(.narrow)))
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                    .foregroundStyle(isSelected ? .white.opacity(0.85) : .secondary)
+
+                Text(date.formatted(.dateTime.day()))
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(isSelected ? .white : .primary)
+
+                Group {
+                    if isToday {
+                        Text("Today")
+                            .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
+                    } else if isTomorrow {
+                        Text("Tmrw")
+                            .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
+                    } else {
+                        Text(date.formatted(.dateTime.month(.abbreviated)))
+                            .foregroundStyle(isSelected ? .white.opacity(0.7) : Color(.tertiaryLabel))
+                    }
+                }
+                .font(.system(size: 8, weight: .semibold))
+            }
+            .frame(width: 44, height: 60)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.pareGreen : Color(.tertiarySystemGroupedBackground))
+                    .shadow(
+                        color: isSelected ? Color.pareGreen.opacity(0.3) : .clear,
+                        radius: 6, x: 0, y: 3
+                    )
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -347,20 +464,6 @@ private struct PriorityChip: View {
         .buttonStyle(.plain)
     }
 }
-
-// MARK: - Priority helpers
-
-private extension Priority {
-    var iconName: String {
-        switch self {
-        case .low:    return "minus.circle.fill"
-        case .medium: return "circle.fill"
-        case .high:   return "arrow.up.circle.fill"
-        case .must:   return "exclamationmark.circle.fill"
-        }
-    }
-}
-
 // MARK: - Preview
 
 #Preview("Add Task") {

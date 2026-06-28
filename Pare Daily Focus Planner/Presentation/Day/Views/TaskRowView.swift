@@ -5,19 +5,25 @@ import SwiftData
 struct TaskRowView: View {
     let task: PareTask
     var style: TaskCard.Style = .standard
-    var showsOverdueBadge: Bool = false
+    var isOverdue: Bool = false
     let onComplete: () -> Void
     let onReschedule: () -> Void
+    var onTap: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if showsOverdueBadge {
+        VStack(alignment: .leading, spacing: 6) {
+            if isOverdue {
                 Label("From yesterday", systemImage: "exclamationmark.triangle.fill")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.orange)
+                    .padding(.leading, 4)
             }
 
             TaskCard(task: task, style: style)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    onTap?()
+                }
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
@@ -38,6 +44,8 @@ struct TaskRowView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     TaskRowPreviewContainer()
 }
@@ -47,24 +55,25 @@ private struct TaskRowPreviewContainer: View {
 
     var body: some View {
         let task = sampleTask(in: container.mainContext)
-        List {
-            TaskRowView(
-                task: task,
-                onComplete: {},
-                onReschedule: {}
-            )
-
-            TaskRowView(
-                task: task,
-                showsOverdueBadge: true,
-                onComplete: {},
-                onReschedule: {}
-            )
+        return ZStack {
+            Color.pareBackground.ignoresSafeArea()
+            VStack(spacing: 10) {
+                TaskRowView(
+                    task: task,
+                    onComplete: {},
+                    onReschedule: {}
+                )
+                TaskRowView(
+                    task: task,
+                    isOverdue: true,
+                    onComplete: {},
+                    onReschedule: {}
+                )
+            }
+            .padding()
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
-        .background(Color.pareBackground)
         .modelContainer(container)
+        .preferredColorScheme(.dark)
     }
 
     private func sampleTask(in context: ModelContext) -> PareTask {
