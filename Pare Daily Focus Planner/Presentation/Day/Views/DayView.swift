@@ -9,11 +9,11 @@ struct DayView: View {
     @Environment(DayViewModel.self) private var dayVM
 
     // MARK: - State
-    @State private var showAddTask      = false
-    @State private var taskToEdit: PareTask?   = nil
+    @State private var showAddTask = false
+    @State private var taskToEdit: PareTask? = nil
     @State private var showRescheduleFor: PareTask? = nil
-    @State private var rescheduleDate   = Date()
-    @State private var selectedDate     = Date()
+    @State private var rescheduleDate = Date()
+    @State private var selectedDate = Date()
 
     // MARK: - Body
     var body: some View {
@@ -79,11 +79,10 @@ struct DayView: View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 2) {
                 // Fecha grande
-                Text(AttributedString {
-                    AttributedString(selectedDate.formatted(.dateTime.day().month(.wide)), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareTextPrimary))
-                    AttributedString(" ")
-                    AttributedString(selectedDate.formatted(.dateTime.year()), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareGreen))
-                })
+                let dayMonth = AttributedString(selectedDate.formatted(.dateTime.day().month(.wide)), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareTextPrimary))
+                let space = AttributedString(" ")
+                let year = AttributedString(selectedDate.formatted(.dateTime.year()), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareGreen))
+                Text(dayMonth + space + year)
 
                 // Saludo / día de la semana
                 Text(greeting)
