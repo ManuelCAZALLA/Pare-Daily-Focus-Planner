@@ -9,10 +9,22 @@ enum Recurrence: Codable, Equatable, Hashable {
 
     var label: String {
         switch self {
-        case .daily:                    return "Cada día"
-        case .weekly(let days):         return "Semanal (\(days.count) días)"
-        case .monthly(let day):         return "Mensual (día \(day))"
-        case .custom(let n):            return "Cada \(n) días"
+        case .daily:
+            return "Every day"
+        case .weekly(let days) where days.count == 5:
+            return "Weekdays (Mon–Fri)"
+        case .weekly(let days) where days.count == 7:
+            return "Every day of the week"
+        case .weekly(let days):
+            return "Weekly (\(days.count) days)"
+        case .monthly(let day):
+            return "Monthly on day \(day)"
+        case .custom(let n) where n == 2:
+            return "Every 2 days"
+        case .custom(let n) where n == 7:
+            return "Every week"
+        case .custom(let n):
+            return "Every \(n) days"
         }
     }
 }

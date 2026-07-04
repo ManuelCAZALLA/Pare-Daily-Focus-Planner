@@ -1,4 +1,5 @@
 // DayView.swift
+
 import SwiftUI
 import SwiftData
 
@@ -7,61 +8,51 @@ struct DayView: View {
     // MARK: - Environment
     @Environment(DayViewModel.self) private var dayVM
 
-    // MARK: - Local state
+    // MARK: - State
     @State private var showAddTask = false
     @State private var taskToEdit: PareTask? = nil
     @State private var showRescheduleFor: PareTask? = nil
     @State private var rescheduleDate = Date()
+    @State private var selectedDate = Date()
 
     // MARK: - Body
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                Color(.systemGroupedBackground)
-                    .ignoresSafeArea()
+        ZStack(alignment: .bottomTrailing) {
+            Color.pareBackground.ignoresSafeArea()
 
+            VStack(spacing: 0) {
+
+                // ── Header fijo
+                headerView
+
+                // ── Week strip fijo
+                weekStrip
+
+                Divider()
+                    .background(Color.pareSeparator)
+
+                // ── Timeline scrolleable
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: []) {
 
-                        // ── Header
-                        headerView
-                            .padding(.horizontal, 16)
-                            .padding(.top, 8)
-                            .padding(.bottom, 16)
-
-                        // ── Banner reagendadas
+                        // Banner overdue
                         if !dayVM.overdueFromYesterday.isEmpty {
-                            rescheduledBanner
+                            overdueBanner
                                 .padding(.horizontal, 16)
-                                .padding(.bottom, 12)
+                                .padding(.top, 14)
                         }
 
-                        // ── Tareas de hoy
-                        if dayVM.tasksToday.isEmpty {
-                            emptyState
-                                .padding(.top, 48)
-                        } else {
-                            tasksSection
-                        }
-
-                        // ── Sugerencias del backlog
-                        if !dayVM.suggestions.isEmpty {
-                            suggestionsSection
-                                .padding(.top, 24)
-                        }
-
-                        Spacer(minLength: 100)
+                        // Timeline
+                        timelineContent
+                            .padding(.bottom, 100)
                     }
                 }
-
-                // ── FAB
-                fabButton
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 28)
             }
-            .navigationTitle(greeting)
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar { toolbarContent }
+
+            // ── FAB
+            fabButton
+                .padding(.trailing, 20)
+                .padding(.bottom, 32)
         }
         .sheet(isPresented: $showAddTask) {
             AddTaskSheet()
@@ -75,188 +66,300 @@ struct DayView: View {
             }
         }
         .onAppear {
-            dayVM.loadDay(for: Date())
+            dayVM.loadDay(for: selectedDate)
+        }
+        .onChange(of: selectedDate) { _, new in
+            dayVM.loadDay(for: new)
         }
     }
 
     // MARK: - Header
 
     private var headerView: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(Date().formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-                .kerning(0.4)
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 3) {
+                // Fecha grande
+                let dayMonth = AttributedString(selectedDate.formatted(.dateTime.day().month(.wide)), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.white))
+                let space = AttributedString(" ")
+                let year = AttributedString(selectedDate.formatted(.dateTime.year()), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareGreen))
+                Text(dayMonth + space + year)
 
-            HStack(alignment: .center) {
-                // Progress
-                HStack(spacing: 6) {
-                    let done  = dayVM.tasksToday.filter(\.isCompleted).count
-                    let total = dayVM.tasksToday.count
-
-                    if total > 0 {
-                        Text("\(done) of \(total)")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(done == total && total > 0 ? Color.pareGreen : .secondary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(
-                                Capsule()
-                                    .fill(done == total && total > 0
-                                          ? Color.pareGreen.opacity(0.12)
-                                          : Color(.tertiarySystemGroupedBackground))
-                            )
-                    }
-
-                    if dayVM.streak > 0 {
-                        Text("🔥 \(dayVM.streak)")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.orange)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(
-                                Capsule()
-                                    .fill(Color.orange.opacity(0.10))
-                            )
-                    }
-                }
+                // Saludo / día de la semana
+                Text(greeting)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
-            .padding(.top, 6)
 
-            // Progress bar
-            if !dayVM.tasksToday.isEmpty {
-                let done  = dayVM.tasksToday.filter(\.isCompleted).count
-                let total = dayVM.tasksToday.count
-                let ratio = Double(done) / Double(total)
+            Spacer()
 
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color(.systemFill))
-                            .frame(height: 4)
-                        Capsule()
-                            .fill(ratio == 1 ? Color.pareGreen : Color.pareGreen.opacity(0.7))
-                            .frame(width: geo.size.width * ratio, height: 4)
-                            .animation(.spring(duration: 0.4), value: done)
-                    }
+            // Progress pill
+            let done  = dayVM.tasksToday.filter(\.isCompleted).count
+            let total = dayVM.tasksToday.count
+            if total > 0 {
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("\(done)/\(total)")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(done == total ? Color.pareGreen : Color.white)
+
+                    Text("tasks")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color(hex: "#8E8E93"))
                 }
-                .frame(height: 4)
-                .padding(.top, 10)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(done == total ? Color.pareGreen.opacity(0.15) : Color(hex: "#1C1C1E"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(
+                                    done == total ? Color.pareGreen.opacity(0.4) : Color(hex: "#38383A"),
+                                    lineWidth: 0.5
+                                )
+                        )
+                )
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 20)
+        .padding(.top, 16)
+        .padding(.bottom, 12)
     }
 
-    // MARK: - Rescheduled banner
+    // MARK: - Week strip
 
-    private var rescheduledBanner: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "arrow.clockwise.circle.fill")
-                .foregroundStyle(.orange)
-                .font(.title3)
+    private var weekStrip: some View {
+        let days = currentWeekDays()
 
-            VStack(alignment: .leading, spacing: 1) {
+        return HStack(spacing: 0) {
+            ForEach(days, id: \.self) { day in
+                let isSelected = Calendar.current.isDate(day, inSameDayAs: selectedDate)
+                let isToday    = Calendar.current.isDateInToday(day)
+
+                Button {
+                    withAnimation(.spring(duration: 0.25)) {
+                        selectedDate = day
+                    }
+                } label: {
+                    VStack(spacing: 5) {
+                        Text(day.formatted(.dateTime.weekday(.narrow)))
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(
+                                isSelected ? Color.pareGreen : Color(hex: "#8E8E93")
+                            )
+
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    isSelected
+                                    ? Color.pareGreen
+                                    : (isToday ? Color.pareGreen.opacity(0.18) : Color(hex: "#2C2C2E"))
+                                )
+                                .frame(width: 36, height: 36)
+
+                            // Ring exterior para hoy no-seleccionado
+                            if isToday && !isSelected {
+                                Circle()
+                                    .strokeBorder(Color.pareGreen.opacity(0.5), lineWidth: 1.5)
+                                    .frame(width: 36, height: 36)
+                            }
+
+                            Text(day.formatted(.dateTime.day()))
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundStyle(
+                                    isSelected
+                                    ? .white
+                                    : (isToday ? Color.pareGreen : Color.white)
+                                )
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 44) // HIG minimum tap target
+                    .padding(.vertical, 8)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 8)
+        .background(Color.pareBackground)
+    }
+
+    // MARK: - Timeline content
+
+    private var timelineContent: some View {
+        let timedTasks   = dayVM.tasksToday.filter { $0.scheduledTime != nil }
+            .sorted { ($0.scheduledTime ?? Date()) < ($1.scheduledTime ?? Date()) }
+        let untimedTasks = dayVM.tasksToday.filter { $0.scheduledTime == nil }
+
+        return VStack(spacing: 0) {
+            // Tareas con hora — timeline
+            if !timedTasks.isEmpty {
+                HStack(alignment: .top, spacing: 0) {
+
+                    // Columna de horas + línea
+                    VStack(spacing: 0) {
+                        ForEach(timedTasks) { task in
+                            TimelineHourLabel(task: task)
+                        }
+                    }
+                    .frame(width: 56)
+
+                    // Línea vertical
+                    Rectangle()
+                        .fill(Color(hex: "#38383A"))
+                        .frame(width: 1)
+                        .overlay(alignment: .top) {
+                            // Punto "ahora"
+                            if Calendar.current.isDateInToday(selectedDate) {
+                                Circle()
+                                    .fill(Color.pareGreen)
+                                    .frame(width: 10, height: 10)
+                                    .shadow(color: Color.pareGreen.opacity(0.6), radius: 4)
+                                    .offset(x: -4.5)
+                                    .offset(y: nowLineOffset(tasks: timedTasks))
+                            }
+                        }
+
+                    // Cards
+                    VStack(spacing: 12) {
+                        ForEach(timedTasks) { task in
+                            taskRow(task)
+                                .padding(.leading, 12)
+                        }
+                    }
+                    .padding(.top, 14)
+                    .padding(.trailing, 16)
+                }
+                .padding(.top, 14)
+            }
+
+            // Sin hora — sección al final
+            if !untimedTasks.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 6) {
+                        Rectangle()
+                            .fill(Color(hex: "#48484A"))
+                            .frame(width: 20, height: 1)
+                        Text("Sin hora")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color(hex: "#8E8E93"))
+                            .textCase(.uppercase)
+                            .kerning(0.5)
+                        Rectangle()
+                            .fill(Color(hex: "#48484A"))
+                            .frame(height: 1)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, timedTasks.isEmpty ? 20 : 28)
+
+                    ForEach(untimedTasks) { task in
+                        taskRow(task)
+                            .padding(.horizontal, 16)
+                    }
+                }
+            }
+
+            // Empty state
+            if dayVM.tasksToday.isEmpty {
+                emptyState
+            }
+        }
+    }
+
+    // MARK: - Task row
+
+    @ViewBuilder
+    private func taskRow(_ task: PareTask) -> some View {
+        TaskRowView(
+            task: task,
+            isOverdue: dayVM.overdueFromYesterday.contains(where: { $0.id == task.id }),
+            onComplete: {
+                withAnimation(.spring(duration: 0.3)) {
+                    dayVM.complete(task)
+                }
+            },
+            onReschedule: {
+                rescheduleDate = Date()
+                showRescheduleFor = task
+            },
+            onTap: {
+                taskToEdit = task
+            }
+        )
+    }
+
+    // MARK: - Overdue banner
+
+    private var overdueBanner: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Color.orange.opacity(0.15))
+                    .frame(width: 40, height: 40)
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .foregroundStyle(.orange)
+                    .font(.title3)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
                 Text("From yesterday")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.primary)
-                Text("\(dayVM.overdueFromYesterday.count) task\(dayVM.overdueFromYesterday.count > 1 ? "s" : "") moved to today")
+                    .foregroundStyle(Color.white)
+                Text("\(dayVM.overdueFromYesterday.count) task\(dayVM.overdueFromYesterday.count > 1 ? "s" : "") rescheduled")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
 
             Spacer()
 
             Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.orange.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(Color.orange.opacity(0.2), lineWidth: 1)
-                )
-        )
-    }
-
-    // MARK: - Tasks section
-
-    private var tasksSection: some View {
-        VStack(spacing: 8) {
-            ForEach(dayVM.tasksToday) { task in
-                TaskRowView(
-                    task: task,
-                    showsOverdueBadge: dayVM.overdueFromYesterday.contains(where: { $0.id == task.id }),
-                    onComplete: {
-                        withAnimation(.spring(duration: 0.3)) {
-                            dayVM.complete(task)
-                        }
-                    },
-                    onReschedule: {
-                        rescheduleDate = Date()
-                        showRescheduleFor = task
-                    }
-                )
-                .onTapGesture {
-                    taskToEdit = task
-                }
-            }
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color.orange.opacity(0.6))
         }
         .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.orange.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color.orange.opacity(0.3), lineWidth: 1)
+                )
+        )
     }
 
     // MARK: - Empty state
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 52))
-                .foregroundStyle(Color.pareGreen.opacity(0.3))
+        VStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(Color.pareGreen.opacity(0.1))
+                    .frame(width: 80, height: 80)
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 44))
+                    .foregroundStyle(Color.pareGreen.opacity(0.7))
+            }
 
-            Text("No tasks today")
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+            VStack(spacing: 6) {
+                Text("Sin tareas para hoy")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.white)
 
-            Text("Tap + to add your first task")
-                .font(.subheadline)
-                .foregroundStyle(.tertiary)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    // MARK: - Suggestions
-
-    private var suggestionsSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Suggestions")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-                .kerning(0.5)
-                .padding(.horizontal, 16)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(dayVM.suggestions.prefix(5)) { task in
-                        SuggestionChip(task: task) {
-                            withAnimation {
-                                dayVM.reschedule(task, to: Date())
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
+                Text("Pulsa + para añadir tu primera tarea")
+                    .font(.subheadline)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
+                    .multilineTextAlignment(.center)
             }
         }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 64)
+        .padding(.horizontal, 32)
     }
 
     // MARK: - FAB
@@ -266,28 +369,20 @@ struct DayView: View {
             showAddTask = true
         } label: {
             Image(systemName: "plus")
-                .font(.title2)
-                .fontWeight(.semibold)
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.white)
-                .frame(width: 56, height: 56)
-                .background(Color.pareGreen)
+                .frame(width: 62, height: 62)
+                .background(
+                    LinearGradient(
+                        colors: [Color.pareGreen, Color(hex: "#16A34A")],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .clipShape(Circle())
-                .shadow(color: Color.pareGreen.opacity(0.4), radius: 12, x: 0, y: 6)
+                .shadow(color: Color.pareGreen.opacity(0.55), radius: 20, x: 0, y: 8)
         }
-    }
-
-    // MARK: - Toolbar
-
-    @ToolbarContentBuilder
-    private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                // TODO: abrir WeekView o date picker
-            } label: {
-                Image(systemName: "calendar")
-                    .foregroundStyle(Color.pareGreen)
-            }
-        }
+        .accessibilityLabel("Añadir tarea")
     }
 
     // MARK: - Helpers
@@ -300,35 +395,43 @@ struct DayView: View {
         default:       return "Good evening"
         }
     }
+
+    private func currentWeekDays() -> [Date] {
+        let cal   = Calendar(identifier: .iso8601)
+        let start = cal.date(from: cal.dateComponents(
+            [.yearForWeekOfYear, .weekOfYear], from: selectedDate
+        )) ?? selectedDate
+        return (0..<7).compactMap { cal.date(byAdding: .day, value: $0, to: start) }
+    }
+
+    private func nowLineOffset(tasks: [PareTask]) -> CGFloat {
+        // Aproximación visual: altura por tarea ~74pt
+        let cardHeight: CGFloat = 74
+        let now = Date()
+        guard let first = tasks.first?.scheduledTime else { return 0 }
+        let elapsed = now.timeIntervalSince(first)
+        let total   = tasks.last?.scheduledTime.flatMap { $0.timeIntervalSince(first) } ?? 1
+        guard total > 0 else { return 0 }
+        let ratio   = min(max(elapsed / total, 0), 1)
+        return ratio * (CGFloat(tasks.count) * cardHeight)
+    }
 }
 
-// MARK: - SuggestionChip
+// MARK: - TimelineHourLabel
 
-private struct SuggestionChip: View {
+private struct TimelineHourLabel: View {
     let task: PareTask
-    let onAdd: () -> Void
 
     var body: some View {
-        Button(action: onAdd) {
-            HStack(spacing: 6) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.caption)
-                    .foregroundStyle(Color.priority(task.priority))
-                Text(task.title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
+        VStack {
+            if let time = task.scheduledTime {
+                Text(time.formatted(.dateTime.hour().minute()))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(hex: "#8E8E93"))
+                    .frame(height: 80, alignment: .top)
+                    .padding(.top, 14)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(.secondarySystemGroupedBackground))
-                    .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
-            )
         }
-        .buttonStyle(.plain)
     }
 }
 
@@ -342,7 +445,9 @@ private struct ReschedulePicker: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            ZStack {
+                Color.pareBackground.ignoresSafeArea()
+
                 DatePicker(
                     "New date",
                     selection: $selectedDate,
@@ -351,13 +456,17 @@ private struct ReschedulePicker: View {
                 )
                 .datePickerStyle(.graphical)
                 .tint(Color.pareGreen)
+                .colorScheme(.dark)
                 .padding()
             }
             .navigationTitle("Reschedule")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.pareBackground, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                        .foregroundStyle(Color.pareTextSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Move") {
@@ -371,7 +480,7 @@ private struct ReschedulePicker: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
-        .presentationCornerRadius(20)
+        .presentationCornerRadius(24)
     }
 }
 
@@ -381,10 +490,12 @@ private struct ReschedulePicker: View {
     let container = PareModelContainer.preview
     let context   = container.mainContext
 
-    let t1 = PareTask(title: "Call the client", scheduledDate: Date(), priority: .must)
-    let t2 = PareTask(title: "Review Q3 proposal", scheduledDate: Date(), priority: .high)
-    let t3 = PareTask(title: "Reply to emails", scheduledDate: Date(), priority: .medium)
-    let t4 = PareTask(title: "Read 20 pages", scheduledDate: Date(), priority: .low)
+    let t1 = PareTask(title: "Enviar factura de mayo", scheduledDate: Date(), priority: .must)
+    t1.scheduledTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
+    let t2 = PareTask(title: "Revisar propuesta Q3", scheduledDate: Date(), priority: .high)
+    t2.scheduledTime = Calendar.current.date(bySettingHour: 10, minute: 30, second: 0, of: Date())
+    let t3 = PareTask(title: "Responder emails pendientes", scheduledDate: Date(), priority: .medium)
+    let t4 = PareTask(title: "Leer 20 páginas", scheduledDate: Date(), priority: .low)
     [t1, t2, t3, t4].forEach { context.insert($0) }
 
     let vm = DayViewModel(
@@ -396,4 +507,5 @@ private struct ReschedulePicker: View {
     return DayView()
         .environment(vm)
         .modelContainer(container)
+        .preferredColorScheme(.dark)
 }
