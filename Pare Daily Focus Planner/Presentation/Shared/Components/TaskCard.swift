@@ -23,56 +23,58 @@ struct TaskCard: View {
     // MARK: - Standard card (timeline)
 
     private var standardCard: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
 
-            // Icono
+            // Icono — 44×44 tap area con visual 42pt
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 12)
                     .fill(Color.priorityBackground(task.priority))
-                    .frame(width: 40, height: 40)
+                    .frame(width: 44, height: 44)
 
                 Image(systemName: task.priority.iconName)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Color.priority(task.priority))
             }
 
             // Contenido
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 // Meta (hora + prioridad)
                 HStack(spacing: 6) {
                     if let time = task.scheduledTime {
-                        Text(time.formatted(.dateTime.hour().minute()))
+                        Label(time.formatted(.dateTime.hour().minute()), systemImage: "clock")
                             .font(.caption)
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
                             .foregroundStyle(Color.pareGreen)
                     }
 
-                    Text("·")
-                        .foregroundStyle(Color.pareTextTertiary)
-                        .font(.caption)
+                    if task.scheduledTime != nil {
+                        Text("·")
+                            .foregroundStyle(Color(hex: "#636366"))
+                            .font(.caption)
+                    }
 
                     Text(task.priority.label)
                         .font(.caption)
-                        .foregroundStyle(Color.pareTextSecondary)
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color(hex: "#AEAEB2"))
                 }
 
                 // Título
                 Text(task.title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(
                         task.isCompleted
-                        ? Color.pareTextTertiary
-                        : Color.pareTextPrimary
+                        ? Color(hex: "#636366")
+                        : Color.white
                     )
-                    .strikethrough(task.isCompleted, color: Color.pareTextTertiary)
+                    .strikethrough(task.isCompleted, color: Color(hex: "#636366"))
                     .lineLimit(2)
 
                 // Notas
                 if let notes = task.notes, !notes.isEmpty {
                     Text(notes)
                         .font(.caption)
-                        .foregroundStyle(Color.pareTextSecondary)
+                        .foregroundStyle(Color(hex: "#8E8E93"))
                         .lineLimit(1)
                         .padding(.top, 1)
                 }
@@ -80,17 +82,17 @@ struct TaskCard: View {
 
             Spacer(minLength: 0)
 
-            // Check button
+            // Check button — 44×44 tappable
             CheckCircle(isCompleted: task.isCompleted, priority: task.priority)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.pareCard)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(hex: "#1C1C1E"))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(Color.pareCardBorder, lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color(hex: "#38383A"), lineWidth: 0.5)
                 )
         )
         .overlay(alignment: .leading) {
@@ -98,26 +100,26 @@ struct TaskCard: View {
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.priority(task.priority))
                 .frame(width: 3)
-                .padding(.vertical, 10)
+                .padding(.vertical, 12)
         }
-        .opacity(task.isCompleted ? 0.55 : 1)
+        .opacity(task.isCompleted ? 0.5 : 1)
     }
 
     // MARK: - Compact card
 
     private var compactCard: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
+            // Dot indicator con color de prioridad
             Circle()
-                .fill(Color.priority(task.priority).opacity(0.2))
+                .fill(Color.priority(task.priority))
                 .frame(width: 8, height: 8)
 
             Text(task.title)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(
                     task.isCompleted
-                    ? Color.pareTextTertiary
-                    : Color.pareTextPrimary
+                    ? Color(hex: "#636366")
+                    : Color.white
                 )
                 .strikethrough(task.isCompleted)
                 .lineLimit(1)
@@ -127,17 +129,18 @@ struct TaskCard: View {
             if let time = task.scheduledTime {
                 Text(time.formatted(.dateTime.hour().minute()))
                     .font(.caption)
-                    .foregroundStyle(Color.pareTextSecondary)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.pareCard)
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(hex: "#1C1C1E"))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .strokeBorder(Color.pareCardBorder, lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(Color(hex: "#38383A"), lineWidth: 0.5)
                 )
         )
     }
@@ -150,25 +153,29 @@ struct CheckCircle: View {
     let priority: Priority
 
     var body: some View {
+        // Área tappable mínima 44×44pt (Apple HIG)
         ZStack {
+            // Fondo sutil para no-completado — mejora visibilidad en dark mode
+            Circle()
+                .fill(isCompleted ? Color.pareGreen : Color(hex: "#2C2C2E"))
+                .frame(width: 28, height: 28)
+
             Circle()
                 .strokeBorder(
-                    isCompleted ? Color.pareGreen : Color.pareCardBorder,
+                    isCompleted ? Color.pareGreen : Color(hex: "#636366"),
                     lineWidth: 2
                 )
-                .frame(width: 26, height: 26)
+                .frame(width: 28, height: 28)
 
             if isCompleted {
-                Circle()
-                    .fill(Color.pareGreen)
-                    .frame(width: 26, height: 26)
-
                 Image(systemName: "checkmark")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(.white)
             }
         }
-        .animation(.spring(duration: 0.25), value: isCompleted)
+        .frame(width: 44, height: 44) // tap area HIG compliant
+        .contentShape(Circle())
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isCompleted)
     }
 }
 

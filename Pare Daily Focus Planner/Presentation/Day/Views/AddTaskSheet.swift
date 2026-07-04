@@ -158,13 +158,14 @@ struct AddTaskSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.6))
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(editingTask == nil ? "Añadir" : "Guardar") {
                         save()
                     }
-                    .fontWeight(.semibold)
+                    .font(.body.weight(.bold))
                     .foregroundStyle(title.trimmingCharacters(in: .whitespaces).isEmpty
                         ? Color.white.opacity(0.3)
                         : Color.pareGreen)
@@ -247,11 +248,11 @@ struct AddTaskSheet: View {
 
     // MARK: - Quick Add Section (Sugerencias)
     private var quickAddSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Text("SUGERENCIAS RÁPIDAS")
-                .font(.caption2)
+                .font(.caption)
                 .fontWeight(.bold)
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(Color(hex: "#AEAEB2"))
                 .padding(.horizontal, 4)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -262,16 +263,16 @@ struct AddTaskSheet: View {
                         } label: {
                             HStack(spacing: 8) {
                                 Image(systemName: qTask.icon)
-                                    .font(.system(size: 13, weight: .bold))
+                                    .font(.system(size: 14, weight: .bold))
                                     .foregroundStyle(.white)
-                                    .padding(6)
+                                    .frame(width: 32, height: 32)
                                     .background(
                                         Circle()
-                                            .fill(qTask.color.opacity(0.2))
+                                            .fill(qTask.color.opacity(0.25))
                                     )
                                     .overlay(
                                         Circle()
-                                            .strokeBorder(qTask.color.opacity(0.4), lineWidth: 1)
+                                            .strokeBorder(qTask.color.opacity(0.5), lineWidth: 1)
                                     )
 
                                 VStack(alignment: .leading, spacing: 2) {
@@ -289,15 +290,15 @@ struct AddTaskSheet: View {
                                         Text(qTask.defaultPriority.label)
                                             .font(.system(size: 9))
                                     }
-                                    .foregroundStyle(.white.opacity(0.6))
+                                    .foregroundStyle(Color(hex: "#AEAEB2"))
                                 }
                             }
-                            .padding(.leading, 8)
-                            .padding(.trailing, 12)
-                            .padding(.vertical, 8)
+                            .padding(.leading, 10)
+                            .padding(.trailing, 14)
+                            .padding(.vertical, 10)
                             .background(
                                 RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color.white.opacity(0.04))
+                                    .fill(Color.white.opacity(0.05))
                                     .background(
                                         RoundedRectangle(cornerRadius: 14)
                                             .fill(.ultraThinMaterial)
@@ -307,19 +308,18 @@ struct AddTaskSheet: View {
                                 RoundedRectangle(cornerRadius: 14)
                                     .stroke(
                                         LinearGradient(
-                                            colors: [.white.opacity(0.12), .white.opacity(0.02)],
+                                            colors: [.white.opacity(0.15), .white.opacity(0.03)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         ),
                                         lineWidth: 1
                                     )
                             )
-                            .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
                         }
                         .buttonStyle(ScaleButtonStyle())
                     }
                 }
-                .padding(.vertical, 2)
+                .padding(.vertical, 4)
             }
         }
         .padding(.horizontal, 4)
@@ -406,6 +406,7 @@ struct AddTaskSheet: View {
             Toggle(isOn: $hasTime.animation()) {
                 Label("Establecer hora", systemImage: "clock")
                     .font(.subheadline)
+                    .fontWeight(.medium)
                     .foregroundStyle(.white)
             }
             .tint(Color.pareGreen)
@@ -419,6 +420,7 @@ struct AddTaskSheet: View {
                 .labelsHidden()
                 .datePickerStyle(.compact)
                 .tint(Color.pareGreen)
+                .colorScheme(.dark)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
@@ -430,6 +432,7 @@ struct AddTaskSheet: View {
             Toggle(isOn: $hasRecurrence.animation()) {
                 Label("Tarea recurrente", systemImage: "arrow.clockwise")
                     .font(.subheadline)
+                    .fontWeight(.medium)
                     .foregroundStyle(.white)
             }
             .tint(Color.pareGreen)
@@ -443,6 +446,7 @@ struct AddTaskSheet: View {
                             HStack {
                                 Text(option.label)
                                     .font(.subheadline)
+                                    .fontWeight(.medium)
                                     .foregroundStyle(.white)
                                 Spacer()
                                 if recurrence == option {
@@ -452,13 +456,14 @@ struct AddTaskSheet: View {
                                         .font(.subheadline)
                                 }
                             }
-                            .padding(.vertical, 10)
+                            .padding(.vertical, 13)
+                            .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
 
                         if option.label != recurrenceOptions.last?.label {
                             Divider()
-                                .background(Color.white.opacity(0.1))
+                                .background(Color.white.opacity(0.12))
                         }
                     }
                 }
@@ -614,50 +619,48 @@ private struct DayChip: View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Text(date.formatted(.dateTime.weekday(.narrow)))
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundStyle(isSelected ? .white.opacity(0.85) : .white.opacity(0.5))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(isSelected ? .white.opacity(0.85) : Color(hex: "#AEAEB2"))
 
                 Text(date.formatted(.dateTime.day()))
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(isSelected ? .white : .white.opacity(0.85))
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(isSelected ? .white : Color.white)
 
                 Group {
                     if isToday {
-                        Text("Today")
+                        Text("Hoy")
                             .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
                     } else if isTomorrow {
-                        Text("Tmrw")
+                        Text("Mañ.")
                             .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
                     } else {
                         Text(date.formatted(.dateTime.month(.abbreviated)))
-                            .foregroundStyle(isSelected ? .white.opacity(0.7) : .white.opacity(0.4))
+                            .foregroundStyle(isSelected ? .white.opacity(0.8) : Color(hex: "#8E8E93"))
                     }
                 }
-                .font(.system(size: 8, weight: .semibold))
+                .font(.system(size: 9, weight: .semibold))
             }
-            .frame(width: 44, height: 60)
+            .frame(width: 48, height: 68)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.pareGreen.opacity(0.8) : Color.white.opacity(0.04))
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(isSelected ? Color.pareGreen : Color.white.opacity(0.05))
             )
             .background {
                 if !isSelected {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 14)
                         .fill(.ultraThinMaterial)
                 }
             }
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 14)
                     .stroke(
-                        isSelected ? Color.pareGreen.opacity(0.4) : Color.white.opacity(0.1),
-                        lineWidth: 1
+                        isSelected ? Color.pareGreen.opacity(0.5) : Color.white.opacity(0.12),
+                        lineWidth: isSelected ? 1.5 : 1
                     )
             )
             .shadow(
-                color: isSelected ? Color.pareGreen.opacity(0.2) : .clear,
-                radius: 4, x: 0, y: 2
+                color: isSelected ? Color.pareGreen.opacity(0.3) : .clear,
+                radius: 6, x: 0, y: 3
             )
         }
         .buttonStyle(ScaleButtonStyle())
@@ -673,20 +676,20 @@ private struct CardSection<Content: View>: View {
         VStack(alignment: .leading, spacing: 10) {
             if let header {
                 Text(header.uppercased())
-                    .font(.caption2)
+                    .font(.caption)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(Color(hex: "#AEAEB2"))
                     .padding(.horizontal, 4)
                     .padding(.top, 4)
             }
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 content()
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, header == nil ? 16 : 12)
+            .padding(.vertical, header == nil ? 18 : 14)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white.opacity(0.04))
+                    .fill(Color.white.opacity(0.05))
                     .background(
                         RoundedRectangle(cornerRadius: 16)
                             .fill(.ultraThinMaterial)
@@ -696,7 +699,7 @@ private struct CardSection<Content: View>: View {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(
                         LinearGradient(
-                            colors: [.white.opacity(0.12), .white.opacity(0.02)],
+                            colors: [.white.opacity(0.15), .white.opacity(0.03)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -704,7 +707,7 @@ private struct CardSection<Content: View>: View {
                     )
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
+            .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -718,18 +721,18 @@ private struct PriorityChip: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 Image(systemName: priority.iconName)
-                    .font(.caption)
+                    .font(.system(size: 13, weight: .semibold))
                 Text(priority.label)
-                    .font(.caption)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 13, weight: .semibold))
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .frame(minHeight: 44)
             .background(
                 Capsule()
-                    .fill(isSelected ? Color.priority(priority).opacity(0.2) : Color.white.opacity(0.04))
+                    .fill(isSelected ? Color.priority(priority).opacity(0.2) : Color.white.opacity(0.05))
             )
             .background {
                 if !isSelected {
@@ -738,14 +741,14 @@ private struct PriorityChip: View {
                 }
             }
             .foregroundStyle(
-                isSelected ? Color.priority(priority) : .white.opacity(0.6)
+                isSelected ? Color.priority(priority) : Color(hex: "#AEAEB2")
             )
             .clipShape(Capsule())
             .overlay(
                 Capsule()
                     .strokeBorder(
-                        isSelected ? Color.priority(priority).opacity(0.4) : Color.white.opacity(0.1),
-                        lineWidth: 1
+                        isSelected ? Color.priority(priority).opacity(0.5) : Color.white.opacity(0.12),
+                        lineWidth: 1.5
                     )
             )
         }

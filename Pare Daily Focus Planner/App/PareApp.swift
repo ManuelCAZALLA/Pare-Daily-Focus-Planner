@@ -7,14 +7,26 @@ struct PareApp: App {
 
     @State private var dayViewModel: DayViewModel
     @State private var weekViewModel: WeekViewModel
+    @State private var pomodoroViewModel: PomodoroViewModel
     @State private var notificationService = NotificationService()
 
     init() {
-        let context = PareModelContainer.shared.mainContext
+        let context  = PareModelContainer.shared.mainContext
         let taskRepo = TaskRepository(context: context)
         let weekRepo = WeekPlanRepository(context: context)
-        _dayViewModel  = State(initialValue: DayViewModel(taskRepository: taskRepo, notificationService: NotificationService()))
-        _weekViewModel = State(initialValue: WeekViewModel(weekPlanRepository: weekRepo, taskRepository: taskRepo))
+        let focusRepo = FocusSessionRepository(context: context)
+
+        _dayViewModel      = State(initialValue: DayViewModel(
+            taskRepository: taskRepo,
+            notificationService: NotificationService()
+        ))
+        _weekViewModel     = State(initialValue: WeekViewModel(
+            weekPlanRepository: weekRepo,
+            taskRepository: taskRepo
+        ))
+        _pomodoroViewModel = State(initialValue: PomodoroViewModel(
+            repository: focusRepo
+        ))
     }
 
     var body: some Scene {
@@ -22,6 +34,7 @@ struct PareApp: App {
             ContentView()
                 .environment(dayViewModel)
                 .environment(weekViewModel)
+                .environment(pomodoroViewModel)
                 .environment(notificationService)
         }
         .modelContainer(PareModelContainer.shared)

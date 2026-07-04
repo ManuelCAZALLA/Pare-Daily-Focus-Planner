@@ -77,9 +77,9 @@ struct DayView: View {
 
     private var headerView: some View {
         HStack(alignment: .bottom) {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 // Fecha grande
-                let dayMonth = AttributedString(selectedDate.formatted(.dateTime.day().month(.wide)), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareTextPrimary))
+                let dayMonth = AttributedString(selectedDate.formatted(.dateTime.day().month(.wide)), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.white))
                 let space = AttributedString(" ")
                 let year = AttributedString(selectedDate.formatted(.dateTime.year()), attributes: AttributeContainer().font(.system(size: 28, weight: .heavy)).foregroundColor(Color.pareGreen))
                 Text(dayMonth + space + year)
@@ -87,7 +87,8 @@ struct DayView: View {
                 // Saludo / día de la semana
                 Text(greeting)
                     .font(.subheadline)
-                    .foregroundStyle(Color.pareTextSecondary)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
 
             Spacer()
@@ -100,12 +101,26 @@ struct DayView: View {
                     Text("\(done)/\(total)")
                         .font(.title2)
                         .fontWeight(.bold)
-                        .foregroundStyle(done == total ? Color.pareGreen : Color.pareTextPrimary)
+                        .foregroundStyle(done == total ? Color.pareGreen : Color.white)
 
                     Text("tasks")
                         .font(.caption)
-                        .foregroundStyle(Color.pareTextSecondary)
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color(hex: "#8E8E93"))
                 }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(done == total ? Color.pareGreen.opacity(0.15) : Color(hex: "#1C1C1E"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(
+                                    done == total ? Color.pareGreen.opacity(0.4) : Color(hex: "#38383A"),
+                                    lineWidth: 0.5
+                                )
+                        )
+                )
             }
         }
         .padding(.horizontal, 20)
@@ -130,9 +145,9 @@ struct DayView: View {
                 } label: {
                     VStack(spacing: 5) {
                         Text(day.formatted(.dateTime.weekday(.narrow)))
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(
-                                isSelected ? Color.pareGreen : Color.pareTextTertiary
+                                isSelected ? Color.pareGreen : Color(hex: "#8E8E93")
                             )
 
                         ZStack {
@@ -140,20 +155,28 @@ struct DayView: View {
                                 .fill(
                                     isSelected
                                     ? Color.pareGreen
-                                    : (isToday ? Color.pareGreen.opacity(0.15) : Color.clear)
+                                    : (isToday ? Color.pareGreen.opacity(0.18) : Color(hex: "#2C2C2E"))
                                 )
-                                .frame(width: 32, height: 32)
+                                .frame(width: 36, height: 36)
+
+                            // Ring exterior para hoy no-seleccionado
+                            if isToday && !isSelected {
+                                Circle()
+                                    .strokeBorder(Color.pareGreen.opacity(0.5), lineWidth: 1.5)
+                                    .frame(width: 36, height: 36)
+                            }
 
                             Text(day.formatted(.dateTime.day()))
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(
                                     isSelected
                                     ? .white
-                                    : (isToday ? Color.pareGreen : Color.pareTextSecondary)
+                                    : (isToday ? Color.pareGreen : Color.white)
                                 )
                         }
                     }
                     .frame(maxWidth: .infinity)
+                    .frame(minHeight: 44) // HIG minimum tap target
                     .padding(.vertical, 8)
                 }
                 .buttonStyle(.plain)
@@ -181,25 +204,26 @@ struct DayView: View {
                             TimelineHourLabel(task: task)
                         }
                     }
-                    .frame(width: 52)
+                    .frame(width: 56)
 
                     // Línea vertical
                     Rectangle()
-                        .fill(Color.pareTimelineLine)
+                        .fill(Color(hex: "#38383A"))
                         .frame(width: 1)
                         .overlay(alignment: .top) {
                             // Punto "ahora"
                             if Calendar.current.isDateInToday(selectedDate) {
                                 Circle()
                                     .fill(Color.pareGreen)
-                                    .frame(width: 8, height: 8)
-                                    .offset(x: -3.5)
+                                    .frame(width: 10, height: 10)
+                                    .shadow(color: Color.pareGreen.opacity(0.6), radius: 4)
+                                    .offset(x: -4.5)
                                     .offset(y: nowLineOffset(tasks: timedTasks))
                             }
                         }
 
                     // Cards
-                    VStack(spacing: 10) {
+                    VStack(spacing: 12) {
                         ForEach(timedTasks) { task in
                             taskRow(task)
                                 .padding(.leading, 12)
@@ -214,14 +238,22 @@ struct DayView: View {
             // Sin hora — sección al final
             if !untimedTasks.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("No time set")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.pareTextTertiary)
-                        .textCase(.uppercase)
-                        .kerning(0.5)
-                        .padding(.horizontal, 20)
-                        .padding(.top, timedTasks.isEmpty ? 20 : 28)
+                    HStack(spacing: 6) {
+                        Rectangle()
+                            .fill(Color(hex: "#48484A"))
+                            .frame(width: 20, height: 1)
+                        Text("Sin hora")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color(hex: "#8E8E93"))
+                            .textCase(.uppercase)
+                            .kerning(0.5)
+                        Rectangle()
+                            .fill(Color(hex: "#48484A"))
+                            .frame(height: 1)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, timedTasks.isEmpty ? 20 : 28)
 
                     ForEach(untimedTasks) { task in
                         taskRow(task)
@@ -262,31 +294,40 @@ struct DayView: View {
     // MARK: - Overdue banner
 
     private var overdueBanner: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "arrow.clockwise.circle.fill")
-                .foregroundStyle(.orange)
-                .font(.title3)
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Color.orange.opacity(0.15))
+                    .frame(width: 40, height: 40)
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .foregroundStyle(.orange)
+                    .font(.title3)
+            }
 
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text("From yesterday")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.pareTextPrimary)
+                    .foregroundStyle(Color.white)
                 Text("\(dayVM.overdueFromYesterday.count) task\(dayVM.overdueFromYesterday.count > 1 ? "s" : "") rescheduled")
                     .font(.caption)
-                    .foregroundStyle(Color.pareTextSecondary)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
 
             Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color.orange.opacity(0.6))
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.orange.opacity(0.08))
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.orange.opacity(0.1))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(Color.orange.opacity(0.2), lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color.orange.opacity(0.3), lineWidth: 1)
                 )
         )
     }
@@ -294,23 +335,30 @@ struct DayView: View {
     // MARK: - Empty state
 
     private var emptyState: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 52))
-                .foregroundStyle(Color.pareGreen.opacity(0.25))
+        VStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(Color.pareGreen.opacity(0.1))
+                    .frame(width: 80, height: 80)
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 44))
+                    .foregroundStyle(Color.pareGreen.opacity(0.7))
+            }
 
-            Text("No tasks")
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundStyle(Color.pareTextSecondary)
+            VStack(spacing: 6) {
+                Text("Sin tareas para hoy")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.white)
 
-            Text("Tap + to add your first task for today")
-                .font(.subheadline)
-                .foregroundStyle(Color.pareTextTertiary)
-                .multilineTextAlignment(.center)
+                Text("Pulsa + para añadir tu primera tarea")
+                    .font(.subheadline)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
+                    .multilineTextAlignment(.center)
+            }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 60)
+        .padding(.top, 64)
         .padding(.horizontal, 32)
     }
 
@@ -321,14 +369,20 @@ struct DayView: View {
             showAddTask = true
         } label: {
             Image(systemName: "plus")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.white)
-                .frame(width: 58, height: 58)
-                .background(Color.pareGreen)
+                .frame(width: 62, height: 62)
+                .background(
+                    LinearGradient(
+                        colors: [Color.pareGreen, Color(hex: "#16A34A")],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .clipShape(Circle())
-                .shadow(color: Color.pareGreen.opacity(0.45), radius: 16, x: 0, y: 8)
+                .shadow(color: Color.pareGreen.opacity(0.55), radius: 20, x: 0, y: 8)
         }
+        .accessibilityLabel("Añadir tarea")
     }
 
     // MARK: - Helpers
@@ -372,9 +426,9 @@ private struct TimelineHourLabel: View {
         VStack {
             if let time = task.scheduledTime {
                 Text(time.formatted(.dateTime.hour().minute()))
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Color.pareTextTertiary)
-                    .frame(height: 74, alignment: .top)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(hex: "#8E8E93"))
+                    .frame(height: 80, alignment: .top)
                     .padding(.top, 14)
             }
         }
