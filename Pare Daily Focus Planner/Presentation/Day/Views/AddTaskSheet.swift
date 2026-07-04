@@ -1,18 +1,8 @@
 // AddTaskSheet.swift
+// Presentation/Day/Views/AddTaskSheet.swift
 import SwiftUI
 import SwiftData
-
-// MARK: - QuickTask Model
-private struct QuickTask: Identifiable {
-    let id = UUID()
-    let title: String
-    let icon: String
-    let defaultHour: Int
-    let defaultMinute: Int
-    let defaultNotes: String
-    let defaultPriority: Priority
-    let color: Color
-}
+import UserNotifications
 
 struct AddTaskSheet: View {
 
@@ -31,359 +21,318 @@ struct AddTaskSheet: View {
     @State private var priority: Priority = .medium
     @State private var hasRecurrence: Bool = false
     @State private var recurrence: Recurrence = .daily
+    @State private var showRecurrenceOptions: Bool = false
 
-    // MARK: - Animation State
-    @State private var animateGlows: Bool = false
-
-    // MARK: - Edit mode (optional)
+    // MARK: - Edit mode
     var editingTask: PareTask? = nil
 
     // MARK: - Focus
     @FocusState private var titleFocused: Bool
-
-    // MARK: - Predetermined Quick Tasks
-    private var quickTasks: [QuickTask] {
-        [
-            QuickTask(
-                title: "Ir al gym",
-                icon: "dumbbell.fill",
-                defaultHour: 18,
-                defaultMinute: 0,
-                defaultNotes: "Sesión de entrenamiento (1h 30m)",
-                defaultPriority: .medium,
-                color: Color.pareGreen
-            ),
-            QuickTask(
-                title: "Ver serie",
-                icon: "tv.fill",
-                defaultHour: 21,
-                defaultMinute: 30,
-                defaultNotes: "Ver mi serie favorita (1h)",
-                defaultPriority: .low,
-                color: Color(hex: "#A855F7")
-            ),
-            QuickTask(
-                title: "Responder email",
-                icon: "envelope.fill",
-                defaultHour: 9,
-                defaultMinute: 0,
-                defaultNotes: "Revisar bandeja de entrada",
-                defaultPriority: .medium,
-                color: Color(hex: "#3B82F6")
-            ),
-            QuickTask(
-                title: "Cita médica",
-                icon: "cross.case.fill",
-                defaultHour: 11,
-                defaultMinute: 0,
-                defaultNotes: "Consulta médica de control",
-                defaultPriority: .must,
-                color: Color(hex: "#EF4444")
-            ),
-            QuickTask(
-                title: "Pasar ITV",
-                icon: "car.fill",
-                defaultHour: 10,
-                defaultMinute: 0,
-                defaultNotes: "Pasar la inspección técnica del coche",
-                defaultPriority: .high,
-                color: Color(hex: "#F59E0B")
-            ),
-            QuickTask(
-                title: "Hacer compra",
-                icon: "cart.fill",
-                defaultHour: 17,
-                defaultMinute: 30,
-                defaultNotes: "Supermercado (comida semanal)",
-                defaultPriority: .low,
-                color: Color(hex: "#10B981")
-            ),
-            QuickTask(
-                title: "Llamada trabajo",
-                icon: "phone.fill",
-                defaultHour: 15,
-                defaultMinute: 0,
-                defaultNotes: "Reunión rápida de seguimiento",
-                defaultPriority: .high,
-                color: Color(hex: "#06B6D4")
-            )
-        ]
-    }
+    
+    // MARK: - Notifications
+    @State private var showNotificationAlert: Bool = false
 
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            ZStack {
-                // Background Liquid Glass dynamic gradient
-                liquidGlassBackdrop
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        
-                        // ── Predetermined tasks (only when creating new task)
-                        if editingTask == nil {
-                            quickAddSection
-                        }
-
-                        // ── Title field
-                        titleSection
-
-                        // ── Priority picker
-                        prioritySection
-
-                        // ── Date strip horizontal
-                        dateSection
-
-                        // ── Time toggle + compact picker
-                        timeSection
-
-                        // ── Recurrence
-                        recurrenceSection
-
-                        // ── Notes
-                        notesSection
-
-                        // ── Delete button (edit mode only)
-                        if editingTask != nil {
-                            deleteSection
-                        }
+                    // ── Quick suggestions (solo modo crear)
+                    if editingTask == nil {
+                        quickSuggestions
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    .padding(.bottom, 32)
+
+                    // ── Title
+                    titleField
+
+                    // ── Priority
+                    prioritySelector
+
+                    // ── Date
+                    dateStrip
+
+                    // ── Time
+                    timeRow
+
+                    // ── Recurrence
+                    recurrenceRow
+
+                    // ── Notes
+                    notesField
+
+                    // ── Delete (edit mode)
+                    if editingTask != nil {
+                        deleteButton
+                    }
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 40)
             }
+            .background(Color(hex: "#0C0C0E"))
             .navigationTitle(editingTask == nil ? "Nueva Tarea" : "Editar Tarea")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color(hex: "#0C0C0E"), for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") { dismiss() }
-                        .font(.body.weight(.medium))
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(editingTask == nil ? "Añadir" : "Guardar") {
-                        save()
-                    }
-                    .font(.body.weight(.bold))
-                    .foregroundStyle(title.trimmingCharacters(in: .whitespaces).isEmpty
-                        ? Color.white.opacity(0.3)
-                        : Color.pareGreen)
-                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                    Button(editingTask == nil ? "Añadir" : "Guardar") { save() }
+                        .fontWeight(.semibold)
+                        .foregroundStyle(
+                            title.trimmingCharacters(in: .whitespaces).isEmpty
+                            ? Color(hex: "#48484A")
+                            : Color.pareGreen
+                        )
+                        .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
-            .toolbarBackground(.hidden, for: .navigationBar)
+            // ── Alerta de Notificaciones
+            .alert("Activar notificaciones", isPresented: $showNotificationAlert) {
+                Button("Ahora no", role: .cancel) { }
+                Button("Permitir") {
+                    Task {
+                        // Llamamos a tu servicio a través del ViewModel
+                        await dayVM.notificationService.requestPermission()
+                    }
+                }
+            } message: {
+                Text("¿Quieres recibir un aviso en tu dispositivo cuando llegue la hora de esta tarea?")
+            }
         }
         .onAppear {
             titleFocused = true
             if let task = editingTask { populate(from: task) }
-            
-            withAnimation(.easeInOut(duration: 8.0).repeatForever(autoreverses: true)) {
-                animateGlows = true
-            }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
-        .presentationCornerRadius(20)
+        .presentationCornerRadius(28)
+        .preferredColorScheme(.dark)
     }
 
-    // MARK: - Liquid Glass Backdrop
-    private var liquidGlassBackdrop: some View {
-        ZStack {
-            Color.pareBackground
-                .ignoresSafeArea()
+    // MARK: - Quick suggestions
 
-            GeometryReader { geo in
-                ZStack {
-                    // Circle 1: Pare Green
-                    Circle()
-                        .fill(RadialGradient(
-                            colors: [Color.pareGreen.opacity(0.22), Color.clear],
-                            center: .center,
-                            startRadius: 0,
-                            endRadius: 200
-                        ))
-                        .frame(width: 400, height: 400)
-                        .position(
-                            x: animateGlows ? geo.size.width * 0.15 : geo.size.width * 0.4,
-                            y: animateGlows ? geo.size.height * 0.35 : geo.size.height * 0.15
-                        )
+    private var quickSuggestions: some View {
+        let suggestions = dayVM.suggestions.prefix(4)
+        guard !suggestions.isEmpty else { return AnyView(EmptyView()) }
 
-                    // Circle 2: Blue Glow
-                    Circle()
-                        .fill(RadialGradient(
-                            colors: [Color(hex: "#007AFF").opacity(0.22), Color.clear],
-                            center: .center,
-                            startRadius: 0,
-                            endRadius: 220
-                        ))
-                        .frame(width: 440, height: 440)
-                        .position(
-                            x: animateGlows ? geo.size.width * 0.85 : geo.size.width * 0.6,
-                            y: animateGlows ? geo.size.height * 0.45 : geo.size.height * 0.65
-                        )
+        return AnyView(
+            VStack(alignment: .leading, spacing: 10) {
+                sectionLabel("Sugerencias rápidas")
 
-                    // Circle 3: Purple Glow
-                    Circle()
-                        .fill(RadialGradient(
-                            colors: [Color(hex: "#A855F7").opacity(0.18), Color.clear],
-                            center: .center,
-                            startRadius: 0,
-                            endRadius: 180
-                        ))
-                        .frame(width: 360, height: 360)
-                        .position(
-                            x: animateGlows ? geo.size.width * 0.25 : geo.size.width * 0.5,
-                            y: animateGlows ? geo.size.height * 0.8 : geo.size.height * 0.7
-                        )
-                }
-            }
-            .blur(radius: 70)
-            .ignoresSafeArea()
-
-            Color.black.opacity(0.1)
-                .ignoresSafeArea()
-        }
-    }
-
-    // MARK: - Quick Add Section (Sugerencias)
-    private var quickAddSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("SUGERENCIAS RÁPIDAS")
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundStyle(Color(hex: "#AEAEB2"))
-                .padding(.horizontal, 4)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(quickTasks) { qTask in
-                        Button {
-                            selectQuickTask(qTask)
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: qTask.icon)
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 32, height: 32)
-                                    .background(
-                                        Circle()
-                                            .fill(qTask.color.opacity(0.25))
-                                    )
-                                    .overlay(
-                                        Circle()
-                                            .strokeBorder(qTask.color.opacity(0.5), lineWidth: 1)
-                                    )
-
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(qTask.title)
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(.white)
-
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "clock")
-                                            .font(.system(size: 9))
-                                        Text(String(format: "%02d:%02d", qTask.defaultHour, qTask.defaultMinute))
-                                            .font(.system(size: 9))
-                                        Text("•")
-                                        Text(qTask.defaultPriority.label)
-                                            .font(.system(size: 9))
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(Array(suggestions)) { task in
+                            Button {
+                                title = task.title
+                                priority = task.priority
+                                titleFocused = false
+                            } label: {
+                                HStack(spacing: 8) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color.priority(task.priority).opacity(0.15))
+                                            .frame(width: 28, height: 28)
+                                        Image(systemName: task.priority.iconName)
+                                            .font(.system(size: 12, weight: .semibold))
+                                            .foregroundStyle(Color.priority(task.priority))
                                     }
-                                    .foregroundStyle(Color(hex: "#AEAEB2"))
+
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(task.title)
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(.white)
+                                            .lineLimit(1)
+                                        if let time = task.scheduledTime {
+                                            HStack(spacing: 3) {
+                                                Image(systemName: "clock")
+                                                    .font(.system(size: 9))
+                                                Text(time.formatted(.dateTime.hour().minute()))
+                                                    .font(.system(size: 10))
+                                            }
+                                            .foregroundStyle(Color(hex: "#8E8E93"))
+                                        } else {
+                                            Text(task.priority.label)
+                                                .font(.system(size: 10))
+                                                .foregroundStyle(Color.priority(task.priority).opacity(0.8))
+                                        }
+                                    }
                                 }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .fill(Color(hex: "#1A1A1C"))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.5)
+                                        )
+                                )
                             }
-                            .padding(.leading, 10)
-                            .padding(.trailing, 14)
-                            .padding(.vertical, 10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color.white.opacity(0.05))
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(.ultraThinMaterial)
-                                    )
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .stroke(
-                                        LinearGradient(
-                                            colors: [.white.opacity(0.15), .white.opacity(0.03)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 1
-                                    )
-                            )
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(ScaleButtonStyle())
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.horizontal, 2)
+                .padding(.vertical, 2)
             }
-        }
-        .padding(.horizontal, 4)
+        )
     }
 
-    private func selectQuickTask(_ qTask: QuickTask) {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
+    // MARK: - Title field
 
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-            title = qTask.title
-            notes = qTask.defaultNotes
-            priority = qTask.defaultPriority
-            hasTime = true
-            scheduledTime = Calendar.current.date(
-                bySettingHour: qTask.defaultHour,
-                minute: qTask.defaultMinute,
-                second: 0,
-                of: scheduledDate
-            ) ?? Date()
-        }
-    }
-
-    // MARK: - Title section
-    private var titleSection: some View {
-        CardSection {
+    private var titleField: some View {
+        VStack(alignment: .leading, spacing: 0) {
             TextField("¿Qué necesitas hacer?", text: $title, axis: .vertical)
-                .font(.body)
-                .fontWeight(.semibold)
-                .focused($titleFocused)
-                .submitLabel(.done)
-                .lineLimit(1...3)
+                .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(.white)
+                .tint(Color.pareGreen)
+                .focused($titleFocused)
+                .lineLimit(1...3)
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(hex: "#1A1A1C"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(
+                                    title.isEmpty
+                                    ? Color(hex: "#2A2A2C")
+                                    : Color.pareGreen.opacity(0.4),
+                                    lineWidth: 1
+                                )
+                        )
+                )
         }
     }
 
-    // MARK: - Priority section
-    private var prioritySection: some View {
-        CardSection(header: "Prioridad") {
+    // MARK: - Priority selector
+
+    private var prioritySelector: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Prioridad")
+
             HStack(spacing: 8) {
                 ForEach(Priority.allCases, id: \.rawValue) { p in
-                    PriorityChip(priority: p, isSelected: priority == p) {
+                    Button {
                         withAnimation(.spring(duration: 0.2)) { priority = p }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: p.iconName)
+                                .font(.system(size: 13, weight: .semibold))
+                            Text(p.label)
+                                .font(.system(size: 13, weight: .semibold))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(
+                                    priority == p
+                                    ? Color.priority(p).opacity(0.18)
+                                    : Color(hex: "#1A1A1C")
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .strokeBorder(
+                                            priority == p
+                                            ? Color.priority(p).opacity(0.5)
+                                            : Color(hex: "#2A2A2C"),
+                                            lineWidth: 1
+                                        )
+                                )
+                        )
+                        .foregroundStyle(
+                            priority == p
+                            ? Color.priority(p)
+                            : Color(hex: "#8E8E93")
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }
     }
 
-    // MARK: - Date section — strip horizontal de días
-    private var dateSection: some View {
-        CardSection(header: "Fecha") {
+    // MARK: - Date strip
+
+    private var dateStrip: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Fecha")
+
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(nextDays(60), id: \.self) { day in
-                            DayChip(
-                                date: day,
-                                isSelected: Calendar.current.isDate(day, inSameDayAs: scheduledDate)
-                            ) {
-                                withAnimation(.spring(duration: 0.25)) {
-                                    scheduledDate = day
+                            let isSelected = Calendar.current.isDate(day, inSameDayAs: scheduledDate)
+                            let isToday    = Calendar.current.isDateInToday(day)
+                            let isTomorrow = Calendar.current.isDateInTomorrow(day)
+
+                            Button {
+                                withAnimation(.spring(duration: 0.25)) { scheduledDate = day }
+                            } label: {
+                                VStack(spacing: 4) {
+                                    Text(day.formatted(.dateTime.weekday(.narrow)))
+                                        .font(.system(size: 10, weight: .semibold))
+                                        .foregroundStyle(
+                                            isSelected ? .white.opacity(0.85) :
+                                            isToday ? Color.pareGreen :
+                                            Color(hex: "#48484A")
+                                        )
+
+                                    Text(day.formatted(.dateTime.day()))
+                                        .font(.system(size: 17, weight: .bold))
+                                        .foregroundStyle(
+                                            isSelected ? .white :
+                                            isToday ? Color.pareGreen :
+                                            Color(hex: "#8E8E93")
+                                        )
+
+                                    Group {
+                                        if isToday {
+                                            Text("Hoy")
+                                                .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
+                                        } else if isTomorrow {
+                                            Text("Mañana")
+                                                .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
+                                        } else {
+                                            Text(day.formatted(.dateTime.month(.abbreviated)))
+                                                .foregroundStyle(isSelected ? .white.opacity(0.7) : Color(hex: "#48484A"))
+                                        }
+                                    }
+                                    .font(.system(size: 9, weight: .semibold))
                                 }
+                                .frame(width: 46, height: 68)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .fill(
+                                            isSelected
+                                            ? Color.pareGreen
+                                            : isToday
+                                                ? Color.pareGreen.opacity(0.08)
+                                                : Color(hex: "#1A1A1C")
+                                        )
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .strokeBorder(
+                                                    isSelected ? Color.clear :
+                                                    isToday ? Color.pareGreen.opacity(0.3) :
+                                                    Color(hex: "#2A2A2C"),
+                                                    lineWidth: 0.8
+                                                )
+                                        )
+                                        .shadow(
+                                            color: isSelected ? Color.pareGreen.opacity(0.35) : .clear,
+                                            radius: 8, x: 0, y: 4
+                                        )
+                                )
                             }
+                            .buttonStyle(.plain)
                             .id(day)
                         }
                     }
@@ -400,90 +349,187 @@ struct AddTaskSheet: View {
         }
     }
 
-    // MARK: - Time section — compact picker
-    private var timeSection: some View {
-        CardSection(header: "Hora") {
-            Toggle(isOn: $hasTime.animation()) {
-                Label("Establecer hora", systemImage: "clock")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white)
-            }
-            .tint(Color.pareGreen)
+    // MARK: - Time row
 
-            if hasTime {
-                DatePicker(
-                    "",
-                    selection: $scheduledTime,
-                    displayedComponents: .hourAndMinute
-                )
-                .labelsHidden()
-                .datePickerStyle(.compact)
-                .tint(Color.pareGreen)
-                .colorScheme(.dark)
-                .transition(.move(edge: .top).combined(with: .opacity))
+    private var timeRow: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Hora")
+
+            VStack(spacing: 0) {
+                Button {
+                    withAnimation(.spring(duration: 0.3)) { hasTime.toggle() }
+                    
+                    // Comprobar permisos si se activa la hora
+                    if hasTime {
+                        checkNotificationStatus()
+                    }
+                } label: {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(hasTime ? Color.pareGreen.opacity(0.15) : Color(hex: "#2A2A2C"))
+                                .frame(width: 34, height: 34)
+                            Image(systemName: hasTime ? "clock.fill" : "clock")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(hasTime ? Color.pareGreen : Color(hex: "#8E8E93"))
+                        }
+
+                        Text(hasTime
+                             ? scheduledTime.formatted(.dateTime.hour().minute())
+                             : "Sin hora")
+                            .font(.subheadline)
+                            .fontWeight(hasTime ? .semibold : .regular)
+                            .foregroundStyle(hasTime ? .white : Color(hex: "#8E8E93"))
+
+                        Spacer()
+
+                        Image(systemName: hasTime ? "xmark.circle.fill" : "chevron.right")
+                            .foregroundStyle(Color(hex: "#48484A"))
+                            .font(.system(size: 14))
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 13)
+                }
+                .buttonStyle(.plain)
+
+                if hasTime {
+                    Divider()
+                        .background(Color(hex: "#2A2A2C"))
+                        .padding(.horizontal, 14)
+
+                    DatePicker("", selection: $scheduledTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .datePickerStyle(.compact)
+                        .tint(Color.pareGreen)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
             }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(hex: "#1A1A1C"))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.8)
+                    )
+            )
         }
     }
 
-    // MARK: - Recurrence section
-    private var recurrenceSection: some View {
-        CardSection(header: "Repetir") {
-            Toggle(isOn: $hasRecurrence.animation()) {
-                Label("Tarea recurrente", systemImage: "arrow.clockwise")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white)
-            }
-            .tint(Color.pareGreen)
+    // MARK: - Recurrence row
 
-            if hasRecurrence {
-                VStack(spacing: 0) {
-                    ForEach(recurrenceOptions, id: \.label) { option in
-                        Button {
-                            withAnimation { recurrence = option }
-                        } label: {
-                            HStack {
-                                Text(option.label)
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(.white)
-                                Spacer()
-                                if recurrence == option {
-                                    Image(systemName: "checkmark")
-                                        .foregroundStyle(Color.pareGreen)
-                                        .fontWeight(.semibold)
-                                        .font(.subheadline)
-                                }
-                            }
-                            .padding(.vertical, 13)
-                            .contentShape(Rectangle())
+    private var recurrenceRow: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Repetir")
+
+            VStack(spacing: 0) {
+                Button {
+                    withAnimation(.spring(duration: 0.3)) {
+                        hasRecurrence.toggle()
+                        showRecurrenceOptions = hasRecurrence
+                    }
+                } label: {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(hasRecurrence ? Color(hex: "#007AFF").opacity(0.15) : Color(hex: "#2A2A2C"))
+                                .frame(width: 34, height: 34)
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(hasRecurrence ? Color(hex: "#007AFF") : Color(hex: "#8E8E93"))
                         }
-                        .buttonStyle(.plain)
 
-                        if option.label != recurrenceOptions.last?.label {
-                            Divider()
-                                .background(Color.white.opacity(0.12))
+                        Text(hasRecurrence ? recurrence.label : "No se repite")
+                            .font(.subheadline)
+                            .fontWeight(hasRecurrence ? .semibold : .regular)
+                            .foregroundStyle(hasRecurrence ? .white : Color(hex: "#8E8E93"))
+
+                        Spacer()
+
+                        Image(systemName: showRecurrenceOptions ? "chevron.up" : "chevron.down")
+                            .foregroundStyle(Color(hex: "#48484A"))
+                            .font(.system(size: 12))
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 13)
+                }
+                .buttonStyle(.plain)
+
+                if showRecurrenceOptions {
+                    Divider()
+                        .background(Color(hex: "#2A2A2C"))
+                        .padding(.horizontal, 14)
+
+                    VStack(spacing: 0) {
+                        ForEach(recurrenceOptions, id: \.label) { option in
+                            Button {
+                                withAnimation { recurrence = option; hasRecurrence = true }
+                            } label: {
+                                HStack {
+                                    Text(option.label)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.white)
+                                    Spacer()
+                                    if recurrence == option && hasRecurrence {
+                                        Image(systemName: "checkmark")
+                                            .foregroundStyle(Color.pareGreen)
+                                            .fontWeight(.semibold)
+                                            .font(.subheadline)
+                                    }
+                                }
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.plain)
+
+                            if option.label != recurrenceOptions.last?.label {
+                                Divider()
+                                    .background(Color(hex: "#2A2A2C"))
+                                    .padding(.horizontal, 14)
+                            }
                         }
                     }
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
-                .transition(.move(edge: .top).combined(with: .opacity))
             }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(hex: "#1A1A1C"))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.8)
+                    )
+            )
         }
     }
 
-    // MARK: - Notes section
-    private var notesSection: some View {
-        CardSection(header: "Notas") {
+    // MARK: - Notes field
+
+    private var notesField: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Notas")
+
             TextField("Añade una nota...", text: $notes, axis: .vertical)
                 .font(.subheadline)
                 .foregroundStyle(.white)
+                .tint(Color.pareGreen)
                 .lineLimit(3...6)
+                .padding(14)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(hex: "#1A1A1C"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.8)
+                        )
+                )
         }
     }
 
-    // MARK: - Delete section
-    private var deleteSection: some View {
+    // MARK: - Delete button
+
+    private var deleteButton: some View {
         Button(role: .destructive) {
             if let task = editingTask {
                 dayVM.deleteTask(task)
@@ -492,29 +538,35 @@ struct AddTaskSheet: View {
         } label: {
             HStack {
                 Spacer()
-                Label("Eliminar Tarea", systemImage: "trash")
+                Label("Eliminar tarea", systemImage: "trash")
                     .fontWeight(.medium)
                 Spacer()
             }
             .padding(.vertical, 14)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.red.opacity(0.15))
-                    .background(
+                    .fill(Color.red.opacity(0.08))
+                    .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(.ultraThinMaterial)
+                            .strokeBorder(Color.red.opacity(0.2), lineWidth: 0.8)
                     )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
             )
             .foregroundStyle(.red)
         }
-        .buttonStyle(ScaleButtonStyle())
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Section label
+
+    private func sectionLabel(_ text: String) -> some View {
+        Text(text.uppercased())
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundStyle(Color(hex: "#48484A"))
+            .kerning(0.8)
     }
 
     // MARK: - Helpers
+
     private func nextDays(_ count: Int) -> [Date] {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
@@ -531,8 +583,20 @@ struct AddTaskSheet: View {
             .custom(intervalDays: 7)
         ]
     }
+    
+    // Función para revisar el estado sin pedir permisos obligatorios de inmediato
+    private func checkNotificationStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                if settings.authorizationStatus == .notDetermined {
+                    showNotificationAlert = true
+                }
+            }
+        }
+    }
 
-    // MARK: - Actions
+    // MARK: - Save
+
     private func save() {
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
@@ -546,11 +610,7 @@ struct AddTaskSheet: View {
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
             dayVM.reschedule(task, to: scheduledDate)
         } else {
-            let task = PareTask(
-                title: trimmed,
-                scheduledDate: scheduledDate,
-                priority: priority
-            )
+            let task = PareTask(title: trimmed, scheduledDate: scheduledDate, priority: priority)
             task.notes         = notes.isEmpty ? nil : notes
             task.scheduledTime = hasTime ? mergedDateTime() : nil
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
@@ -560,11 +620,11 @@ struct AddTaskSheet: View {
     }
 
     private func mergedDateTime() -> Date {
-        let cal = Calendar.current
-        let timeComps = cal.dateComponents([.hour, .minute], from: scheduledTime)
+        let cal   = Calendar.current
+        let comps = cal.dateComponents([.hour, .minute], from: scheduledTime)
         return cal.date(
-            bySettingHour: timeComps.hour   ?? 9,
-            minute:        timeComps.minute ?? 0,
+            bySettingHour: comps.hour ?? 9,
+            minute:        comps.minute ?? 0,
             second:        0,
             of:            scheduledDate
         ) ?? scheduledDate
@@ -576,11 +636,10 @@ struct AddTaskSheet: View {
         scheduledDate = task.scheduledDate
         priority      = task.priority
         if let time = task.scheduledTime {
-            hasTime       = true
+            hasTime = true
             scheduledTime = time
         }
-        if let raw = task.recurrenceRaw,
-           let rec = decodeRecurrence(raw) {
+        if let raw = task.recurrenceRaw, let rec = decodeRecurrence(raw) {
             hasRecurrence = true
             recurrence    = rec
         }
@@ -596,185 +655,39 @@ struct AddTaskSheet: View {
     }
 }
 
-// MARK: - ScaleButtonStyle
-struct ScaleButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
-            .animation(.spring(response: 0.15, dampingFraction: 0.6), value: configuration.isPressed)
-    }
-}
+// MARK: - Preview
 
-// MARK: - DayChip
-private struct DayChip: View {
-    let date: Date
-    let isSelected: Bool
-    let action: () -> Void
+#Preview("Nueva Tarea") {
+    let context = PareModelContainer.preview.mainContext
+    let vm = DayViewModel(
+        taskRepository: TaskRepository(context: context),
+        notificationService: NotificationService() // Utilizando tu servicio
+    )
 
-    private var cal: Calendar { Calendar.current }
-    private var isToday: Bool { cal.isDateInToday(date) }
-    private var isTomorrow: Bool { cal.isDateInTomorrow(date) }
+    let s1 = PareTask(title: "Ir al gym", scheduledDate: Date(), priority: .medium)
+    s1.scheduledTime = Calendar.current.date(bySettingHour: 18, minute: 0, second: 0, of: Date())
+    let s2 = PareTask(title: "Ver serie", scheduledDate: Date(), priority: .low)
+    s2.scheduledTime = Calendar.current.date(bySettingHour: 21, minute: 30, second: 0, of: Date())
+    [s1, s2].forEach { context.insert($0) }
+    vm.loadDay(for: Date())
 
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                Text(date.formatted(.dateTime.weekday(.narrow)))
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(isSelected ? .white.opacity(0.85) : Color(hex: "#AEAEB2"))
-
-                Text(date.formatted(.dateTime.day()))
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundStyle(isSelected ? .white : Color.white)
-
-                Group {
-                    if isToday {
-                        Text("Hoy")
-                            .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
-                    } else if isTomorrow {
-                        Text("Mañ.")
-                            .foregroundStyle(isSelected ? .white.opacity(0.85) : Color.pareGreen)
-                    } else {
-                        Text(date.formatted(.dateTime.month(.abbreviated)))
-                            .foregroundStyle(isSelected ? .white.opacity(0.8) : Color(hex: "#8E8E93"))
-                    }
-                }
-                .font(.system(size: 9, weight: .semibold))
-            }
-            .frame(width: 48, height: 68)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? Color.pareGreen : Color.white.opacity(0.05))
-            )
-            .background {
-                if !isSelected {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(.ultraThinMaterial)
-                }
-            }
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(
-                        isSelected ? Color.pareGreen.opacity(0.5) : Color.white.opacity(0.12),
-                        lineWidth: isSelected ? 1.5 : 1
-                    )
-            )
-            .shadow(
-                color: isSelected ? Color.pareGreen.opacity(0.3) : .clear,
-                radius: 6, x: 0, y: 3
-            )
-        }
-        .buttonStyle(ScaleButtonStyle())
-    }
-}
-
-// MARK: - CardSection
-private struct CardSection<Content: View>: View {
-    var header: String? = nil
-    @ViewBuilder var content: () -> Content
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            if let header {
-                Text(header.uppercased())
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color(hex: "#AEAEB2"))
-                    .padding(.horizontal, 4)
-                    .padding(.top, 4)
-            }
-            VStack(alignment: .leading, spacing: 12) {
-                content()
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, header == nil ? 18 : 14)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white.opacity(0.05))
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(.ultraThinMaterial)
-                    )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(
-                        LinearGradient(
-                            colors: [.white.opacity(0.15), .white.opacity(0.03)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 4)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-// MARK: - PriorityChip
-private struct PriorityChip: View {
-    let priority: Priority
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: priority.iconName)
-                    .font(.system(size: 13, weight: .semibold))
-                Text(priority.label)
-                    .font(.system(size: 13, weight: .semibold))
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .frame(minHeight: 44)
-            .background(
-                Capsule()
-                    .fill(isSelected ? Color.priority(priority).opacity(0.2) : Color.white.opacity(0.05))
-            )
-            .background {
-                if !isSelected {
-                    Capsule()
-                        .fill(.ultraThinMaterial)
-                }
-            }
-            .foregroundStyle(
-                isSelected ? Color.priority(priority) : Color(hex: "#AEAEB2")
-            )
-            .clipShape(Capsule())
-            .overlay(
-                Capsule()
-                    .strokeBorder(
-                        isSelected ? Color.priority(priority).opacity(0.5) : Color.white.opacity(0.12),
-                        lineWidth: 1.5
-                    )
-            )
-        }
-        .buttonStyle(ScaleButtonStyle())
-    }
-}
-
-// MARK: - Previews
-#Preview("Add Task") {
-    AddTaskSheet()
-        .environment(DayViewModel(
-            taskRepository: TaskRepository(context: PareModelContainer.preview.mainContext),
-            notificationService: NotificationService()
-        ))
+    return AddTaskSheet()
+        .environment(vm)
         .modelContainer(PareModelContainer.preview)
 }
 
-#Preview("Edit Task") {
+#Preview("Editar Tarea") {
     let context = PareModelContainer.preview.mainContext
     let task = PareTask(title: "Revisar propuesta Q3", scheduledDate: Date(), priority: .high)
     task.scheduledTime = Calendar.current.date(bySettingHour: 14, minute: 0, second: 0, of: Date())
+    task.notes = "Incluir métricas del Q2"
     context.insert(task)
+
+    let vm = DayViewModel(
+        taskRepository: TaskRepository(context: context),
+        notificationService: NotificationService() // Utilizando tu servicio
+    )
     return AddTaskSheet(editingTask: task)
-        .environment(DayViewModel(
-            taskRepository: TaskRepository(context: context),
-            notificationService: NotificationService()
-        ))
+        .environment(vm)
         .modelContainer(PareModelContainer.preview)
 }

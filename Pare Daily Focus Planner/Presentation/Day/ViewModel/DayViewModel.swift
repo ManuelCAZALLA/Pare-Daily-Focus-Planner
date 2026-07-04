@@ -5,7 +5,7 @@ import Foundation
 @MainActor
 final class DayViewModel {
     private let taskRepository: TaskRepositoryProtocol
-    private let notificationService: NotificationService
+    let notificationService: NotificationService
 
     var tasksToday: [PareTask] = []
     var selectedDate: Date = Date()
