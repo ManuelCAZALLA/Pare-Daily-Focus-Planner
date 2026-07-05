@@ -6,27 +6,27 @@ struct ContentView: View {
         TabView {
             DayView()
                 .tabItem {
-                    Label("Today", systemImage: "sun.max.fill")
+                    Label("Hoy", systemImage: "sun.max.fill")
                 }
 
             PomodoroView()
                 .tabItem {
-                    Label("Focus", systemImage: "timer")
+                    Label("Enfoque", systemImage: "timer")
                 }
 
             WeekView()
                 .tabItem {
-                    Label("Week", systemImage: "calendar")
+                    Label("Semana", systemImage: "calendar")
                 }
 
             StatsView()
                 .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
+                    Label("Estadísticas", systemImage: "chart.bar.fill")
                 }
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label("Ajustes", systemImage: "gearshape.fill")
                 }
         }
         .tint(Color.pareGreen)

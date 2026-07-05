@@ -3,9 +3,9 @@ import SwiftUI
 
 struct EmptyStateView: View {
     let systemImage: String
-    let title: String
-    var message: String? = nil
-    var actionTitle: String? = nil
+    let title: LocalizedStringKey
+    var message: LocalizedStringKey? = nil
+    var actionTitle: LocalizedStringKey? = nil
     var action: (() -> Void)? = nil
 
     var body: some View {
@@ -46,9 +46,9 @@ extension EmptyStateView {
     static func noTasksToday(action: @escaping () -> Void) -> EmptyStateView {
         EmptyStateView(
             systemImage: "checkmark.circle",
-            title: "Nothing planned",
-            message: "Add a task to focus on what matters today.",
-            actionTitle: "Add Task",
+            title: "Nada planeado",
+            message: "Añade una tarea para enfocarte en lo que importa hoy.",
+            actionTitle: "Añadir tarea",
             action: action
         )
     }
@@ -56,16 +56,16 @@ extension EmptyStateView {
     static func noWeekTasks() -> EmptyStateView {
         EmptyStateView(
             systemImage: "calendar",
-            title: "Week is open",
-            message: "Plan your week on Sunday, or drag tasks across days."
+            title: "Semana despejada",
+            message: "Planifica tu semana el domingo, o arrastra tareas entre días."
         )
     }
 
     static func noStats() -> EmptyStateView {
         EmptyStateView(
             systemImage: "chart.bar",
-            title: "No data yet",
-            message: "Complete a few tasks to see your progress."
+            title: "Sin datos aún",
+            message: "Completa algunas tareas para ver tu progreso."
         )
     }
 }

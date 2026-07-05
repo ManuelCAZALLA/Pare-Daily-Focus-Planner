@@ -54,9 +54,9 @@ final class PomodoroViewModel {
 
     var sessionLabel: String {
         switch currentSession {
-        case .focus:       return "Focus"
-        case .shortBreak:  return "Short Break"
-        case .longBreak:   return "Long Break"
+        case .focus:       return String(localized: "Focus")
+        case .shortBreak:  return String(localized: "Short Break")
+        case .longBreak:   return String(localized: "Long Break")
         }
     }
 
@@ -208,10 +208,17 @@ final class PomodoroViewModel {
 
     private func scheduleBackgroundNotification() {
         let content = UNMutableNotificationContent()
-        content.title = sessionLabel + " finished"
-        content.body  = currentSession == .focus
-            ? "Time for a break 🎉"
-            : "Back to focus 🎯"
+        switch currentSession {
+        case .focus:
+            content.title = String(localized: "Focus finished")
+            content.body  = String(localized: "Time for a break 🎉")
+        case .shortBreak:
+            content.title = String(localized: "Short Break finished")
+            content.body  = String(localized: "Back to focus 🎯")
+        case .longBreak:
+            content.title = String(localized: "Long Break finished")
+            content.body  = String(localized: "Back to focus 🎯")
+        }
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(

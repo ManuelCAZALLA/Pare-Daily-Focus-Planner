@@ -10,10 +10,10 @@ struct StatsView: View {
                 Image(systemName: "chart.bar.fill")
                     .font(.system(size: 48))
                     .foregroundStyle(Color.pareGreen.opacity(0.4))
-                Text("Stats")
+                Text("Estadísticas")
                     .font(.title3).fontWeight(.bold)
                     .foregroundStyle(.secondary)
-                Text("Coming soon")
+                Text("Próximamente")
                     .font(.subheadline)
                     .foregroundStyle(Color(hex: "#48484A"))
             }

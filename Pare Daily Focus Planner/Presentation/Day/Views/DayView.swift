@@ -237,7 +237,7 @@ struct DayView: View {
                         Rectangle()
                             .fill(Color(hex: "#2A2A2C"))
                             .frame(height: 0.5)
-                        Text("No time set")
+                        Text("Sin hora")
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(Color(hex: "#48484A"))
                             .kerning(0.8)
@@ -288,11 +288,11 @@ struct DayView: View {
             }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("From yesterday")
+                Text("De ayer")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
-                Text("\(dayVM.overdueFromYesterday.count) task\(dayVM.overdueFromYesterday.count > 1 ? "s" : "") moved")
+                Text("\(dayVM.overdueFromYesterday.count) tareas trasladadas")
                     .font(.caption)
                     .foregroundStyle(Color(hex: "#8E8E93"))
             }
@@ -328,11 +328,11 @@ struct DayView: View {
             }
 
             VStack(spacing: 6) {
-                Text("All clear")
+                Text("Todo despejado")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(Color(hex: "#8E8E93"))
-                Text("Tap + to plan your day")
+                Text("Toca + para planificar tu día")
                     .font(.subheadline)
                     .foregroundStyle(Color(hex: "#48484A"))
             }
@@ -364,9 +364,9 @@ struct DayView: View {
     private var greeting: String {
         let h = Calendar.current.component(.hour, from: Date())
         switch h {
-        case 0..<12:  return "Good morning"
-        case 12..<18: return "Good afternoon"
-        default:       return "Good evening"
+        case 0..<12:  return String(localized: "Buenos días")
+        case 12..<18: return String(localized: "Buenas tardes")
+        default:       return String(localized: "Buenas noches")
         }
     }
 
@@ -480,17 +480,17 @@ private struct ReschedulePicker: View {
                     .colorScheme(.dark)
                     .padding()
             }
-            .navigationTitle("Reschedule")
+            .navigationTitle("Reagendar")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(hex: "#0C0C0E"), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancelar") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Move") { onConfirm(selectedDate); dismiss() }
+                    Button("Mover") { onConfirm(selectedDate); dismiss() }
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.pareGreen)
                 }

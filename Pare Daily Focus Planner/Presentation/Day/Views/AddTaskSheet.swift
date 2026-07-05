@@ -559,7 +559,7 @@ struct AddTaskSheet: View {
     // MARK: - Section label
 
     private func sectionLabel(_ text: String) -> some View {
-        Text(text.uppercased())
+        Text(String(localized: String.LocalizationValue(text)).uppercased())
             .font(.system(size: 11, weight: .semibold))
             .foregroundStyle(Color(hex: "#48484A"))
             .kerning(0.8)

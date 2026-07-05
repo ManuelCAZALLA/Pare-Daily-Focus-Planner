@@ -10,21 +10,21 @@ enum Recurrence: Codable, Equatable, Hashable {
     var label: String {
         switch self {
         case .daily:
-            return "Every day"
+            return String(localized: "Cada día")
         case .weekly(let days) where days.count == 5:
-            return "Weekdays (Mon–Fri)"
+            return String(localized: "Días laborables (Lun–Vie)")
         case .weekly(let days) where days.count == 7:
-            return "Every day of the week"
+            return String(localized: "Todos los días de la semana")
         case .weekly(let days):
-            return "Weekly (\(days.count) days)"
+            return String(localized: "Semanalmente (\(days.count) días)")
         case .monthly(let day):
-            return "Monthly on day \(day)"
+            return String(localized: "Mensual el día \(day)")
         case .custom(let n) where n == 2:
-            return "Every 2 days"
+            return String(localized: "Cada 2 días")
         case .custom(let n) where n == 7:
-            return "Every week"
+            return String(localized: "Cada semana")
         case .custom(let n):
-            return "Every \(n) days"
+            return String(localized: "Cada \(n) días")
         }
     }
 }

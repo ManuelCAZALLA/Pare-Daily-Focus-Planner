@@ -7,6 +7,7 @@ struct TaskCard: View {
 
     let task: PareTask
     var style: Style = .standard
+    var onComplete: (() -> Void)? = nil   // ← callback para el check tappable
 
     enum Style {
         case standard
@@ -42,18 +43,16 @@ struct TaskCard: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Color.priority(task.priority))
             }
-            .opacity(task.isCompleted ? 0.5 : 1)
+            .opacity(task.isCompleted ? 0.4 : 1)
 
             // Contenido
             VStack(alignment: .leading, spacing: 5) {
-                // Título
                 Text(task.title)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(task.isCompleted ? Color(hex: "#48484A") : .white)
                     .strikethrough(task.isCompleted, color: Color(hex: "#48484A"))
                     .lineLimit(2)
 
-                // Meta row
                 HStack(spacing: 6) {
                     if let time = task.scheduledTime {
                         HStack(spacing: 3) {
@@ -62,14 +61,15 @@ struct TaskCard: View {
                             Text(time.formatted(.dateTime.hour().minute()))
                                 .font(.system(size: 11, weight: .semibold))
                         }
-                        .foregroundStyle(task.isCompleted ? Color(hex: "#48484A") : Color.pareGreen)
+                        .foregroundStyle(task.isCompleted
+                                         ? Color(hex: "#48484A")
+                                         : Color.pareGreen)
 
                         Circle()
                             .fill(Color(hex: "#3A3A3C"))
                             .frame(width: 3, height: 3)
                     }
 
-                    // Priority badge
                     HStack(spacing: 3) {
                         Circle()
                             .fill(Color.priority(task.priority))
@@ -82,7 +82,6 @@ struct TaskCard: View {
                                      : Color.priority(task.priority).opacity(0.85))
                 }
 
-                // Notas
                 if let notes = task.notes, !notes.isEmpty, !task.isCompleted {
                     Text(notes)
                         .font(.system(size: 12))
@@ -94,18 +93,21 @@ struct TaskCard: View {
 
             Spacer(minLength: 0)
 
-            // Check
-            CheckCircle(isCompleted: task.isCompleted, priority: task.priority)
+            // Check — tappable directamente
+            Button {
+                onComplete?()
+            } label: {
+                CheckCircle(isCompleted: task.isCompleted, priority: task.priority)
+            }
+            .buttonStyle(.plain)
+            .disabled(onComplete == nil)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 13)
         .background {
             RoundedRectangle(cornerRadius: 16)
-                .fill(task.isCompleted
-                      ? Color(hex: "#141416")
-                      : Color(hex: "#1C1C1E"))
+                .fill(task.isCompleted ? Color(hex: "#141416") : Color(hex: "#1C1C1E"))
                 .overlay {
-                    // Liquid Glass rim light — solo borde superior
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
@@ -133,7 +135,6 @@ struct TaskCard: View {
                         )
                 }
         }
-        // Barra de prioridad izquierda
         .overlay(alignment: .leading) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(
@@ -150,14 +151,13 @@ struct TaskCard: View {
                 .padding(.vertical, 14)
                 .opacity(task.isCompleted ? 0.3 : 1)
         }
-        .opacity(task.isCompleted ? 0.65 : 1)
+        .opacity(task.isCompleted ? 0.55 : 1)
     }
 
     // MARK: - Compact card
 
     private var compactCard: some View {
         HStack(spacing: 10) {
-            // Barra de prioridad
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.priority(task.priority))
                 .frame(width: 3, height: 28)
@@ -174,9 +174,7 @@ struct TaskCard: View {
             if let time = task.scheduledTime {
                 Text(time.formatted(.dateTime.hour().minute()))
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(task.isCompleted
-                                     ? Color(hex: "#48484A")
-                                     : Color(hex: "#8E8E93"))
+                    .foregroundStyle(task.isCompleted ? Color(hex: "#48484A") : Color(hex: "#8E8E93"))
             }
         }
         .padding(.horizontal, 12)
@@ -216,6 +214,7 @@ struct CheckCircle: View {
                 Image(systemName: "checkmark")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white)
+                    .transition(.scale.combined(with: .opacity))
             }
         }
         .frame(width: 44, height: 44)
@@ -224,7 +223,7 @@ struct CheckCircle: View {
     }
 }
 
-// MARK: - TaskRowView mejorado
+// MARK: - TaskRowView
 
 struct TaskRowView: View {
     let task: PareTask
@@ -234,14 +233,20 @@ struct TaskRowView: View {
     let onReschedule: () -> Void
     var onTap: (() -> Void)? = nil
 
+    @Environment(DayViewModel.self) private var dayVM
+
+    // Estado local para animación de salida
+    private var isCompleting: Bool {
+        dayVM.completingTaskIDs.contains(task.id)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            // Badge "From yesterday"
             if isOverdue {
                 HStack(spacing: 5) {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 9, weight: .bold))
-                    Text("From yesterday")
+                    Text("De ayer")
                         .font(.system(size: 10, weight: .semibold))
                 }
                 .foregroundStyle(.orange)
@@ -258,15 +263,19 @@ struct TaskRowView: View {
                 .padding(.leading, 4)
             }
 
-            TaskCard(task: task, style: style)
+            TaskCard(task: task, style: style, onComplete: onComplete)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap?() }
         }
+        // Animación de salida cuando se completa
+        .scaleEffect(isCompleting ? 0.94 : 1)
+        .opacity(isCompleting ? 0 : 1)
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isCompleting)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button {
                 onComplete()
             } label: {
-                Label("Done", systemImage: "checkmark.circle.fill")
+                Label("Hecho", systemImage: "checkmark.circle.fill")
             }
             .tint(Color.pareGreen)
         }
@@ -274,7 +283,7 @@ struct TaskRowView: View {
             Button {
                 onReschedule()
             } label: {
-                Label("Move", systemImage: "calendar.badge.clock")
+                Label("Mover", systemImage: "calendar.badge.clock")
             }
             .tint(Color(hex: "#007AFF"))
         }
@@ -302,36 +311,32 @@ extension Priority {
 
     let t1 = PareTask(title: "Enviar factura de mayo", scheduledDate: Date(), priority: .must)
     t1.scheduledTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
-    let t2 = PareTask(title: "Revisar propuesta Q3 con el equipo de ventas", scheduledDate: Date(), priority: .high)
+    let t2 = PareTask(title: "Revisar propuesta Q3 con el equipo", scheduledDate: Date(), priority: .high)
     t2.scheduledTime = Calendar.current.date(bySettingHour: 10, minute: 30, second: 0, of: Date())
     t2.notes = "Incluir métricas del trimestre anterior"
     let t3 = PareTask(title: "Responder emails pendientes", scheduledDate: Date(), priority: .medium)
     let t4 = PareTask(title: "Leer 20 páginas", scheduledDate: Date(), priority: .low)
-    t4.isCompleted = true
     [t1, t2, t3, t4].forEach { ctx.insert($0) }
+
+    let vm = DayViewModel(
+        taskRepository: TaskRepository(context: ctx),
+        notificationService: NotificationService()
+    )
+    vm.loadDay(for: Date())
 
     return ZStack {
         Color(hex: "#0C0C0E").ignoresSafeArea()
         ScrollView {
             VStack(spacing: 10) {
-                // Standard cards
-                TaskRowView(task: t1, onComplete: {}, onReschedule: {})
-                TaskRowView(task: t2, onComplete: {}, onReschedule: {})
-                TaskRowView(task: t3, isOverdue: true, onComplete: {}, onReschedule: {})
-                TaskRowView(task: t4, onComplete: {}, onReschedule: {})
-
-                Divider()
-                    .background(Color(hex: "#2A2A2C"))
-                    .padding(.vertical, 4)
-
-                // Compact cards
-                TaskCard(task: t1, style: .compact)
-                TaskCard(task: t2, style: .compact)
-                TaskCard(task: t4, style: .compact)
+                TaskRowView(task: t1, onComplete: { vm.complete(t1) }, onReschedule: {})
+                TaskRowView(task: t2, onComplete: { vm.complete(t2) }, onReschedule: {})
+                TaskRowView(task: t3, isOverdue: true, onComplete: { vm.complete(t3) }, onReschedule: {})
+                TaskRowView(task: t4, onComplete: { vm.complete(t4) }, onReschedule: {})
             }
             .padding()
         }
     }
+    .environment(vm)
     .modelContainer(container)
     .preferredColorScheme(.dark)
 }

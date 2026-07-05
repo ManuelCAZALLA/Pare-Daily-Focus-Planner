@@ -128,7 +128,7 @@ struct PomodoroView: View {
                     Image(systemName: "plus.circle")
                         .font(.subheadline)
                         .foregroundStyle(Color(hex: "#8E8E93"))
-                    Text("Select a task")
+                    Text("Selecciona una tarea")
                         .font(.subheadline)
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
@@ -320,7 +320,7 @@ struct PomodoroView: View {
             ConfigItem(
                 icon: "🍅",
                 value: "\(vm.focusDuration) min",
-                label: "Focus",
+                label: "Enfoque",
                 options: [15, 20, 25, 30, 45, 60],
                 current: vm.focusDuration
             ) { vm.setFocusDuration($0) }
@@ -330,7 +330,7 @@ struct PomodoroView: View {
             ConfigItem(
                 icon: "☕",
                 value: "\(vm.shortBreakDuration) min",
-                label: "Break",
+                label: "Descanso",
                 options: [3, 5, 10, 15],
                 current: vm.shortBreakDuration
             ) { vm.setShortBreak($0) }
@@ -340,7 +340,7 @@ struct PomodoroView: View {
             ConfigItem(
                 icon: "🔁",
                 value: "\(vm.sessionsPerRound)x",
-                label: "Rounds",
+                label: "Rondas",
                 options: [2, 3, 4, 6],
                 current: vm.sessionsPerRound
             ) { vm.setSessionsPerRound($0) }
@@ -385,9 +385,9 @@ struct PomodoroView: View {
 
     private var statsStrip: some View {
         HStack(spacing: 20) {
-            StatChip(icon: "🍅", value: "\(vm.totalSessionsToday)", label: "today")
+            StatChip(icon: "🍅", value: "\(vm.totalSessionsToday)", label: "hoy")
             StatChip(icon: "⏱", value: formatFocusTime(vm.totalFocusTimeToday), label: "focus")
-            StatChip(icon: "🔥", value: "\(vm.focusStreakDays)", label: "days")
+            StatChip(icon: "🔥", value: "\(vm.focusStreakDays)", label: "días")
         }
         .frame(maxWidth: .infinity)
     }
@@ -473,6 +473,15 @@ private struct ConfigItem: View {
 
     @State private var showPicker = false
 
+    private var dialogTitle: String {
+        switch label {
+        case "Enfoque": return String(localized: "Ajustar enfoque")
+        case "Descanso": return String(localized: "Ajustar descanso")
+        case "Rondas": return String(localized: "Ajustar rondas")
+        default: return "Ajustar \(label)"
+        }
+    }
+
     var body: some View {
         Button {
             withAnimation(.spring(duration: 0.3)) {
@@ -485,20 +494,20 @@ private struct ConfigItem: View {
                 Text(value)
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(.white)
-                Text(label)
+                Text(LocalizedStringKey(label))
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(Color(hex: "#8E8E93"))
             }
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
-        .confirmationDialog("Set \(label)", isPresented: $showPicker) {
+        .confirmationDialog(dialogTitle, isPresented: $showPicker) {
             ForEach(options, id: \.self) { opt in
-                Button("\(opt) \(label == "Rounds" ? "rounds" : "min")") {
+                Button(label == "Rondas" ? String(localized: "\(opt) rondas") : String(localized: "\(opt) min")) {
                     onChange(opt)
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "Cancelar"), role: .cancel) {}
         }
     }
 }
@@ -508,7 +517,7 @@ private struct ConfigItem: View {
 private struct StatChip: View {
     let icon: String
     let value: String
-    let label: String
+    let label: LocalizedStringKey
 
     var body: some View {
         HStack(spacing: 4) {
@@ -541,7 +550,7 @@ struct TaskPickerSheet: View {
                         Image(systemName: "tray")
                             .font(.system(size: 40))
                             .foregroundStyle(Color(hex: "#48484A"))
-                        Text("No tasks today")
+                        Text("No hay tareas hoy")
                             .font(.subheadline)
                             .foregroundStyle(Color(hex: "#8E8E93"))
                     }
@@ -590,13 +599,13 @@ struct TaskPickerSheet: View {
                     .scrollContentBackground(.hidden)
                 }
             }
-            .navigationTitle("Focus on...")
+            .navigationTitle("Enfocar en...")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(hex: "#0C0C0E"), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("None") {
+                    Button("Ninguno") {
                         selectedTask = nil
                         dismiss()
                     }

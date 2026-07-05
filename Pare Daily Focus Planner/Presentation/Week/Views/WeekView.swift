@@ -10,10 +10,10 @@ struct WeekView: View {
                 Image(systemName: "calendar")
                     .font(.system(size: 48))
                     .foregroundStyle(Color.pareGreen.opacity(0.4))
-                Text("Week view")
+                Text("Vista semanal")
                     .font(.title3).fontWeight(.bold)
                     .foregroundStyle(.secondary)
-                Text("Coming soon")
+                Text("Próximamente")
                     .font(.subheadline)
                     .foregroundStyle(Color(hex: "#48484A"))
             }

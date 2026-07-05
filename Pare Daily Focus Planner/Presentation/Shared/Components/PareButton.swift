@@ -8,7 +8,7 @@ struct PareButton: View {
         case destructive
     }
 
-    let title: String
+    let title: LocalizedStringKey
     var systemImage: String? = nil
     var style: Style = .primary
     var isFullWidth: Bool = true
@@ -44,7 +44,7 @@ struct PareFAB: View {
                 .background(Color.pareGreen, in: Circle())
                 .shadow(color: Color.pareGreen.opacity(0.35), radius: 8, y: 4)
         }
-        .accessibilityLabel("Add task")
+        .accessibilityLabel("Añadir tarea")
     }
 }
 

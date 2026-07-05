@@ -9,10 +9,10 @@ enum Priority: Int, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .low:    return "Baja"
-        case .medium: return "Media"
-        case .high:   return "Alta"
-        case .must:   return "Imprescindible"
+        case .low:    return String(localized: "Baja")
+        case .medium: return String(localized: "Media")
+        case .high:   return String(localized: "Alta")
+        case .must:   return String(localized: "Imprescindible")
         }
     }
 }

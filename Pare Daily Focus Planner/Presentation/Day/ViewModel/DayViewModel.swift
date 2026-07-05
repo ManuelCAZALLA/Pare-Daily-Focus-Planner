@@ -13,6 +13,9 @@ final class DayViewModel {
     var overdueFromYesterday: [PareTask] = []
     var suggestions: [PareTask] = []
 
+    // IDs de tareas completándose — para animación de salida
+    var completingTaskIDs: Set<UUID> = []
+
     init(
         taskRepository: TaskRepositoryProtocol,
         notificationService: NotificationService
@@ -37,19 +40,27 @@ final class DayViewModel {
 
         let pending = taskRepository.allPending()
         suggestions = SmartScheduler.suggestions(from: pending, for: selectedDate)
-
         streak = calculateStreak()
     }
 
+    // MARK: - Complete con animación de salida
+
     func complete(_ task: PareTask) {
-        notificationService.cancel(for: task)
-        try? taskRepository.complete(task)
-        loadDay(for: selectedDate)
+        // 1. Marcar como "completándose" para animación
+        completingTaskIDs.insert(task.id)
+
+        // 2. Esperar la animación de salida (0.35s) y luego persistir + recargar
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(350))
+            self.completingTaskIDs.remove(task.id)
+            self.notificationService.cancel(for: task)
+            try? self.taskRepository.complete(task)
+            self.loadDay(for: self.selectedDate)
+        }
     }
 
     func reschedule(_ task: PareTask, to date: Date) {
         notificationService.cancel(for: task)
-
         let calendar = Calendar.current
         let dayStart = calendar.startOfDay(for: date)
         task.scheduledDate = dayStart
@@ -109,33 +120,23 @@ final class DayViewModel {
 
         for _ in 0..<365 {
             switch streakStatus(for: date) {
-            case .passed:
-                count += 1
-            case .skipped:
-                break
-            case .failed:
-                return count
+            case .passed:  count += 1
+            case .skipped: break
+            case .failed:  return count
             }
-
             guard let previous = calendar.date(byAdding: .day, value: -1, to: date) else {
                 return count
             }
             date = previous
         }
-
         return count
     }
 
-    private enum StreakStatus {
-        case passed
-        case skipped
-        case failed
-    }
+    private enum StreakStatus { case passed, skipped, failed }
 
     private func streakStatus(for date: Date) -> StreakStatus {
         let focus = taskRepository.tasks(for: date)
             .filter { $0.priority == .must || $0.priority == .high }
-
         if focus.isEmpty { return .skipped }
         return focus.allSatisfy(\.isCompleted) ? .passed : .failed
     }
