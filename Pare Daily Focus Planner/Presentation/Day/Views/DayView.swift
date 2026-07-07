@@ -13,18 +13,30 @@ struct DayView: View {
     @State private var showRescheduleFor: PareTask? = nil
     @State private var rescheduleDate    = Date()
     @State private var selectedDate      = Date()
+    
+    // Navegación entre semanas
+    @State private var weekOffset: Int   = 0
 
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Color(hex: "#0C0C0E").ignoresSafeArea()
+            // Fondo moderno con ligero degradado
+            LinearGradient(
+                colors: [Color(hex: "#1A1B20"), Color(hex: "#0C0C0E")],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 headerView
+                
                 weekStrip
-                    .padding(.bottom, 4)
+                    .frame(height: 75)
+                    .padding(.bottom, 8)
+                
                 Divider()
-                    .background(Color(hex: "#2A2A2C"))
+                    .background(Color.white.opacity(0.1))
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(spacing: 0) {
@@ -61,142 +73,156 @@ struct DayView: View {
     // MARK: - Header
 
     private var headerView: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
-                // Saludo
-                Text(greeting)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(Color(hex: "#8E8E93"))
-                    .textCase(.uppercase)
-                    .kerning(0.8)
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 4) {
+                // Saludo y Streak integrados
+                HStack(spacing: 8) {
+                    Text(greeting)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Color(hex: "#8E8E93"))
+                        .textCase(.uppercase)
+                        .kerning(1.2)
+                    
+                    if dayVM.streak > 0 {
+                        HStack(spacing: 4) {
+                            Text("🔥")
+                                .font(.system(size: 10))
+                            Text("\(dayVM.streak)")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(Color.orange)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.15), in: Capsule())
+                    }
+                }
 
                 // Fecha grande
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(selectedDate.formatted(.dateTime.day().month(.wide)))
-                        .font(.system(size: 30, weight: .heavy))
+                        .font(.system(size: 32, weight: .heavy))
                         .foregroundStyle(.white)
 
                     Text(selectedDate.formatted(.dateTime.year()))
-                        .font(.system(size: 30, weight: .heavy))
+                        .font(.system(size: 32, weight: .heavy))
                         .foregroundStyle(Color.pareGreen)
                 }
             }
 
             Spacer()
 
-            // Progress badge
-            let done  = dayVM.tasksToday.filter(\.isCompleted).count
+            // Progress badge (Solo se muestra si hay tareas)
             let total = dayVM.tasksToday.count
+            let done  = dayVM.tasksToday.filter(\.isCompleted).count
 
-            VStack(alignment: .trailing, spacing: 2) {
-                if total > 0 {
-                    ZStack {
-                        Circle()
-                            .stroke(Color(hex: "#2A2A2C"), lineWidth: 3)
-                            .frame(width: 52, height: 52)
+            if total > 0 {
+                ZStack {
+                    Circle()
+                        .stroke(Color.white.opacity(0.1), lineWidth: 4)
+                        .frame(width: 54, height: 54)
 
-                        Circle()
-                            .trim(from: 0, to: total > 0 ? Double(done) / Double(total) : 0)
-                            .stroke(Color.pareGreen, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                            .rotationEffect(.degrees(-90))
-                            .frame(width: 52, height: 52)
-                            .animation(.spring(duration: 0.5), value: done)
+                    Circle()
+                        .trim(from: 0, to: Double(done) / Double(total))
+                        .stroke(
+                            AngularGradient(
+                                gradient: Gradient(colors: [Color.pareGreen.opacity(0.6), Color.pareGreen]),
+                                center: .center,
+                                startAngle: .degrees(-90),
+                                endAngle: .degrees(270)
+                            ),
+                            style: StrokeStyle(lineWidth: 4, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(-90))
+                        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: done)
 
-                        VStack(spacing: 0) {
-                            Text("\(done)")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundStyle(done == total && total > 0 ? Color.pareGreen : .white)
-                            Text("/\(total)")
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundStyle(Color(hex: "#8E8E93"))
-                        }
-                    }
-                } else {
-                    ZStack {
-                        Circle()
-                            .stroke(Color(hex: "#2A2A2C"), lineWidth: 3)
-                            .frame(width: 52, height: 52)
-                        Text("0")
+                    VStack(spacing: -2) {
+                        Text("\(done)")
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(Color(hex: "#48484A"))
-                    }
-                }
-
-                if dayVM.streak > 0 {
-                    HStack(spacing: 3) {
-                        Text("🔥")
-                            .font(.system(size: 11))
-                        Text("\(dayVM.streak)")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(Color(hex: "#FF9500"))
+                            .foregroundStyle(done == total ? Color.pareGreen : .white)
+                        Text("/\(total)")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(Color(hex: "#8E8E93"))
                     }
                 }
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 16)
-        .padding(.bottom, 14)
+        .padding(.bottom, 16)
     }
 
-    // MARK: - Week strip
+    // MARK: - Week strip (Navegable)
 
     private var weekStrip: some View {
-        let days = currentWeekDays()
-        return ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4) {
-                ForEach(days, id: \.self) { day in
-                    let isSelected = Calendar.current.isDate(day, inSameDayAs: selectedDate)
-                    let isToday    = Calendar.current.isDateInToday(day)
-                    let hasTask    = !dayVM.tasksToday.isEmpty && Calendar.current.isDate(day, inSameDayAs: selectedDate)
+        // TabView permite hacer swipe infinito entre semanas
+        TabView(selection: $weekOffset) {
+            ForEach(-50...50, id: \.self) { offset in
+                weekView(for: offset)
+                    .tag(offset)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+    }
+    
+    private func weekView(for offset: Int) -> some View {
+        let days = weekDays(for: offset)
+        return HStack(spacing: 8) {
+            ForEach(days, id: \.self) { day in
+                let isSelected = Calendar.current.isDate(day, inSameDayAs: selectedDate)
+                let isToday    = Calendar.current.isDateInToday(day)
+                let hasTask    = !dayVM.tasksToday.isEmpty && Calendar.current.isDate(day, inSameDayAs: selectedDate)
 
-                    Button {
-                        withAnimation(.spring(duration: 0.25)) { selectedDate = day }
-                    } label: {
-                        VStack(spacing: 6) {
-                            Text(day.formatted(.dateTime.weekday(.narrow)))
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundStyle(
-                                    isSelected ? Color.pareGreen :
-                                    isToday ? Color(hex: "#8E8E93") :
-                                    Color(hex: "#48484A")
+                Button {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                        selectedDate = day
+                    }
+                } label: {
+                    VStack(spacing: 8) {
+                        Text(day.formatted(.dateTime.weekday(.narrow)))
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(
+                                isSelected ? (isToday ? Color.pareGreen : .white) :
+                                isToday ? Color.pareGreen.opacity(0.8) :
+                                Color(hex: "#636366")
+                            )
+
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    isSelected
+                                    ? (isToday ? Color.pareGreen : .white)
+                                    : (isToday ? Color.pareGreen.opacity(0.15) : Color.clear)
+                                )
+                                .frame(width: 40, height: 40)
+                                .overlay(
+                                    Circle()
+                                        .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+                                        .opacity(isSelected || isToday ? 0 : 1)
                                 )
 
-                            ZStack {
-                                // Fondo seleccionado
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(
-                                        isSelected
-                                        ? Color.pareGreen
-                                        : isToday
-                                            ? Color.pareGreen.opacity(0.12)
-                                            : Color(hex: "#1A1A1C")
+                            VStack(spacing: 2) {
+                                Text(day.formatted(.dateTime.day()))
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundStyle(
+                                        isSelected ? .black :
+                                        isToday ? Color.pareGreen :
+                                        Color.white
                                     )
-                                    .frame(width: 36, height: 42)
-
-                                VStack(spacing: 2) {
-                                    Text(day.formatted(.dateTime.day()))
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundStyle(
-                                            isSelected ? .white :
-                                            isToday ? Color.pareGreen :
-                                            Color(hex: "#8E8E93")
-                                        )
-                                    // Dot si tiene tareas
-                                    Circle()
-                                        .fill(isSelected ? .white.opacity(0.6) : Color.pareGreen)
-                                        .frame(width: 4, height: 4)
-                                        .opacity(hasTask ? 1 : 0)
-                                }
                             }
                         }
-                        .frame(minWidth: 44)
+                        
+                        // Dot si tiene tareas
+                        Circle()
+                            .fill(isSelected ? Color.pareGreen : Color.pareGreen.opacity(0.5))
+                            .frame(width: 4, height: 4)
+                            .opacity(hasTask ? 1 : 0)
                     }
-                    .buttonStyle(.plain)
                 }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 6)
         }
+        .padding(.horizontal, 16)
     }
 
     // MARK: - Timeline content
@@ -232,25 +258,21 @@ struct DayView: View {
             }
 
             if !untimedTasks.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     HStack {
+                        Text("SIN HORA")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(Color(hex: "#636366"))
+                            .kerning(1.2)
+                        
                         Rectangle()
-                            .fill(Color(hex: "#2A2A2C"))
-                            .frame(height: 0.5)
-                        Text("Sin hora")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(Color(hex: "#48484A"))
-                            .kerning(0.8)
-                            .textCase(.uppercase)
-                            .fixedSize()
-                        Rectangle()
-                            .fill(Color(hex: "#2A2A2C"))
-                            .frame(height: 0.5)
+                            .fill(Color.white.opacity(0.1))
+                            .frame(height: 1)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, timedTasks.isEmpty ? 24 : 28)
+                    .padding(.top, timedTasks.isEmpty ? 24 : 32)
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         ForEach(untimedTasks) { task in
                             TaskRowView(
                                 task: task,
@@ -277,68 +299,79 @@ struct DayView: View {
     // MARK: - Overdue banner
 
     private var overdueBanner: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(Color.orange.opacity(0.15))
-                    .frame(width: 36, height: 36)
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.orange)
+                    .fill(
+                        LinearGradient(colors: [.orange, .red], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .frame(width: 40, height: 40)
+                    .shadow(color: .orange.opacity(0.3), radius: 8, x: 0, y: 4)
+                
+                Image(systemName: "arrow.uturn.backward")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(.white)
             }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("De ayer")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(.white)
-                Text("\(dayVM.overdueFromYesterday.count) tareas trasladadas")
-                    .font(.caption)
+                Text("\(dayVM.overdueFromYesterday.count) tareas requieren tu atención")
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color(hex: "#8E8E93"))
             }
 
             Spacer()
 
             Image(systemName: "chevron.right")
-                .font(.system(size: 12))
-                .foregroundStyle(Color(hex: "#48484A"))
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color(hex: "#636366"))
         }
-        .padding(14)
+        .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.orange.opacity(0.07))
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(hex: "#1A1A1C"))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(Color.orange.opacity(0.18), lineWidth: 0.8)
+                    RoundedRectangle(cornerRadius: 20)
+                        .strokeBorder(Color.white.opacity(0.05), lineWidth: 1)
                 )
+                .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
         )
     }
 
     // MARK: - Empty state
 
     private var emptyState: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
             ZStack {
                 Circle()
-                    .fill(Color.pareGreen.opacity(0.08))
-                    .frame(width: 80, height: 80)
-                Image(systemName: "checkmark")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(Color.pareGreen.opacity(0.4))
+                    .fill(Color.pareGreen.opacity(0.1))
+                    .frame(width: 100, height: 100)
+                
+                Circle()
+                    .strokeBorder(Color.pareGreen.opacity(0.3), lineWidth: 2)
+                    .frame(width: 120, height: 120)
+                
+                Image(systemName: "sparkles")
+                    .font(.system(size: 40, weight: .regular))
+                    .foregroundStyle(Color.pareGreen)
             }
+            .padding(.bottom, 8)
 
-            VStack(spacing: 6) {
+            VStack(spacing: 8) {
                 Text("Todo despejado")
-                    .font(.title3)
+                    .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundStyle(Color(hex: "#8E8E93"))
-                Text("Toca + para planificar tu día")
+                    .foregroundStyle(.white)
+                Text("Es un buen momento para descansar\no planificar tu día.")
                     .font(.subheadline)
-                    .foregroundStyle(Color(hex: "#48484A"))
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 70)
+        .padding(.top, 90)
     }
 
     // MARK: - FAB
@@ -347,13 +380,19 @@ struct DayView: View {
         Button { showAddTask = true } label: {
             ZStack {
                 Circle()
-                    .fill(Color.pareGreen)
-                    .frame(width: 60, height: 60)
-                    .shadow(color: Color.pareGreen.opacity(0.5), radius: 18, x: 0, y: 8)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.pareGreen.opacity(0.8), Color.pareGreen],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 64, height: 64)
+                    .shadow(color: Color.pareGreen.opacity(0.4), radius: 15, x: 0, y: 8)
 
                 Image(systemName: "plus")
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundStyle(.white)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(.black)
             }
         }
         .buttonStyle(SpringButtonStyle())
@@ -370,12 +409,15 @@ struct DayView: View {
         }
     }
 
-    private func currentWeekDays() -> [Date] {
-        let cal   = Calendar(identifier: .iso8601)
-        let start = cal.date(from: cal.dateComponents(
-            [.yearForWeekOfYear, .weekOfYear], from: selectedDate
-        )) ?? selectedDate
-        return (0..<7).compactMap { cal.date(byAdding: .day, value: $0, to: start) }
+    private func weekDays(for offset: Int) -> [Date] {
+        let cal = Calendar.current
+        let startOfCurrentWeek = cal.date(from: cal.dateComponents(
+            [.yearForWeekOfYear, .weekOfYear], from: Date()
+        )) ?? Date()
+        
+        let startOfTargetWeek = cal.date(byAdding: .weekOfYear, value: offset, to: startOfCurrentWeek) ?? startOfCurrentWeek
+        
+        return (0..<7).compactMap { cal.date(byAdding: .day, value: $0, to: startOfTargetWeek) }
     }
 
     private func isCurrentTask(_ task: PareTask, in tasks: [PareTask]) -> Bool {
@@ -395,7 +437,7 @@ struct DayView: View {
 
 // MARK: - TimelineRow
 
-private struct TimelineRow: View {
+struct TimelineRow: View {
     let task: PareTask
     let isLast: Bool
     let isNow: Bool
@@ -452,7 +494,7 @@ private struct TimelineRow: View {
 
 // MARK: - SpringButtonStyle
 
-private struct SpringButtonStyle: ButtonStyle {
+struct SpringButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.92 : 1)
@@ -462,7 +504,7 @@ private struct SpringButtonStyle: ButtonStyle {
 
 // MARK: - ReschedulePicker
 
-private struct ReschedulePicker: View {
+struct ReschedulePicker: View {
     let task: PareTask
     @Binding var selectedDate: Date
     let onConfirm: (Date) -> Void
