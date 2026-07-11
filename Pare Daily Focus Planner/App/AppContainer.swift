@@ -5,7 +5,7 @@
 
 struct AppContainer {
     let dayViewModel: DayViewModel
-    let weekViewModel: WeekViewModel
+    let obligationsViewModel: ObligationsViewModel
     let notificationService: NotificationService
 }
 

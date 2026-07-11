@@ -14,14 +14,9 @@ struct ContentView: View {
                     Label("Enfoque", systemImage: "timer")
                 }
 
-            WeekView()
+            ObligationsView()
                 .tabItem {
-                    Label("Semana", systemImage: "calendar")
-                }
-
-            StatsView()
-                .tabItem {
-                    Label("Estadísticas", systemImage: "chart.bar.fill")
+                    Label("Trámites", systemImage: "doc.text.fill")
                 }
 
             SettingsView()

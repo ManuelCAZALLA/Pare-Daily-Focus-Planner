@@ -53,19 +53,13 @@ extension EmptyStateView {
         )
     }
 
-    static func noWeekTasks() -> EmptyStateView {
+    static func noObligations(action: @escaping () -> Void) -> EmptyStateView {
         EmptyStateView(
-            systemImage: "calendar",
-            title: "Semana despejada",
-            message: "Planifica tu semana el domingo, o arrastra tareas entre días."
-        )
-    }
-
-    static func noStats() -> EmptyStateView {
-        EmptyStateView(
-            systemImage: "chart.bar",
-            title: "Sin datos aún",
-            message: "Completa algunas tareas para ver tu progreso."
+            systemImage: "doc.text",
+            title: "Sin trámites registrados",
+            message: "Añade el primer trámite que quieras no olvidar.",
+            actionTitle: "Añadir trámite",
+            action: action
         )
     }
 }
@@ -75,7 +69,7 @@ extension EmptyStateView {
         .background(Color.pareBackground)
 }
 
-#Preview("Message only") {
-    EmptyStateView.noWeekTasks()
+#Preview("Obligations") {
+    EmptyStateView.noObligations {}
         .background(Color.pareBackground)
 }
