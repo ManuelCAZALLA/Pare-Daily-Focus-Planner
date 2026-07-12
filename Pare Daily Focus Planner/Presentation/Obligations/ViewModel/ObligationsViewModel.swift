@@ -21,14 +21,19 @@ enum ObligationUrgency: String, CaseIterable {
 @MainActor
 final class ObligationsViewModel {
     private let repository: ObligationRepositoryProtocol
+    private let notificationService: NotificationService?
 
     var categories: [LifeAdminCategory] = LifeAdminCategory.allCases
     var selectedCategory: LifeAdminCategory?
     var searchText: String = ""
     var savedObligations: [LifeObligation] = []
 
-    init(repository: ObligationRepositoryProtocol) {
+    init(
+        repository: ObligationRepositoryProtocol,
+        notificationService: NotificationService? = nil
+    ) {
         self.repository = repository
+        self.notificationService = notificationService
     }
 
     var registeredTemplates: [ObligationTemplate] {
@@ -63,26 +68,32 @@ final class ObligationsViewModel {
         holderName: String,
         expiryDate: Date?,
         actionStartDate: Date?,
+        alertOffset: ObligationAlertOffset?,
         notes: String,
-        location: String,
-        estimatedCost: String,
         documentsNeeded: String
     ) throws {
         let obligation = existing ?? LifeObligation(templateID: template.id)
+        notificationService?.cancel(for: obligation)
         obligation.holderName = holderName.nilIfEmpty
         obligation.expiryDate = expiryDate
         obligation.actionStartDate = actionStartDate
+        obligation.alertOffset = expiryDate == nil ? nil : alertOffset
         obligation.notes = notes.nilIfEmpty
-        obligation.location = location.nilIfEmpty
-        obligation.estimatedCost = estimatedCost.nilIfEmpty
         obligation.documentsNeeded = documentsNeeded.nilIfEmpty
+        try repository.save(obligation)
+        notificationService?.schedule(for: obligation, title: template.title)
         try repository.save(obligation)
         load()
     }
 
     func delete(_ obligation: LifeObligation) throws {
+        notificationService?.cancel(for: obligation)
         try repository.delete(obligation)
         load()
+    }
+
+    func requestNotificationPermission() async {
+        await notificationService?.requestPermission()
     }
 
     func smartContext(for template: ObligationTemplate) -> String {

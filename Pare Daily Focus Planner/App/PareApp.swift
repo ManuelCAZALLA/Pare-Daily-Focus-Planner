@@ -15,15 +15,20 @@ struct PareApp: App {
         let taskRepo = TaskRepository(context: context)
         let focusRepo = FocusSessionRepository(context: context)
         let obligationsRepo = ObligationRepository(context: context)
+        let notifications = NotificationService()
 
         _dayViewModel      = State(initialValue: DayViewModel(
             taskRepository: taskRepo,
-            notificationService: NotificationService()
+            notificationService: notifications
         ))
         _pomodoroViewModel = State(initialValue: PomodoroViewModel(
             repository: focusRepo
         ))
-        _obligationsViewModel = State(initialValue: ObligationsViewModel(repository: obligationsRepo))
+        _obligationsViewModel = State(initialValue: ObligationsViewModel(
+            repository: obligationsRepo,
+            notificationService: notifications
+        ))
+        _notificationService = State(initialValue: notifications)
     }
 
     var body: some Scene {

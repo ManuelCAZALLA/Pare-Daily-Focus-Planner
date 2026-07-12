@@ -56,7 +56,7 @@ struct DayView: View {
                 .padding(.bottom, 32)
         }
         .sheet(isPresented: $showAddTask) {
-            AddTaskSheet()
+            AddTaskSheet(initialScheduledDate: selectedDate)
         }
         .sheet(item: $taskToEdit) { task in
             AddTaskSheet(editingTask: task)
@@ -97,16 +97,16 @@ struct DayView: View {
                     }
                 }
 
-                // Fecha grande
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(selectedDate.formatted(.dateTime.day().month(.wide)))
-                        .font(.system(size: 32, weight: .heavy))
-                        .foregroundStyle(.white)
+                // Separar el año evita que el sistema trunque el mes en pantallas estrechas.
+                Text(selectedDate.formatted(.dateTime.day().month(.wide)))
+                    .font(.system(size: 28, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
 
-                    Text(selectedDate.formatted(.dateTime.year()))
-                        .font(.system(size: 32, weight: .heavy))
-                        .foregroundStyle(Color.pareGreen)
-                }
+                Text(selectedDate.formatted(.dateTime.year()))
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(Color.pareGreen)
             }
 
             Spacer()
@@ -345,17 +345,22 @@ struct DayView: View {
     private var emptyState: some View {
         VStack(spacing: 20) {
             ZStack {
-                Circle()
-                    .fill(Color.pareGreen.opacity(0.1))
-                    .frame(width: 100, height: 100)
+                // Glow effect (large and blurred)
+                Image("AppLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 96, height: 96)
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .blur(radius: 12)
+                    .opacity(0.45)
                 
-                Circle()
-                    .strokeBorder(Color.pareGreen.opacity(0.3), lineWidth: 2)
-                    .frame(width: 120, height: 120)
-                
-                Image(systemName: "sparkles")
-                    .font(.system(size: 40, weight: .regular))
-                    .foregroundStyle(Color.pareGreen)
+                // Blurred/Faded App Icon itself
+                Image("AppLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 96, height: 96)
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .opacity(0.7)
             }
             .padding(.bottom, 8)
 

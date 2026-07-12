@@ -13,11 +13,12 @@ struct AddTaskSheet: View {
     // MARK: - Form state
     @State private var title: String = ""
     @State private var notes: String = ""
-    @State private var scheduledDate: Date = Date()
+    @State private var scheduledDate: Date
     @State private var hasTime: Bool = false
     @State private var scheduledTime: Date = Calendar.current.date(
         bySettingHour: 9, minute: 0, second: 0, of: Date()
     ) ?? Date()
+    @State private var reminder: TaskAlertOffset? = .fiveMinutes
     @State private var priority: Priority = .medium
     @State private var hasRecurrence: Bool = false
     @State private var recurrence: Recurrence = .daily
@@ -25,6 +26,11 @@ struct AddTaskSheet: View {
 
     // MARK: - Edit mode
     var editingTask: PareTask? = nil
+
+    init(editingTask: PareTask? = nil, initialScheduledDate: Date = Date()) {
+        self.editingTask = editingTask
+        _scheduledDate = State(initialValue: editingTask?.scheduledDate ?? initialScheduledDate)
+    }
 
     // MARK: - Focus
     @FocusState private var titleFocused: Bool
@@ -54,6 +60,12 @@ struct AddTaskSheet: View {
 
                     // ── Time
                     timeRow
+
+                    // ── Reminder
+                    if hasTime {
+                        reminderRow
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                    }
 
                     // ── Recurrence
                     recurrenceRow
@@ -217,43 +229,47 @@ struct AddTaskSheet: View {
         VStack(alignment: .leading, spacing: 10) {
             sectionLabel("Prioridad")
 
-            HStack(spacing: 8) {
-                ForEach(Priority.allCases, id: \.rawValue) { p in
-                    Button {
-                        withAnimation(.spring(duration: 0.2)) { priority = p }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: p.iconName)
-                                .font(.system(size: 13, weight: .semibold))
-                            Text(p.label)
-                                .font(.system(size: 13, weight: .semibold))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Priority.allCases, id: \.rawValue) { p in
+                        Button {
+                            withAnimation(.spring(duration: 0.2)) { priority = p }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: p.iconName)
+                                    .font(.system(size: 13, weight: .semibold))
+                                Text(p.label)
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 14)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(
+                                        priority == p
+                                        ? Color.priority(p).opacity(0.18)
+                                        : Color(hex: "#1A1A1C")
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .strokeBorder(
+                                                priority == p
+                                                ? Color.priority(p).opacity(0.5)
+                                                : Color(hex: "#2A2A2C"),
+                                                lineWidth: 1
+                                            )
+                                    )
+                            )
+                            .foregroundStyle(
+                                priority == p
+                                ? Color.priority(p)
+                                : Color(hex: "#8E8E93")
+                            )
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(
-                                    priority == p
-                                    ? Color.priority(p).opacity(0.18)
-                                    : Color(hex: "#1A1A1C")
-                                )
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .strokeBorder(
-                                            priority == p
-                                            ? Color.priority(p).opacity(0.5)
-                                            : Color(hex: "#2A2A2C"),
-                                            lineWidth: 1
-                                        )
-                                )
-                        )
-                        .foregroundStyle(
-                            priority == p
-                            ? Color.priority(p)
-                            : Color(hex: "#8E8E93")
-                        )
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
@@ -306,6 +322,8 @@ struct AddTaskSheet: View {
                                         }
                                     }
                                     .font(.system(size: 9, weight: .semibold))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.75)
                                 }
                                 .frame(width: 46, height: 68)
                                 .background(
@@ -414,6 +432,66 @@ struct AddTaskSheet: View {
                             .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.8)
                     )
             )
+        }
+    }
+
+    // MARK: - Reminder
+
+    private var reminderRow: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Aviso")
+
+            Menu {
+                Button("Sin aviso") {
+                    reminder = nil
+                }
+
+                Divider()
+
+                ForEach(TaskAlertOffset.allCases) { offset in
+                    Button(offset.label) {
+                        reminder = offset
+                        checkNotificationStatus()
+                    }
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .fill(reminder == nil ? Color(hex: "#2A2A2C") : Color.pareGreen.opacity(0.15))
+                            .frame(width: 34, height: 34)
+                        Image(systemName: reminder == nil ? "bell.slash" : "bell.fill")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(reminder == nil ? Color(hex: "#8E8E93") : Color.pareGreen)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(reminder?.label ?? "Sin aviso")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(reminder == nil ? Color(hex: "#8E8E93") : .white)
+                            .lineLimit(1)
+                        Text("Se mostrará incluso con la app cerrada")
+                            .font(.caption)
+                            .foregroundStyle(Color(hex: "#8E8E93"))
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color(hex: "#48484A"))
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 13)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(hex: "#1A1A1C"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 0.8)
+                        )
+                )
+            }
         }
     }
 
@@ -606,6 +684,7 @@ struct AddTaskSheet: View {
             task.notes         = notes.isEmpty ? nil : notes
             task.scheduledDate = scheduledDate
             task.scheduledTime = hasTime ? mergedDateTime() : nil
+            task.alertOffset   = hasTime ? reminder : nil
             task.priority      = priority
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
             dayVM.reschedule(task, to: scheduledDate)
@@ -613,6 +692,7 @@ struct AddTaskSheet: View {
             let task = PareTask(title: trimmed, scheduledDate: scheduledDate, priority: priority)
             task.notes         = notes.isEmpty ? nil : notes
             task.scheduledTime = hasTime ? mergedDateTime() : nil
+            task.alertOffset   = hasTime ? reminder : nil
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
             dayVM.addTask(task)
         }
@@ -639,6 +719,7 @@ struct AddTaskSheet: View {
             hasTime = true
             scheduledTime = time
         }
+        reminder = task.alertOffset
         if let raw = task.recurrenceRaw, let rec = decodeRecurrence(raw) {
             hasRecurrence = true
             recurrence    = rec

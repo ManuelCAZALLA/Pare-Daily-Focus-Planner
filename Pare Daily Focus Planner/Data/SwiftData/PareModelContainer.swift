@@ -3,7 +3,7 @@ import SwiftData
 
 enum PareModelContainer {
     static let shared: ModelContainer = {
-        let schema = Schema([PareTask.self, WeekPlan.self])
+        let schema = Schema([PareTask.self, WeekPlan.self, LifeObligation.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
             return try ModelContainer(for: schema, configurations: [config])
@@ -14,7 +14,7 @@ enum PareModelContainer {
 
     /// Para previews y tests
     static let preview: ModelContainer = {
-        let schema = Schema([PareTask.self, WeekPlan.self])
+        let schema = Schema([PareTask.self, WeekPlan.self, LifeObligation.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try! ModelContainer(for: schema, configurations: [config])
     }()
