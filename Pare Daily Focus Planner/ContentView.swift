@@ -1,28 +1,39 @@
 // ContentView.swift
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    
     var body: some View {
         TabView {
-            DayView()
-                .tabItem {
-                    Label("Hoy", systemImage: "sun.max.fill")
-                }
+            NavigationStack {
+                DayView()
+            }
+            .tabItem {
+                Label("Hoy", systemImage: "sun.max.fill")
+            }
 
-            PomodoroView()
-                .tabItem {
-                    Label("Enfoque", systemImage: "timer")
-                }
+            NavigationStack {
+                RoutineView()
+            }
+            .tabItem {
+                Label("Rutina", systemImage: "moon.stars.fill")
+            }
 
-            ObligationsView()
-                .tabItem {
-                    Label("Trámites", systemImage: "doc.text.fill")
-                }
+            NavigationStack {
+                ObligationsView()
+            }
+            .tabItem {
+                Label("Trámites", systemImage: "doc.text.fill")
+            }
 
-            SettingsView()
-                .tabItem {
-                    Label("Ajustes", systemImage: "gearshape.fill")
-                }
+            NavigationStack {
+                SettingsView()
+            }
+            .tabItem {
+                Label("Ajustes", systemImage: "gearshape.fill")
+            }
         }
         .tint(Color.pareGreen)
         .preferredColorScheme(.dark)

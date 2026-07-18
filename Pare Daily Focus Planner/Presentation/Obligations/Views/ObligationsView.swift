@@ -76,13 +76,7 @@ struct ObligationsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Text("Adaptado a España")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Color.pareGreen)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.pareGreen.opacity(0.12), in: Capsule())
-
+            
             Button {
                 showSavedObligations = true
             } label: {
@@ -112,11 +106,12 @@ struct ObligationsView: View {
     private var featuresStrip: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                featureChip("Contexto inteligente", icon: "brain.head.profile")
-                featureChip("Plazo de acción", icon: "calendar.badge.clock")
-                featureChip("Avisos escalonados", icon: "bell.badge")
-                featureChip("Checklist del trámite", icon: "checklist")
-                featureChip("Perfiles familiares", icon: "person.3")
+                NavigationLink {
+                    FamilyProfilesView()
+                } label: {
+                    featureChip("Perfiles familiares", icon: "person.3")
+                }
+                .buttonStyle(.plain) 
             }
         }
     }

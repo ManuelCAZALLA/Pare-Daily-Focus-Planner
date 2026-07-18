@@ -6,14 +6,13 @@ import SwiftData
 struct PareApp: App {
 
     @State private var dayViewModel: DayViewModel
-    @State private var pomodoroViewModel: PomodoroViewModel
+    @State private var routineViewModel: RoutineViewModel
     @State private var obligationsViewModel: ObligationsViewModel
     @State private var notificationService = NotificationService()
 
     init() {
         let context  = PareModelContainer.shared.mainContext
         let taskRepo = TaskRepository(context: context)
-        let focusRepo = FocusSessionRepository(context: context)
         let obligationsRepo = ObligationRepository(context: context)
         let notifications = NotificationService()
 
@@ -21,8 +20,9 @@ struct PareApp: App {
             taskRepository: taskRepo,
             notificationService: notifications
         ))
-        _pomodoroViewModel = State(initialValue: PomodoroViewModel(
-            repository: focusRepo
+        _routineViewModel  = State(initialValue: RoutineViewModel(
+            context: context,
+            taskRepository: taskRepo
         ))
         _obligationsViewModel = State(initialValue: ObligationsViewModel(
             repository: obligationsRepo,
@@ -35,7 +35,7 @@ struct PareApp: App {
         WindowGroup {
             ContentView()
                 .environment(dayViewModel)
-                .environment(pomodoroViewModel)
+                .environment(routineViewModel)
                 .environment(obligationsViewModel)
                 .environment(notificationService)
         }

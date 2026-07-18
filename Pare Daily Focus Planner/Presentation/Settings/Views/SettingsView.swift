@@ -2,6 +2,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(NotificationService.self) private var notificationService
+    @Environment(RoutineViewModel.self) private var routineVM
+    @State private var viewModel = SettingsViewModel()
 
     var body: some View {
         ZStack {
@@ -11,8 +13,10 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     header
                     notificationsSection
+                    routineSection
                     planningSection
-                    privacySection
+                    supportSection
+                    legalSection
                     aboutSection
                 }
                 .padding(.horizontal, 16)
@@ -22,6 +26,8 @@ struct SettingsView: View {
         }
         .task { await notificationService.refreshAuthorizationStatus() }
     }
+
+    // MARK: - Sections
 
     private var header: some View {
         HStack(spacing: 14) {
@@ -38,6 +44,7 @@ struct SettingsView: View {
                 Text("Ajustes")
                     .font(.largeTitle.weight(.heavy))
                     .fontDesign(.rounded)
+                    .foregroundStyle(.white)
                 Text("Personaliza cómo te acompaña Pare")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -68,6 +75,80 @@ struct SettingsView: View {
         }
     }
 
+    private var routineSection: some View {
+        SettingsSection(title: "Rutina Diaria") {
+            // Morning Toggle + Hora
+            Toggle(isOn: Binding(
+                get: { routineVM.morningEnabled },
+                set: { routineVM.morningEnabled = $0 }
+            )) {
+                SettingsRow(
+                    icon: "sunrise.fill",
+                    title: "Rutina de mañana",
+                    detail: LocalizedStringKey(routineVM.morningEnabled ? String(format: "%02d:%02d", routineVM.morningHour, routineVM.morningMinute) : "Desactivada"),
+                    tint: Color(hex: "#FF9500"),
+                    showsChevron: false
+                )
+            }
+            .tint(Color(hex: "#FF9500"))
+            .padding(.vertical, 4)
+
+            if routineVM.morningEnabled {
+                Divider().overlay(Color.white.opacity(0.08))
+                HStack {
+                    Text("Hora")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                    Spacer()
+                    DatePicker("", selection: Binding(
+                        get: { routineVM.morningTime },
+                        set: { routineVM.morningTime = $0 }
+                    ), displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .colorScheme(.dark)
+                    .tint(Color(hex: "#FF9500"))
+                }
+                .padding(.vertical, 6)
+            }
+
+            Divider().overlay(Color.white.opacity(0.08))
+
+            // Evening Toggle + Hora
+            Toggle(isOn: Binding(
+                get: { routineVM.eveningEnabled },
+                set: { routineVM.eveningEnabled = $0 }
+            )) {
+                SettingsRow(
+                    icon: "moon.stars.fill",
+                    title: "Rutina de noche",
+                    detail: LocalizedStringKey(routineVM.eveningEnabled ? String(format: "%02d:%02d", routineVM.eveningHour, routineVM.eveningMinute) : "Desactivada"),
+                    tint: Color(hex: "#5E5CE6"),
+                    showsChevron: false
+                )
+            }
+            .tint(Color(hex: "#5E5CE6"))
+            .padding(.vertical, 4)
+
+            if routineVM.eveningEnabled {
+                Divider().overlay(Color.white.opacity(0.08))
+                HStack {
+                    Text("Hora")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                    Spacer()
+                    DatePicker("", selection: Binding(
+                        get: { routineVM.eveningTime },
+                        set: { routineVM.eveningTime = $0 }
+                    ), displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .colorScheme(.dark)
+                    .tint(Color(hex: "#5E5CE6"))
+                }
+                .padding(.vertical, 6)
+            }
+        }
+    }
+    
     private var planningSection: some View {
         SettingsSection(title: "Planificación") {
             SettingsRow(
@@ -90,15 +171,72 @@ struct SettingsView: View {
         }
     }
 
-    private var privacySection: some View {
-        SettingsSection(title: "Privacidad") {
-            SettingsRow(
-                icon: "lock.fill",
-                title: "Tus datos",
-                detail: "Se guardan solo en este dispositivo",
-                tint: Color.pareGreen,
-                showsChevron: false
-            )
+    private var supportSection: some View {
+        SettingsSection(title: "Soporte y Comunidad") {
+            Button(action: viewModel.openWebsite) {
+                SettingsRow(
+                    icon: "globe",
+                    title: "Página Web",
+                    detail: "Visita nuestro sitio oficial",
+                    tint: .blue,
+                    showsChevron: true
+                )
+            }
+            .buttonStyle(.plain)
+            
+            Divider().overlay(Color.white.opacity(0.08))
+
+            Button(action: viewModel.openEmail) {
+                SettingsRow(
+                    icon: "envelope.fill",
+                    title: "Contáctanos",
+                    detail: "Envíanos un email para ayuda o sugerencias",
+                    tint: .orange,
+                    showsChevron: true
+                )
+            }
+            .buttonStyle(.plain)
+            
+            Divider().overlay(Color.white.opacity(0.08))
+            
+            Button(action: viewModel.rateApp) {
+                SettingsRow(
+                    icon: "star.fill",
+                    title: "Valora la App",
+                    detail: "¿Te gusta Pare? Déjanos una reseña",
+                    tint: .yellow,
+                    showsChevron: true
+                )
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
+    private var legalSection: some View {
+        SettingsSection(title: "Legal") {
+            Button(action: viewModel.openPrivacyPolicy) {
+                SettingsRow(
+                    icon: "hand.raised.fill",
+                    title: "Política de Privacidad",
+                    detail: "Tus datos son tuyos",
+                    tint: Color.pareGreen,
+                    showsChevron: true
+                )
+            }
+            .buttonStyle(.plain)
+            
+            Divider().overlay(Color.white.opacity(0.08))
+
+            Button(action: viewModel.openTermsOfUse) {
+                SettingsRow(
+                    icon: "doc.text.fill",
+                    title: "Términos de Uso",
+                    detail: "Condiciones del servicio",
+                    tint: .gray,
+                    showsChevron: true
+                )
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -107,17 +245,15 @@ struct SettingsView: View {
             SettingsRow(
                 icon: "info.circle.fill",
                 title: "Pare Daily Focus Planner",
-                detail: "Versión \(appVersion)",
+                detail: "Versión \(viewModel.appVersion)",
                 tint: Color.pareGreen,
                 showsChevron: false
             )
         }
     }
-
-    private var appVersion: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
-    }
 }
+
+// MARK: - Componentes UI Reutilizables
 
 private struct SettingsSection<Content: View>: View {
     let title: LocalizedStringKey
@@ -156,7 +292,8 @@ private struct SettingsRow: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundStyle(tint)
-                .frame(width: 24)
+                .font(.system(size: 18))
+                .frame(width: 24, height: 24)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
@@ -176,5 +313,7 @@ private struct SettingsRow: View {
             }
         }
         .padding(.vertical, 14)
+        // Asegura que toda la fila sea clickeable cuando se envuelve en un Button
+        .contentShape(Rectangle())
     }
 }
