@@ -88,14 +88,14 @@ struct AddObligationSheet: View {
                             Divider().background(Color(hex: "#2A2A2C"))
                             
                             dateToggleRow(
-                                title: "Planificar fecha de inicio",
+                                title: "Cuándo empezar a prepararlo",
                                 isOn: $hasActionStartDate,
                                 date: $actionStartDate
                             )
                             
                             if hasActionStartDate {
                                 DatePicker(
-                                    "Empezar a gestionar",
+                                    "Fecha para empezar",
                                     selection: $actionStartDate,
                                     displayedComponents: .date
                                 )

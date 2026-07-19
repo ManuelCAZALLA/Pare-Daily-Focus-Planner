@@ -1,4 +1,3 @@
-//
 //  AddFamilyProfieSheet.swift
 //  Pare Daily Focus Planner
 //
@@ -6,10 +5,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddFamilyProfileSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var viewModel: FamilyProfilesViewModel
+    @Environment(\.modelContext) private var modelContext
     var editingProfile: FamilyProfile?
     
     // MARK: - Estados
@@ -82,7 +82,7 @@ struct AddFamilyProfileSheet: View {
                     Section {
                         Button(role: .destructive) {
                             if let profile = editingProfile {
-                                viewModel.deleteProfile(profile)
+                                modelContext.delete(profile)
                                 dismiss()
                             }
                         } label: {
@@ -119,12 +119,10 @@ struct AddFamilyProfileSheet: View {
     
     private func save() {
         if let profile = editingProfile {
-            var updated = profile
-            updated.name = name
-            updated.relationship = relationship
-            updated.avatar = selectedAvatar
-            updated.colorHex = selectedColorHex
-            viewModel.updateProfile(updated)
+            profile.name = name
+            profile.relationship = relationship
+            profile.avatar = selectedAvatar
+            profile.colorHex = selectedColorHex
         } else {
             let newProfile = FamilyProfile(
                 name: name,
@@ -132,8 +130,15 @@ struct AddFamilyProfileSheet: View {
                 colorHex: selectedColorHex,
                 avatar: selectedAvatar
             )
-            viewModel.addProfile(newProfile)
+            modelContext.insert(newProfile)
         }
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error al guardar perfil: \(error)")
+        }
+        
         dismiss()
     }
 }

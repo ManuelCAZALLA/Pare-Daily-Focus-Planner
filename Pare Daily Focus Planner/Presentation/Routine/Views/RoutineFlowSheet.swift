@@ -753,8 +753,8 @@ struct EveningFlowSheet: View {
         guard !title.isEmpty else { return }
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
         let task = PareTask(title: title, scheduledDate: tomorrow, priority: .medium)
-        modelContext.insert(task)
-        try? modelContext.save()
+        dayVM.addTask(task)
+        
         quickCaptureTitle = ""
         withAnimation(.spring(duration: 0.3)) { newTaskAdded = true }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -828,8 +828,9 @@ struct EveningFlowSheet: View {
                 if step < totalSteps - 1 {
                     withAnimation(.spring(duration: 0.4)) { step += 1 }
                 } else {
-                    let pendingTasks = routineVM.tasksForToday().filter { !$0.isCompleted && carriedTasks.contains($0.id) }
-                    routineVM.completeEvening(note: eveningNote, carriedOverTasks: pendingTasks)
+                    let tasks = dayVM.tasksToday.filter { carriedTasks.contains($0.id) }
+                    routineVM.completeEvening(note: eveningNote, carriedOverTasks: tasks)
+                    dayVM.loadDay(for: dayVM.selectedDate)
                     dismiss()
                 }
             } label: {

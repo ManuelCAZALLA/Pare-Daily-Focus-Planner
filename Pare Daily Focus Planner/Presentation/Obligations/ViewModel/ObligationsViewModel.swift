@@ -25,15 +25,18 @@ final class ObligationsViewModel {
 
     var categories: [LifeAdminCategory] = LifeAdminCategory.allCases
     var selectedCategory: LifeAdminCategory?
+    var familyProfile: FamilyProfile?
     var searchText: String = ""
     var savedObligations: [LifeObligation] = []
 
     init(
         repository: ObligationRepositoryProtocol,
-        notificationService: NotificationService? = nil
+        notificationService: NotificationService? = nil,
+        familyProfile: FamilyProfile? = nil
     ) {
         self.repository = repository
         self.notificationService = notificationService
+        self.familyProfile = familyProfile
     }
 
     var registeredTemplates: [ObligationTemplate] {
@@ -51,11 +54,11 @@ final class ObligationsViewModel {
     }
 
     func load() {
-        savedObligations = repository.all()
+        savedObligations = repository.all(forProfileID: familyProfile?.id)
     }
 
     func obligation(for template: ObligationTemplate) -> LifeObligation? {
-        repository.obligation(forTemplateID: template.id)
+        repository.obligation(forTemplateID: template.id, profileID: familyProfile?.id)
     }
 
     func selectCategory(_ category: LifeAdminCategory?) {
@@ -73,6 +76,7 @@ final class ObligationsViewModel {
         documentsNeeded: String
     ) throws {
         let obligation = existing ?? LifeObligation(templateID: template.id)
+        obligation.familyProfile = familyProfile
         notificationService?.cancel(for: obligation)
         obligation.holderName = holderName.nilIfEmpty
         obligation.expiryDate = expiryDate

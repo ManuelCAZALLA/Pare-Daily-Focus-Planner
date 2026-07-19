@@ -16,6 +16,14 @@ final class DayViewModel {
     // IDs de tareas completándose — para animación de salida
     var completingTaskIDs: Set<UUID> = []
 
+    // Ajuste de planificación (ver SettingsView). Se lee directamente de
+    // UserDefaults en vez de usar @AppStorage porque este tipo no es una
+    // View: no necesitamos invalidación automática, solo el valor actual
+    // cada vez que se recarga el día.
+    private var autoHideCompletedTasks: Bool {
+        UserDefaults.standard.object(forKey: "autoHideCompletedTasks") as? Bool ?? true
+    }
+
     init(
         taskRepository: TaskRepositoryProtocol,
         notificationService: NotificationService
@@ -28,7 +36,8 @@ final class DayViewModel {
         selectedDate = Calendar.current.startOfDay(for: date)
 
         let fetched = taskRepository.tasks(for: selectedDate)
-        tasksToday = sortTasks(fetched.filter { !$0.isCompleted })
+        let visibleTasks = autoHideCompletedTasks ? fetched.filter { !$0.isCompleted } : fetched
+        tasksToday = sortTasks(visibleTasks)
 
         if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) {
             overdueFromYesterday = sortTasks(

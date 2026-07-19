@@ -5,6 +5,10 @@ struct SettingsView: View {
     @Environment(RoutineViewModel.self) private var routineVM
     @State private var viewModel = SettingsViewModel()
 
+    // Ajustes persistentes de planificación
+    @AppStorage("weekStartsOnMonday") private var weekStartsOnMonday: Bool = true
+    @AppStorage("autoHideCompletedTasks") private var autoHideCompletedTasks: Bool = true
+
     var body: some View {
         ZStack {
             Color(hex: "#0C0C0E").ignoresSafeArea()
@@ -148,26 +152,34 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private var planningSection: some View {
         SettingsSection(title: "Planificación") {
-            SettingsRow(
-                icon: "calendar",
-                title: "Semana laboral",
-                detail: "De lunes a domingo",
-                tint: Color.pareGreen,
-                showsChevron: false
-            )
+            Toggle(isOn: $weekStartsOnMonday) {
+                SettingsRow(
+                    icon: "calendar",
+                    title: "Semana laboral",
+                    detail: weekStartsOnMonday ? "Empieza en lunes" : "Empieza en domingo",
+                    tint: Color.pareGreen,
+                    showsChevron: false
+                )
+            }
+            .tint(Color.pareGreen)
+            .padding(.vertical, 4)
 
             Divider().overlay(Color.white.opacity(0.08))
 
-            SettingsRow(
-                icon: "checkmark.circle",
-                title: "Tareas completadas",
-                detail: "Se ocultan al terminar",
-                tint: Color.pareGreen,
-                showsChevron: false
-            )
+            Toggle(isOn: $autoHideCompletedTasks) {
+                SettingsRow(
+                    icon: "checkmark.circle",
+                    title: "Tareas completadas",
+                    detail: autoHideCompletedTasks ? "Se ocultan al terminar" : "Se muestran siempre",
+                    tint: Color.pareGreen,
+                    showsChevron: false
+                )
+            }
+            .tint(Color.pareGreen)
+            .padding(.vertical, 4)
         }
     }
 
@@ -183,7 +195,7 @@ struct SettingsView: View {
                 )
             }
             .buttonStyle(.plain)
-            
+
             Divider().overlay(Color.white.opacity(0.08))
 
             Button(action: viewModel.openEmail) {
@@ -196,9 +208,9 @@ struct SettingsView: View {
                 )
             }
             .buttonStyle(.plain)
-            
+
             Divider().overlay(Color.white.opacity(0.08))
-            
+
             Button(action: viewModel.rateApp) {
                 SettingsRow(
                     icon: "star.fill",
@@ -211,7 +223,7 @@ struct SettingsView: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     private var legalSection: some View {
         SettingsSection(title: "Legal") {
             Button(action: viewModel.openPrivacyPolicy) {
@@ -224,7 +236,7 @@ struct SettingsView: View {
                 )
             }
             .buttonStyle(.plain)
-            
+
             Divider().overlay(Color.white.opacity(0.08))
 
             Button(action: viewModel.openTermsOfUse) {

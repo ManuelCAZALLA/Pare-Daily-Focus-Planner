@@ -6,37 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FamilyProfilesView: View {
-    @StateObject private var viewModel = FamilyProfilesViewModel()
-    @State private var activeSheet: SheetType?
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \FamilyProfile.name) private var profiles: [FamilyProfile]
     
-    enum SheetType: Identifiable {
-        case add
-        case edit(FamilyProfile)
-        
-        var id: String {
-            switch self {
-            case .add: return "add"
-            case .edit(let profile): return "edit-\(profile.id.uuidString)"
-            }
-        }
-    }
+    @State private var showAddSheet = false
     
     var body: some View {
         NavigationStack {
             List {
-                if viewModel.profiles.isEmpty {
+                if profiles.isEmpty {
                     ContentUnavailableView(
                         "No hay perfiles",
                         systemImage: "person.2.badge.gearshape",
-                        description: Text("Añade miembros de tu familia para organizar mejor las obligaciones.")
+                        description: Text("Añade miembros de tu familia para organizar mejor las obligaciones y trámites.")
                     )
                 } else {
                     Section {
-                        ForEach(viewModel.profiles) { profile in
-                            Button {
-                                activeSheet = .edit(profile)
+                        ForEach(profiles) { profile in
+                            NavigationLink {
+                                ProfileObligationsView(profile: profile)
                             } label: {
                                 HStack(spacing: 16) {
                                     // Avatar con fondo circular de su color asignado
@@ -60,17 +51,10 @@ struct FamilyProfilesView: View {
                                             .font(.footnote)
                                             .foregroundStyle(.secondary)
                                     }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .font(.system(size: 14, weight: .semibold))
-                                        .foregroundStyle(.quaternary)
                                 }
                             }
-                            .buttonStyle(.plain)
                         }
-                        .onDelete(perform: viewModel.deleteProfile)
+                        .onDelete(perform: deleteProfiles)
                     } header: {
                         Text("Miembros de la familia")
                     }
@@ -81,21 +65,22 @@ struct FamilyProfilesView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        activeSheet = .add
+                        showAddSheet = true
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
                     }
                 }
             }
-            .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .add:
-                    AddFamilyProfileSheet(viewModel: viewModel)
-                case .edit(let profile):
-                    AddFamilyProfileSheet(viewModel: viewModel, editingProfile: profile)
-                }
+            .sheet(isPresented: $showAddSheet) {
+                AddFamilyProfileSheet()
             }
+        }
+    }
+    
+    private func deleteProfiles(offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(profiles[index])
         }
     }
 }

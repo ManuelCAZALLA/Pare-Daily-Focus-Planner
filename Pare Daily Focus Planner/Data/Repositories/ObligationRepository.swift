@@ -9,16 +9,47 @@ final class ObligationRepository: ObligationRepositoryProtocol {
         self.context = context
     }
 
-    func all() -> [LifeObligation] {
-        let descriptor = FetchDescriptor<LifeObligation>(
-            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
-        )
+    func all(forProfileID profileID: UUID?) -> [LifeObligation] {
+        let descriptor: FetchDescriptor<LifeObligation>
+        
+        // Evaluamos el opcional fuera de la macro para simplificar la expresión
+        if let targetProfileID = profileID {
+            descriptor = FetchDescriptor<LifeObligation>(
+                predicate: #Predicate<LifeObligation> { obligation in
+                    obligation.familyProfile?.id == targetProfileID
+                },
+                sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+            )
+        } else {
+            descriptor = FetchDescriptor<LifeObligation>(
+                predicate: #Predicate<LifeObligation> { obligation in
+                    obligation.familyProfile == nil
+                },
+                sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+            )
+        }
+        
         return (try? context.fetch(descriptor)) ?? []
     }
 
-    func obligation(forTemplateID templateID: String) -> LifeObligation? {
-        let pred = #Predicate<LifeObligation> { $0.templateID == templateID }
-        return try? context.fetch(FetchDescriptor(predicate: pred)).first
+    func obligation(forTemplateID templateID: String, profileID: UUID?) -> LifeObligation? {
+        let descriptor: FetchDescriptor<LifeObligation>
+        
+        if let targetProfileID = profileID {
+            descriptor = FetchDescriptor<LifeObligation>(
+                predicate: #Predicate<LifeObligation> { obligation in
+                    obligation.templateID == templateID && obligation.familyProfile?.id == targetProfileID
+                }
+            )
+        } else {
+            descriptor = FetchDescriptor<LifeObligation>(
+                predicate: #Predicate<LifeObligation> { obligation in
+                    obligation.templateID == templateID && obligation.familyProfile == nil
+                }
+            )
+        }
+        
+        return try? context.fetch(descriptor).first
     }
 
     func save(_ obligation: LifeObligation) throws {

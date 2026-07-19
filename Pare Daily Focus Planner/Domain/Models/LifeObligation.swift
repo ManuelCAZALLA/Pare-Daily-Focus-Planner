@@ -17,6 +17,7 @@ final class LifeObligation {
     var alertOffsetRaw: String?
     var createdAt: Date
     var updatedAt: Date
+    var familyProfile: FamilyProfile?
 
     var alertOffset: ObligationAlertOffset? {
         get {

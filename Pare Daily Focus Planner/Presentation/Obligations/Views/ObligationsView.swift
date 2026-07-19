@@ -6,6 +6,8 @@ struct ObligationsView: View {
     @State private var showAddEditSheet = false
     @State private var showSavedObligations = false
     @State private var selectedTemplate: ObligationTemplate? = nil
+    
+    var profile: FamilyProfile? = nil
 
     var body: some View {
         @Bindable var vm = obligationsVM
@@ -14,8 +16,10 @@ struct ObligationsView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
-                    header
-                    featuresStrip
+                    if profile == nil {
+                        header
+                        featuresStrip
+                    }
                     searchBar
                     categoriesSection
                     templatesSection
@@ -283,8 +287,8 @@ private struct ObligationTemplateRow: View {
 }
 
 private struct MockObligationRepository: ObligationRepositoryProtocol {
-    func all() -> [LifeObligation] { [] }
-    func obligation(forTemplateID templateID: String) -> LifeObligation? { nil }
+    func all(forProfileID profileID: UUID?) -> [LifeObligation] { [] }
+    func obligation(forTemplateID templateID: String, profileID: UUID?) -> LifeObligation? { nil }
     func save(_ obligation: LifeObligation) throws {}
     func delete(_ obligation: LifeObligation) throws {}
 }

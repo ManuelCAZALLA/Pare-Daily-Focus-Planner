@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3C20E169300CCF420038D820 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C20E168300CCF420038D820 /* FirebaseAnalytics */; };
+		3C20E16B300CCF420038D820 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C20E16A300CCF420038D820 /* FirebaseCrashlytics */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pare Daily Focus Planner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C20E16B300CCF420038D820 /* FirebaseCrashlytics in Frameworks */,
+				3C20E169300CCF420038D820 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = "Pare Daily Focus Planner";
 			packageProductDependencies = (
+				3C20E168300CCF420038D820 /* FirebaseAnalytics */,
+				3C20E16A300CCF420038D820 /* FirebaseCrashlytics */,
 			);
 			productName = "Pare Daily Focus Planner";
 			productReference = 3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = 3CEDE1072FD56E6C00FD1446;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3C20E167300CCF410038D820 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3CEDE1112FD56E6C00FD1446 /* Products */;
 			projectDirPath = "";
@@ -359,6 +371,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3C20E167300CCF410038D820 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.16.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3C20E168300CCF420038D820 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C20E167300CCF410038D820 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		3C20E16A300CCF420038D820 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C20E167300CCF410038D820 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3CEDE1082FD56E6C00FD1446 /* Project object */;
 }

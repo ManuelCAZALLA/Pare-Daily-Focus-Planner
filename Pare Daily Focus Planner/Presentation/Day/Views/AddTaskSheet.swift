@@ -407,6 +407,7 @@ struct AddTaskSheet: View {
                     }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 13)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
 
@@ -531,6 +532,7 @@ struct AddTaskSheet: View {
                     }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 13)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
 
