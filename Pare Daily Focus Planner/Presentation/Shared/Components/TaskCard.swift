@@ -7,7 +7,7 @@ struct TaskCard: View {
 
     let task: PareTask
     var style: Style = .standard
-    var onComplete: (() -> Void)? = nil   // ← callback para el check tappable
+    var onComplete: (() -> Void)? = nil
 
     enum Style {
         case standard
@@ -53,7 +53,11 @@ struct TaskCard: View {
                     .strikethrough(task.isCompleted, color: Color(hex: "#48484A"))
                     .lineLimit(2)
 
-                HStack(spacing: 6) {
+                // ── Fila de metadatos ──────────────────────────────────────
+                // Usamos layoutPriority para que la etiqueta de prioridad
+                // nunca se parta: si no cabe todo, se trunca el label pero
+                // permanece en la misma línea.
+                HStack(spacing: 0) {
                     if let time = task.scheduledTime {
                         HStack(spacing: 3) {
                             Image(systemName: "clock.fill")
@@ -64,18 +68,23 @@ struct TaskCard: View {
                         .foregroundStyle(task.isCompleted
                                          ? Color(hex: "#48484A")
                                          : Color.pareGreen)
+                        .fixedSize()           // la hora nunca se trunca ni parte
 
                         Circle()
                             .fill(Color(hex: "#3A3A3C"))
                             .frame(width: 3, height: 3)
+                            .padding(.horizontal, 6)
                     }
 
                     HStack(spacing: 3) {
                         Circle()
                             .fill(Color.priority(task.priority))
                             .frame(width: 5, height: 5)
+                            .flexibleFrame()
                         Text(task.priority.label)
                             .font(.system(size: 11, weight: .medium))
+                            .lineLimit(1)      // nunca rompe a segunda línea
+                            .minimumScaleFactor(0.85)  // se encoge un poco antes de truncar
                     }
                     .foregroundStyle(task.isCompleted
                                      ? Color(hex: "#48484A")
@@ -90,8 +99,8 @@ struct TaskCard: View {
                         .padding(.top, 1)
                 }
             }
-
-            Spacer(minLength: 0)
+            .frame(maxWidth: .infinity, alignment: .leading)  // ocupa el espacio disponible
+            // sin Spacer suelto — el frame+alignment ya empuja el check a la derecha
 
             // Check — tappable directamente
             Button {
@@ -235,7 +244,6 @@ struct TaskRowView: View {
 
     @Environment(DayViewModel.self) private var dayVM
 
-    // Estado local para animación de salida
     private var isCompleting: Bool {
         dayVM.completingTaskIDs.contains(task.id)
     }
@@ -267,7 +275,6 @@ struct TaskRowView: View {
                 .contentShape(Rectangle())
                 .onTapGesture { onTap?() }
         }
-        // Animación de salida cuando se completa
         .scaleEffect(isCompleting ? 0.94 : 1)
         .opacity(isCompleting ? 0 : 1)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isCompleting)
@@ -300,6 +307,15 @@ extension Priority {
         case .high:   return "arrow.up.circle.fill"
         case .must:   return "exclamationmark.circle.fill"
         }
+    }
+}
+
+// MARK: - View helper
+
+private extension View {
+    /// Evita que el punto separador de prioridad se expanda
+    func flexibleFrame() -> some View {
+        self.fixedSize()
     }
 }
 
