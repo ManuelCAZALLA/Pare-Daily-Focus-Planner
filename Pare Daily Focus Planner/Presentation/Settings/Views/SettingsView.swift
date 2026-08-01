@@ -80,16 +80,15 @@ struct SettingsView: View {
     }
 
     private var routineSection: some View {
-        SettingsSection(title: "Rutina Diaria") {
+        @Bindable var rVM = routineVM
+        
+        return SettingsSection(title: "Rutina Diaria") {
             // Morning Toggle + Hora
-            Toggle(isOn: Binding(
-                get: { routineVM.morningEnabled },
-                set: { routineVM.morningEnabled = $0 }
-            )) {
+            Toggle(isOn: $rVM.morningEnabled) {
                 SettingsRow(
                     icon: "sunrise.fill",
                     title: "Rutina de mañana",
-                    detail: LocalizedStringKey(routineVM.morningEnabled ? String(format: "%02d:%02d", routineVM.morningHour, routineVM.morningMinute) : "Desactivada"),
+                    detail: LocalizedStringKey(rVM.morningEnabled ? String(format: "%02d:%02d", rVM.morningHour, rVM.morningMinute) : "Desactivada"),
                     tint: Color(hex: "#FF9500"),
                     showsChevron: false
                 )
@@ -97,35 +96,29 @@ struct SettingsView: View {
             .tint(Color(hex: "#FF9500"))
             .padding(.vertical, 4)
 
-            if routineVM.morningEnabled {
+            if rVM.morningEnabled {
                 Divider().overlay(Color.white.opacity(0.08))
                 HStack {
-                    Text("Hora")
-                        .font(.subheadline.weight(.semibold))
+                    Text("Hora de aviso")
+                        .font(.subheadline)
                         .foregroundStyle(.white)
                     Spacer()
-                    DatePicker("", selection: Binding(
-                        get: { routineVM.morningTime },
-                        set: { routineVM.morningTime = $0 }
-                    ), displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .colorScheme(.dark)
-                    .tint(Color(hex: "#FF9500"))
+                    DatePicker("", selection: $rVM.morningTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .colorScheme(.dark)
+                        .tint(Color(hex: "#FF9500"))
                 }
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
             }
 
             Divider().overlay(Color.white.opacity(0.08))
 
             // Evening Toggle + Hora
-            Toggle(isOn: Binding(
-                get: { routineVM.eveningEnabled },
-                set: { routineVM.eveningEnabled = $0 }
-            )) {
+            Toggle(isOn: $rVM.eveningEnabled) {
                 SettingsRow(
                     icon: "moon.stars.fill",
                     title: "Rutina de noche",
-                    detail: LocalizedStringKey(routineVM.eveningEnabled ? String(format: "%02d:%02d", routineVM.eveningHour, routineVM.eveningMinute) : "Desactivada"),
+                    detail: LocalizedStringKey(rVM.eveningEnabled ? String(format: "%02d:%02d", rVM.eveningHour, rVM.eveningMinute) : "Desactivada"),
                     tint: Color(hex: "#5E5CE6"),
                     showsChevron: false
                 )
@@ -133,22 +126,19 @@ struct SettingsView: View {
             .tint(Color(hex: "#5E5CE6"))
             .padding(.vertical, 4)
 
-            if routineVM.eveningEnabled {
+            if rVM.eveningEnabled {
                 Divider().overlay(Color.white.opacity(0.08))
                 HStack {
-                    Text("Hora")
-                        .font(.subheadline.weight(.semibold))
+                    Text("Hora de aviso")
+                        .font(.subheadline)
                         .foregroundStyle(.white)
                     Spacer()
-                    DatePicker("", selection: Binding(
-                        get: { routineVM.eveningTime },
-                        set: { routineVM.eveningTime = $0 }
-                    ), displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .colorScheme(.dark)
-                    .tint(Color(hex: "#5E5CE6"))
+                    DatePicker("", selection: $rVM.eveningTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .colorScheme(.dark)
+                        .tint(Color(hex: "#5E5CE6"))
                 }
-                .padding(.vertical, 6)
+                .padding(.vertical, 8)
             }
         }
     }
