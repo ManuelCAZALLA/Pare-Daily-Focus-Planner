@@ -11,41 +11,52 @@ struct AddFamilyProfileSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     var editingProfile: FamilyProfile?
-    
+
     // MARK: - Estados
     @State private var name: String = ""
     @State private var relationship: String = ""
     @State private var selectedAvatar: String = "👩"
     @State private var selectedColorHex: String = "#007AFF"
-    
+
     // Opciones predefinidas para facilitar la selección rápida
     let avatars = ["👩", "👨", "👧", "👦", "👶", "👵", "👴", "🐱", "🐶", "🏡"]
     let colorPalette = ["#FF2D55", "#FF9500", "#FFCC00", "#4CD964", "#5AC8FA", "#007AFF", "#5856D6", "#8E8E93"]
-    
+
     var body: some View {
         NavigationStack {
             Form {
                 Section {
                     TextField("Nombre", text: $name)
                         .autocorrectionDisabled()
-                    
+
                     TextField("Parentesco (ej. Madre, Hijo)", text: $relationship)
                 } header: {
                     Text("Detalles básicos")
                 }
-                
+
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             ForEach(avatars, id: \.self) { avatar in
+                                let unselectedBG = Color(.systemGroupedBackground)
+
                                 Text(avatar)
                                     .font(.system(size: 28))
                                     .frame(width: 50, height: 50)
-                                    .background(selectedAvatar == avatar ? Color(hex: selectedColorHex).opacity(0.2) : Color(.systemGroupedBackground))
+                                    .background(
+                                        selectedAvatar == avatar
+                                            ? Color(hex: selectedColorHex).opacity(0.2)
+                                            : unselectedBG
+                                    )
                                     .clipShape(Circle())
                                     .overlay(
                                         Circle()
-                                            .stroke(selectedAvatar == avatar ? Color(hex: selectedColorHex) : Color.clear, lineWidth: 2)
+                                            .stroke(
+                                                selectedAvatar == avatar
+                                                    ? Color(hex: selectedColorHex)
+                                                    : Color.clear,
+                                                lineWidth: 2
+                                            )
                                     )
                                     .onTapGesture {
                                         selectedAvatar = avatar
@@ -57,7 +68,7 @@ struct AddFamilyProfileSheet: View {
                 } header: {
                     Text("Selecciona un Avatar")
                 }
-                
+
                 Section {
                     HStack(spacing: 14) {
                         ForEach(colorPalette, id: \.self) { hex in
@@ -77,7 +88,7 @@ struct AddFamilyProfileSheet: View {
                 } header: {
                     Text("Color Identificador")
                 }
-                
+
                 if editingProfile != nil {
                     Section {
                         Button(role: .destructive) {
@@ -116,7 +127,7 @@ struct AddFamilyProfileSheet: View {
             }
         }
     }
-    
+
     private func save() {
         if let profile = editingProfile {
             profile.name = name
@@ -132,13 +143,13 @@ struct AddFamilyProfileSheet: View {
             )
             modelContext.insert(newProfile)
         }
-        
+
         do {
             try modelContext.save()
         } catch {
             print("Error al guardar perfil: \(error)")
         }
-        
+
         dismiss()
     }
 }

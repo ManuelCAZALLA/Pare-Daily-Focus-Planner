@@ -9,42 +9,26 @@ final class SettingsViewModel {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     }
 
-    // Enviar Email
-    func openEmail() {
+    var emailURL: URL? {
         let emailAddress = "soportecazalla@gmail.com"
         let subject = "Soporte Pare Daily Focus Planner".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        if let url = URL(string: "mailto:\(emailAddress)?subject=\(subject)"), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
+        return URL(string: "mailto:\(emailAddress)?subject=\(subject)")
     }
 
-    // Abrir Página Web
-    func openWebsite() {
-        if let url = URL(string: "https://manuelcazalla.github.io/LocalizatuCoche-Web/") {
-            UIApplication.shared.open(url)
-        }
+    var websiteURL: URL? {
+        URL(string: "https://manuelcazalla.github.io/LocalizatuCoche-Web/")
     }
 
-    // Política de Privacidad
-    func openPrivacyPolicy() {
-        if let url = URL(string: "https://manuelcazalla.github.io/pare-privacidad.html/") {
-            UIApplication.shared.open(url)
-        }
+    var privacyPolicyURL: URL? {
+        URL(string: "https://manuelcazalla.github.io/pare-privacidad.html/")
     }
 
-    // Términos de Uso
-    func openTermsOfUse() {
-        if let url = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/") {
-            UIApplication.shared.open(url)
-        }
+    var termsOfUseURL: URL? {
+        URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
     }
 
-    // Valorar la App en la App Store
-    func rateApp() {
-        // Reemplaza "TU_APP_ID" con el ID real de tu app en App Store Connect
+    var rateAppURL: URL? {
         let appId = "TU_APP_ID"
-        if let url = URL(string: "https://apps.apple.com/app/id\(appId)?action=write-review") {
-            UIApplication.shared.open(url)
-        }
+        return URL(string: "https://apps.apple.com/app/id\(appId)?action=write-review")
     }
 }

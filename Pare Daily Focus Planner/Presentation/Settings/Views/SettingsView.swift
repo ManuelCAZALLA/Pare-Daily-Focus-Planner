@@ -1,13 +1,19 @@
 import SwiftUI
+import RevenueCatUI
 
 struct SettingsView: View {
     @Environment(NotificationService.self) private var notificationService
     @Environment(RoutineViewModel.self) private var routineVM
-    @State private var viewModel = SettingsViewModel()
+    @Environment(PurchasesService.self) private var purchases   // ← RevenueCat
+    private let viewModel = SettingsViewModel()
 
     // Ajustes persistentes de planificación
     @AppStorage("weekStartsOnMonday") private var weekStartsOnMonday: Bool = true
     @AppStorage("autoHideCompletedTasks") private var autoHideCompletedTasks: Bool = true
+
+    // Sheets de monetización
+    @State private var showPaywall = false
+    @State private var showCustomerCenter = false
 
     var body: some View {
         ZStack {
@@ -16,6 +22,7 @@ struct SettingsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
                     header
+                    proSection              // ← nuevo
                     notificationsSection
                     routineSection
                     planningSection
@@ -29,9 +36,124 @@ struct SettingsView: View {
             }
         }
         .task { await notificationService.refreshAuthorizationStatus() }
+        .task { await purchases.loadCustomerInfo() }    // ← cargar estado Pro
+        // Paywall gestionado 100% por RevenueCat (diseñado en su dashboard)
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+                .onRestoreCompleted { _ in showPaywall = false }
+                .preferredColorScheme(.dark)
+        }
+        // Customer Center para usuarios Pro (cancelar, reembolso, cambiar plan…)
+        .sheet(isPresented: $showCustomerCenter) {
+#if canImport(RevenueCatUI)
+#if os(iOS)
+            if #available(iOS 15.0, *) {
+                CustomerCenterView()
+            } else {
+                Text("Gestión de suscripción no disponible en esta versión")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black.opacity(0.8))
+                    .cornerRadius(12)
+            }
+#else
+            Text("Gestión de suscripción no disponible en esta versión")
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.black.opacity(0.8))
+                .cornerRadius(12)
+#endif
+#else
+            Text("Gestión de suscripción no disponible en esta versión")
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.black.opacity(0.8))
+                .cornerRadius(12)
+#endif
+        }
     }
 
-    // MARK: - Sections
+    // MARK: - Pro section
+
+    private var proSection: some View {
+        SettingsSection(title: "Pare Pro") {
+            if purchases.isProActive {
+
+                // ── Usuario Pro ────────────────────────────────────────
+                SettingsRow(
+                    icon: "sparkles",
+                    title: "Pare Pro activo",
+                    detail: "Gracias por apoyar la app ✨",
+                    tint: Color.pareGreen,
+                    showsChevron: false
+                )
+
+                Divider().overlay(Color.white.opacity(0.08))
+
+                Button { showCustomerCenter = true } label: {
+                    SettingsRow(
+                        icon: "person.crop.circle.badge.checkmark",
+                        title: "Gestionar suscripción",
+                        detail: "Cancela, pausa o cambia tu plan",
+                        tint: Color.pareGreen,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
+
+            } else {
+
+                // ── Usuario Free ───────────────────────────────────────
+                Button { showPaywall = true } label: {
+                    HStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color.pareGreen.opacity(0.15))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color.pareGreen)
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Hazte Pro")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundStyle(.white)
+                            Text("Desbloquea todo sin límites")
+                                .font(.caption)
+                                .foregroundStyle(Color(hex: "#8E8E93"))
+                        }
+                        Spacer()
+                        Text("VER")
+                            .font(.system(size: 11, weight: .heavy))
+                            .foregroundStyle(Color(hex: "#0C0C0E"))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Capsule().fill(Color.pareGreen))
+                    }
+                    .padding(.vertical, 4)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+
+                Divider().overlay(Color.white.opacity(0.08))
+
+                Button {
+                    Task { await purchases.restorePurchases() }
+                } label: {
+                    SettingsRow(
+                        icon: "arrow.clockwise",
+                        title: "Restaurar compras",
+                        detail: "¿Ya compraste Pro? Recupéralo aquí",
+                        tint: Color(hex: "#8E8E93"),
+                        showsChevron: false
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    // MARK: - Resto de secciones (sin cambios)
 
     private var header: some View {
         HStack(spacing: 14) {
@@ -81,9 +203,8 @@ struct SettingsView: View {
 
     private var routineSection: some View {
         @Bindable var rVM = routineVM
-        
+
         return SettingsSection(title: "Rutina Diaria") {
-            // Morning Toggle + Hora
             Toggle(isOn: $rVM.morningEnabled) {
                 SettingsRow(
                     icon: "sunrise.fill",
@@ -113,7 +234,6 @@ struct SettingsView: View {
 
             Divider().overlay(Color.white.opacity(0.08))
 
-            // Evening Toggle + Hora
             Toggle(isOn: $rVM.eveningEnabled) {
                 SettingsRow(
                     icon: "moon.stars.fill",
@@ -175,70 +295,80 @@ struct SettingsView: View {
 
     private var supportSection: some View {
         SettingsSection(title: "Soporte y Comunidad") {
-            Button(action: viewModel.openWebsite) {
-                SettingsRow(
-                    icon: "globe",
-                    title: "Página Web",
-                    detail: "Visita nuestro sitio oficial",
-                    tint: .blue,
-                    showsChevron: true
-                )
+            if let url = viewModel.websiteURL {
+                Link(destination: url) {
+                    SettingsRow(
+                        icon: "globe",
+                        title: "Página Web",
+                        detail: "Visita nuestro sitio oficial",
+                        tint: .blue,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
 
             Divider().overlay(Color.white.opacity(0.08))
 
-            Button(action: viewModel.openEmail) {
-                SettingsRow(
-                    icon: "envelope.fill",
-                    title: "Contáctanos",
-                    detail: "Envíanos un email para ayuda o sugerencias",
-                    tint: .orange,
-                    showsChevron: true
-                )
+            if let url = viewModel.emailURL {
+                Link(destination: url) {
+                    SettingsRow(
+                        icon: "envelope.fill",
+                        title: "Contáctanos",
+                        detail: "Envíanos un email para ayuda o sugerencias",
+                        tint: .orange,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
 
             Divider().overlay(Color.white.opacity(0.08))
 
-            Button(action: viewModel.rateApp) {
-                SettingsRow(
-                    icon: "star.fill",
-                    title: "Valora la App",
-                    detail: "¿Te gusta Pare? Déjanos una reseña",
-                    tint: .yellow,
-                    showsChevron: true
-                )
+            if let url = viewModel.rateAppURL {
+                Link(destination: url) {
+                    SettingsRow(
+                        icon: "star.fill",
+                        title: "Valora la App",
+                        detail: "¿Te gusta Pare? Déjanos una reseña",
+                        tint: .yellow,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 
     private var legalSection: some View {
         SettingsSection(title: "Legal") {
-            Button(action: viewModel.openPrivacyPolicy) {
-                SettingsRow(
-                    icon: "hand.raised.fill",
-                    title: "Política de Privacidad",
-                    detail: "Tus datos son tuyos",
-                    tint: Color.pareGreen,
-                    showsChevron: true
-                )
+            if let url = viewModel.privacyPolicyURL {
+                Link(destination: url) {
+                    SettingsRow(
+                        icon: "hand.raised.fill",
+                        title: "Política de Privacidad",
+                        detail: "Tus datos son tuyos",
+                        tint: Color.pareGreen,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
 
             Divider().overlay(Color.white.opacity(0.08))
 
-            Button(action: viewModel.openTermsOfUse) {
-                SettingsRow(
-                    icon: "doc.text.fill",
-                    title: "Términos de Uso",
-                    detail: "Condiciones del servicio",
-                    tint: .gray,
-                    showsChevron: true
-                )
+            if let url = viewModel.termsOfUseURL {
+                Link(destination: url) {
+                    SettingsRow(
+                        icon: "doc.text.fill",
+                        title: "Términos de Uso",
+                        detail: "Condiciones del servicio",
+                        tint: .gray,
+                        showsChevron: true
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 
@@ -315,7 +445,6 @@ private struct SettingsRow: View {
             }
         }
         .padding(.vertical, 14)
-        // Asegura que toda la fila sea clickeable cuando se envuelve en un Button
         .contentShape(Rectangle())
     }
 }

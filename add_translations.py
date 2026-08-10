@@ -139,7 +139,27 @@ translations = {
   "Permite las notificaciones para que podamos recordarte tus tareas y trámites a tiempo.": "Allow notifications so we can remind you of your tasks and obligations on time.",
   "Ajustes": "Settings",
   "Hoy": "Today",
-  "Trámites": "Obligations"
+  "Trámites": "Obligations",
+
+  "¿Ya compraste Pro? Recupéralo aquí": "Already bought Pro? Restore it here",
+  "Cancela, pausa o cambia tu plan": "Cancel, pause, or change your plan",
+  "Desbloquea todo sin límites": "Unlock everything with no limits",
+  "Gestionar suscripción": "Manage subscription",
+  "Gracias por apoyar la app ✨": "Thanks for supporting the app ✨",
+  "Hazte Pro": "Get Pro",
+  "Pare Pro activo": "Pare Pro active",
+  "Restaurar compras": "Restore purchases",
+  "PARE": "PARE",
+  "Pare Daily Focus Planner": "Pare Daily Focus Planner",
+  "Pare Pro": "Pare Pro",
+  "VER": "VIEW",
+  "⚡": "⚡",
+  "✍️": "✍️",
+  "🌅": "🌅",
+  "🌙": "🌙",
+  "🎉": "🎉",
+  "🔥": "🔥",
+  "😶": "😶"
 }
 
 path = "Pare Daily Focus Planner/Resources/Localizable.xcstrings"

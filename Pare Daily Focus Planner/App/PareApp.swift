@@ -1,6 +1,7 @@
 // PareApp.swift
 import SwiftUI
 import SwiftData
+import RevenueCat
 
 @main
 struct PareApp: App {
@@ -29,6 +30,16 @@ struct PareApp: App {
             notificationService: notifications
         ))
         _notificationService = State(initialValue: notifications)
+
+        // ── RevenueCat ──────────────────────────────────────────────────
+        // IMPORTANTE: cambia esta key por la de producción antes de subir
+        // a App Store. Nunca subas la test key a producción.
+        #if DEBUG
+        Purchases.logLevel = .debug
+        #else
+        Purchases.logLevel = .warn
+        #endif
+        Purchases.configure(withAPIKey: "test_fJpOtRkRhnbdRhEBVtGhcmMKXwa")
     }
 
     var body: some Scene {
@@ -38,6 +49,7 @@ struct PareApp: App {
                 .environment(routineViewModel)
                 .environment(obligationsViewModel)
                 .environment(notificationService)
+                .environment(PurchasesService.shared)   // ← Pro status global
         }
         .modelContainer(PareModelContainer.shared)
     }
