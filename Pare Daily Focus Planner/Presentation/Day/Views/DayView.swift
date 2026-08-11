@@ -1,11 +1,13 @@
 // DayView.swift
 import SwiftUI
 import SwiftData
+import RevenueCatUI
 
 struct DayView: View {
 
     // MARK: - Environment
     @Environment(DayViewModel.self) private var dayVM
+    @Environment(PurchasesService.self) private var purchases
 
     // MARK: - State
     @State private var showAddTask = false
@@ -14,6 +16,7 @@ struct DayView: View {
     @State private var rescheduleDate = Date()
     @State private var selectedDate = Date()
     @State private var overdueTaskAction: PareTask? = nil   // sheet de acción para tareas de ayer
+    @State private var showPaywall = false
 
     // Navegación entre semanas
     @State private var weekOffset: Int = 0
@@ -83,6 +86,10 @@ struct DayView: View {
                 }
             }
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+                .preferredColorScheme(.dark)
+        }
         .onAppear { dayVM.loadDay(for: selectedDate) }
         .onChange(of: selectedDate) { _, new in dayVM.loadDay(for: new) }
     }
@@ -134,6 +141,33 @@ struct DayView: View {
             }
 
             Spacer()
+
+            if !purchases.isProActive {
+                Button {
+                    showPaywall = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 9, weight: .heavy))
+                        Text("PRO")
+                            .font(.system(size: 11, weight: .heavy))
+                    }
+                    .foregroundStyle(Color(hex: "#0C0C0E"))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule().fill(
+                            LinearGradient(
+                                colors: [Color(hex: "#4ADE80"), Color(hex: "#16A34A")],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    )
+                    .shadow(color: Color(hex: "#22C55E").opacity(0.35), radius: 6, y: 2)
+                }
+                .buttonStyle(.plain)
+            }
 
             progressBadge
         }
