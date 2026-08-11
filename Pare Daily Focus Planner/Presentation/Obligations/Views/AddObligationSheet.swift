@@ -1,9 +1,13 @@
 // AddObligationSheet.swift
 import SwiftUI
+import PDFKit
+import QuickLook
+import RevenueCatUI
 
 struct AddObligationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(ObligationsViewModel.self) private var obligationsVM
+    @Environment(PurchasesService.self) private var purchases
 
     let template: ObligationTemplate
     let editingObligation: LifeObligation?
@@ -17,6 +21,10 @@ struct AddObligationSheet: View {
     @State private var alertOffset: ObligationAlertOffset?
     @State private var documentsNeeded: String = ""
     @State private var notes: String = ""
+    @State private var scannedDocumentData: Data?
+    @State private var showDocumentScanner = false
+    @State private var showPaywall = false
+    @State private var previewURL: URL?
 
     init(template: ObligationTemplate, editingObligation: LifeObligation?) {
         self.template = template
@@ -32,6 +40,7 @@ struct AddObligationSheet: View {
             _alertOffset = State(initialValue: editingObligation.alertOffset)
             _documentsNeeded = State(initialValue: editingObligation.documentsNeeded ?? "")
             _notes = State(initialValue: editingObligation.notes ?? "")
+            _scannedDocumentData = State(initialValue: editingObligation.scannedDocumentData)
         } else {
             _holderName = State(initialValue: "")
             _hasExpiryDate = State(initialValue: false)
@@ -41,6 +50,7 @@ struct AddObligationSheet: View {
             _alertOffset = State(initialValue: nil)
             _documentsNeeded = State(initialValue: "")
             _notes = State(initialValue: "")
+            _scannedDocumentData = State(initialValue: nil)
         }
     }
 
@@ -111,6 +121,8 @@ struct AddObligationSheet: View {
                                 .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 1)
                         )
                     }
+
+                    scannedDocumentSection
                     
                     // Additional info section
                     VStack(alignment: .leading, spacing: 10) {
@@ -176,6 +188,22 @@ struct AddObligationSheet: View {
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(28)
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+                .preferredColorScheme(.dark)
+        }
+        #if !os(watchOS)
+        .sheet(isPresented: $showDocumentScanner) {
+            DocumentScanner(
+                onScan: { data in
+                    scannedDocumentData = data
+                    showDocumentScanner = false
+                },
+                onCancel: { showDocumentScanner = false }
+            )
+        }
+        .quickLookPreview($previewURL)
+        #endif
     }
 
     private var headerCard: some View {
@@ -205,6 +233,90 @@ struct AddObligationSheet: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 1)
         )
+    }
+
+    @ViewBuilder
+    private var scannedDocumentSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("obligation.scan.section")
+
+            if let data = scannedDocumentData {
+                HStack(spacing: 14) {
+                    documentThumbnail(for: data)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Button("obligation.scan.view") {
+                            previewURL = makePreviewURL(for: data)
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.pareGreen)
+
+                        Button("obligation.scan.delete", role: .destructive) {
+                            self.scannedDocumentData = nil
+                            previewURL = nil
+                        }
+                        .font(.subheadline.weight(.semibold))
+                    }
+
+                    Spacer()
+                }
+                .padding(14)
+                .background(Color(hex: "#1A1A1C"), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            } else {
+                #if !os(watchOS)
+                Button {
+                    if purchases.isProActive {
+                        showDocumentScanner = true
+                    } else {
+                        showPaywall = true
+                    }
+                } label: {
+                    Label("obligation.scan", systemImage: "doc.viewfinder")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(Color.pareGreen)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.pareGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                #endif
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func documentThumbnail(for data: Data) -> some View {
+        #if !os(watchOS)
+        if let page = PDFDocument(data: data)?.page(at: 0),
+           let image = page.thumbnail(of: CGSize(width: 88, height: 112), for: .mediaBox).cgImage {
+            Image(uiImage: UIImage(cgImage: image))
+                .resizable()
+                .scaledToFill()
+                .frame(width: 72, height: 92)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        } else {
+            Image(systemName: "doc.fill")
+                .font(.title2)
+                .foregroundStyle(Color.pareGreen)
+                .frame(width: 72, height: 92)
+                .background(Color.pareGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
+        #endif
+        #if os(watchOS)
+        EmptyView()
+        #endif
+    }
+
+    private func makePreviewURL(for data: Data) -> URL? {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("obligation-document-\(UUID().uuidString)")
+            .appendingPathExtension("pdf")
+        do {
+            try data.write(to: url, options: .atomic)
+            return url
+        } catch {
+            return nil
+        }
     }
 
     private func sectionLabel(_ text: LocalizedStringKey) -> some View {
@@ -293,7 +405,8 @@ struct AddObligationSheet: View {
                 actionStartDate: hasActionStartDate ? actionStartDate : nil,
                 alertOffset: hasExpiryDate ? alertOffset : nil,
                 notes: notes,
-                documentsNeeded: documentsNeeded
+                documentsNeeded: documentsNeeded,
+                scannedDocumentData: scannedDocumentData
             )
             dismiss()
         } catch {
@@ -336,3 +449,4 @@ struct AddObligationSheet: View {
         }
     }
 }
+

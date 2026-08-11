@@ -70,9 +70,17 @@ private struct SavedObligationRow: View {
                 .background(Color.pareGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(template.title)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.white)
+                HStack(spacing: 6) {
+                    Text(template.title)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.white)
+
+                    if obligation.scannedDocumentData != nil {
+                        Image(systemName: "doc.fill")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(Color.pareGreen)
+                    }
+                }
 
                 Text(detailText)
                     .font(.caption)
