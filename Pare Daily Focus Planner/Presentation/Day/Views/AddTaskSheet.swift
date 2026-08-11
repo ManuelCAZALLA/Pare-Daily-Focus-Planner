@@ -89,11 +89,11 @@ struct AddTaskSheet: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("general.cancel") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(editingTask == nil ? "Añadir" : "Guardar") { save() }
+                    Button(editingTask == nil ? "Añadir" : "general.save") { save() }
                         .fontWeight(.semibold)
                         .foregroundStyle(
                             title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -394,7 +394,7 @@ struct AddTaskSheet: View {
 
                         Text(hasTime
                              ? scheduledTime.formatted(.dateTime.hour().minute())
-                             : "Sin hora")
+                             : String(localized: "tasks.untimed"))
                             .font(.subheadline)
                             .fontWeight(hasTime ? .semibold : .regular)
                             .foregroundStyle(hasTime ? .white : Color(hex: "#8E8E93"))
@@ -467,7 +467,7 @@ struct AddTaskSheet: View {
                     }
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(reminder?.label ?? "Sin aviso")
+                        Text(reminder?.label ?? String(localized: "Sin aviso"))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(reminder == nil ? Color(hex: "#8E8E93") : .white)
                             .lineLimit(1)
@@ -519,7 +519,7 @@ struct AddTaskSheet: View {
                                 .foregroundStyle(hasRecurrence ? Color(hex: "#007AFF") : Color(hex: "#8E8E93"))
                         }
 
-                        Text(hasRecurrence ? recurrence.label : "No se repite")
+                        Text(hasRecurrence ? recurrence.label : String(localized: "No se repite"))
                             .font(.subheadline)
                             .fontWeight(hasRecurrence ? .semibold : .regular)
                             .foregroundStyle(hasRecurrence ? .white : Color(hex: "#8E8E93"))

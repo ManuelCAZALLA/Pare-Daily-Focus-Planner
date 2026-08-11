@@ -58,7 +58,7 @@ extension EmptyStateView {
             systemImage: "doc.text",
             title: "Sin trámites registrados",
             message: "Añade el primer trámite que quieras no olvidar.",
-            actionTitle: "Añadir trámite",
+            actionTitle: "obligations.add",
             action: action
         )
     }

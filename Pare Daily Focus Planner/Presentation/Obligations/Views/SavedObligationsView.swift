@@ -10,7 +10,7 @@ struct SavedObligationsView: View {
             Group {
                 if obligationsVM.savedObligations.isEmpty {
                     ContentUnavailableView(
-                        "Aún no hay trámites guardados",
+                        "obligations.empty",
                         systemImage: "tray",
                         description: Text("Registra un trámite para consultarlo y editarlo desde aquí.")
                     )
@@ -36,7 +36,7 @@ struct SavedObligationsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cerrar") { dismiss() }
+                    Button("general.close") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
             }
@@ -91,7 +91,7 @@ private struct SavedObligationRow: View {
 
     private var detailText: String {
         if let expiryDate = obligation.expiryDate {
-            return "Vence el \(expiryDate.formatted(date: .abbreviated, time: .omitted))"
+            return String(format: String(localized: "Vence el %@"), expiryDate.formatted(date: .abbreviated, time: .omitted))
         }
         if let holderName = obligation.holderName {
             return holderName

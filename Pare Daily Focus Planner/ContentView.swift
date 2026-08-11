@@ -1,10 +1,14 @@
 // ContentView.swift
 import SwiftUI
 import SwiftData
+import RevenueCatUI
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(PurchasesService.self) private var purchases
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage("hasSeenOnboardingPaywall") private var hasSeenOnboardingPaywall = false
+    @State private var showOnboardingPaywall = false
     
     var body: some View {
         Group {
@@ -15,6 +19,22 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .task {
+            await purchases.loadCustomerInfo()
+            guard !hasSeenOnboardingPaywall, !purchases.isProActive else { return }
+            hasSeenOnboardingPaywall = true
+            showOnboardingPaywall = true
+        }
+        .fullScreenCover(isPresented: $showOnboardingPaywall) {
+            PaywallView()
+                .onPurchaseCompleted { _ in
+                    showOnboardingPaywall = false
+                }
+                .onRestoreCompleted { _ in
+                    showOnboardingPaywall = false
+                }
+                .preferredColorScheme(.dark)
+        }
     }
 
     @ViewBuilder
@@ -44,7 +64,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity)
             }
             .tabItem {
-                Label("Trámites", systemImage: "doc.text.fill")
+                Label("obligations.title", systemImage: "doc.text.fill")
             }
 
             NavigationStack {
@@ -53,7 +73,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity)
             }
             .tabItem {
-                Label("Ajustes", systemImage: "gearshape.fill")
+                Label("settings.title", systemImage: "gearshape.fill")
             }
         }
         .tint(Color.pareGreen)

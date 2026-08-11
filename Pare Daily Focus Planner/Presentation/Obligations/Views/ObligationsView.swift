@@ -72,11 +72,11 @@ struct ObligationsView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Trámites")
+            Text("obligations.title")
                 .font(.largeTitle.weight(.heavy))
                 .fontDesign(.rounded)
 
-            Text("El asistente de los trámites que siempre se olvidan")
+            Text("obligations.subtitle")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
@@ -87,8 +87,8 @@ struct ObligationsView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "tray.full.fill")
                     Text(obligationsVM.savedObligations.isEmpty
-                         ? "Ver trámites guardados"
-                         : "Ver trámites guardados (\(obligationsVM.savedObligations.count))")
+                         ? String(localized: "obligations.saved")
+                         : String(format: String(localized: "obligations.saved.count"), obligationsVM.savedObligations.count))
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.bold))
@@ -136,7 +136,7 @@ struct ObligationsView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
 
-            TextField("Buscar trámite...", text: $vm.searchText)
+            TextField("obligations.search", text: $vm.searchText)
                 .textFieldStyle(.plain)
                 .foregroundStyle(.white)
 
@@ -160,7 +160,7 @@ struct ObligationsView: View {
 
     private var categoriesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Categorías vitales")
+            Text("obligations.categories")
                 .font(.title3.weight(.bold))
                 .fontDesign(.rounded)
 
@@ -184,7 +184,7 @@ struct ObligationsView: View {
     private var templatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(obligationsVM.selectedCategory?.title ?? String(localized: "Todos los trámites"))
+                Text(obligationsVM.selectedCategory?.title ?? String(localized: "obligations.all"))
                     .font(.title3.weight(.bold))
                     .fontDesign(.rounded)
                 Spacer()

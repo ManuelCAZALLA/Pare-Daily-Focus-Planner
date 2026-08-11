@@ -390,7 +390,7 @@ struct DayView: View {
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .lineLimit(1)
-                            Text("Pendiente de ayer · toca para gestionar")
+                            Text("tasks.yesterday")
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundStyle(Color(hex: "#FF9F0A").opacity(0.8))
                         }
@@ -448,10 +448,10 @@ struct DayView: View {
             .padding(.bottom, 2)
 
             VStack(spacing: 6) {
-                Text("Todo despejado")
+                Text("tasks.allClear")
                     .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
-                Text("Es un buen momento para descansar\no planificar tu día.")
+                Text("tasks.allClear.subtitle")
                     .font(.system(size: 14))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color(hex: "#8E8E93"))
@@ -463,7 +463,7 @@ struct DayView: View {
                 Image(systemName: "arrow.down.right")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Color.pareGreen.opacity(0.4))
-                Text("Usa el botón + para añadir tareas")
+                Text("tasks.addHint")
                     .font(.system(size: 12))
                     .foregroundStyle(Color(hex: "#48484A"))
             }
@@ -713,7 +713,7 @@ struct OverdueActionSheet: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("general.cancel") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
             }
@@ -739,11 +739,11 @@ struct OverdueActionSheet: View {
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancelar") { showDatePicker = false }
+                        Button("general.cancel") { showDatePicker = false }
                             .foregroundStyle(Color(hex: "#8E8E93"))
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Mover") {
+                        Button("tasks.move") {
                             showDatePicker = false
                             onAction(.reschedule(pickerDate))
                             dismiss()
@@ -761,11 +761,11 @@ struct OverdueActionSheet: View {
             isPresented: $showDeleteConfirm,
             titleVisibility: .visible
         ) {
-            Button("Eliminar", role: .destructive) {
+            Button("general.delete", role: .destructive) {
                 onAction(.delete)
                 dismiss()
             }
-            Button("Cancelar", role: .cancel) {}
+            Button("general.cancel", role: .cancel) {}
         } message: {
             Text("Esta acción no se puede deshacer.")
         }
@@ -773,8 +773,8 @@ struct OverdueActionSheet: View {
 
     private func actionButton(
         icon: String,
-        title: String,
-        detail: String,
+        title: LocalizedStringKey,
+        detail: LocalizedStringKey,
         tint: Color,
         action: @escaping () -> Void
     ) -> some View {
@@ -838,17 +838,17 @@ struct ReschedulePicker: View {
                     .colorScheme(.dark)
                     .padding()
             }
-            .navigationTitle("Reagendar")
+            .navigationTitle("tasks.reschedule")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(hex: "#080809"), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("general.cancel") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Mover") { onConfirm(selectedDate); dismiss() }
+                    Button("tasks.move") { onConfirm(selectedDate); dismiss() }
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.pareGreen)
                 }

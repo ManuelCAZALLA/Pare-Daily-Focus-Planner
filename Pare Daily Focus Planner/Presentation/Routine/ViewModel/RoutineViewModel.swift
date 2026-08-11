@@ -142,8 +142,8 @@ final class RoutineViewModel {
                 id: "routine.morning",
                 hour: morningHour,
                 minute: morningMinute,
-                title: "Buenos días 🌅",
-                body: "Es momento de preparar tu día con Pare."
+                title: String(localized: "Buenos días 🌅"),
+                body: String(localized: "Es momento de preparar tu día con Pare.")
             )
         }
         if eveningEnabled {
@@ -151,8 +151,8 @@ final class RoutineViewModel {
                 id: "routine.evening",
                 hour: eveningHour,
                 minute: eveningMinute,
-                title: "Cierre del día 🌙",
-                body: "Revisa cómo fue tu día y prepara el de mañana."
+                title: String(localized: "Cierre del día 🌙"),
+                body: String(localized: "Revisa cómo fue tu día y prepara el de mañana.")
             )
         }
     }

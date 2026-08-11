@@ -294,7 +294,7 @@ struct MorningFlowSheet: View {
                                     .lineLimit(1)
                                 Spacer()
                                 if let days = ob.daysUntilExpiry {
-                                    Text(days == 0 ? "Hoy" : "\(days)d")
+                                    Text(days == 0 ? String(localized: "Hoy") : String(format: String(localized: "%lldd"), days))
                                         .font(.caption.weight(.bold))
                                         .foregroundStyle(days <= 1 ? .red : .orange)
                                 }
@@ -310,7 +310,7 @@ struct MorningFlowSheet: View {
         }
     }
 
-    private func briefingSectionHeader(_ title: String, icon: String) -> some View {
+    private func briefingSectionHeader(_ title: LocalizedStringKey, icon: String) -> some View {
         HStack(spacing: 6) {
             Text(icon).font(.system(size: 14))
             Text(title)
@@ -378,7 +378,7 @@ struct MorningFlowSheet: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Text(step == totalSteps - 1 ? "Comenzar el día" : "Continuar")
+                    Text(step == totalSteps - 1 ? "Comenzar el día" : "general.continue")
                         .font(.system(size: 17, weight: .semibold))
                     if step < totalSteps - 1 {
                         Image(systemName: "arrow.right")
@@ -406,8 +406,8 @@ struct MorningFlowSheet: View {
 
     private var morningGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
-        if hour < 12 { return "Buenos días 👋" }
-        return "Buenas tardes 👋"
+        if hour < 12 { return String(localized: "Buenos días 👋") }
+        return String(localized: "Buenas tardes 👋")
     }
 
     private var todayDateString: String {
@@ -510,8 +510,8 @@ struct EveningFlowSheet: View {
             let tasks = routineVM.tasksForToday()
             let completed = tasks.filter(\.isCompleted)
             HStack(spacing: 20) {
-                eveningStatPill(value: "\(completed.count)", label: "completadas", color: Color(hex: "#5E5CE6"))
-                eveningStatPill(value: "\(tasks.count - completed.count)", label: "pendientes", color: Color(hex: "#FF9500"))
+                eveningStatPill(value: "\(completed.count)", label: String(localized: "completadas"), color: Color(hex: "#5E5CE6"))
+                eveningStatPill(value: "\(tasks.count - completed.count)", label: String(localized: "pendientes"), color: Color(hex: "#FF9500"))
             }
             .padding(.top, 8)
         }
@@ -835,7 +835,7 @@ struct EveningFlowSheet: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Text(step == totalSteps - 1 ? "Cerrar el día" : "Continuar")
+                    Text(step == totalSteps - 1 ? "Cerrar el día" : "general.continue")
                         .font(.system(size: 17, weight: .semibold))
                     if step < totalSteps - 1 {
                         Image(systemName: "arrow.right")

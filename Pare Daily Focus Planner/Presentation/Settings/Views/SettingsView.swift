@@ -82,8 +82,8 @@ struct SettingsView: View {
                 // ── Usuario Pro ────────────────────────────────────────
                 SettingsRow(
                     icon: "sparkles",
-                    title: "Pare Pro activo",
-                    detail: "Gracias por apoyar la app ✨",
+                    title: "settings.pro.active",
+                    detail: "settings.pro.active.detail",
                     tint: Color.pareGreen,
                     showsChevron: false
                 )
@@ -93,8 +93,8 @@ struct SettingsView: View {
                 Button { showCustomerCenter = true } label: {
                     SettingsRow(
                         icon: "person.crop.circle.badge.checkmark",
-                        title: "Gestionar suscripción",
-                        detail: "Cancela, pausa o cambia tu plan",
+                        title: "settings.pro.manage",
+                        detail: "settings.pro.manage.detail",
                         tint: Color.pareGreen,
                         showsChevron: true
                     )
@@ -115,10 +115,10 @@ struct SettingsView: View {
                                 .foregroundStyle(Color.pareGreen)
                         }
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Hazte Pro")
+                            Text("settings.pro.upgrade")
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(.white)
-                            Text("Desbloquea todo sin límites")
+                            Text("settings.pro.upgrade.detail")
                                 .font(.caption)
                                 .foregroundStyle(Color(hex: "#8E8E93"))
                         }
@@ -142,8 +142,8 @@ struct SettingsView: View {
                 } label: {
                     SettingsRow(
                         icon: "arrow.clockwise",
-                        title: "Restaurar compras",
-                        detail: "¿Ya compraste Pro? Recupéralo aquí",
+                        title: "settings.pro.restore",
+                        detail: "settings.pro.restore.detail",
                         tint: Color(hex: "#8E8E93"),
                         showsChevron: false
                     )
@@ -167,11 +167,11 @@ struct SettingsView: View {
             }
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Ajustes")
+                Text("settings.title")
                     .font(.largeTitle.weight(.heavy))
                     .fontDesign(.rounded)
                     .foregroundStyle(.white)
-                Text("Personaliza cómo te acompaña Pare")
+                Text("settings.subtitle")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -179,7 +179,7 @@ struct SettingsView: View {
     }
 
     private var notificationsSection: some View {
-        SettingsSection(title: "Notificaciones") {
+        SettingsSection(title: "settings.notifications") {
             Button {
                 Task {
                     if notificationService.isAuthorized {
@@ -204,12 +204,12 @@ struct SettingsView: View {
     private var routineSection: some View {
         @Bindable var rVM = routineVM
 
-        return SettingsSection(title: "Rutina Diaria") {
+        return SettingsSection(title: "settings.routine") {
             Toggle(isOn: $rVM.morningEnabled) {
                 SettingsRow(
                     icon: "sunrise.fill",
                     title: "Rutina de mañana",
-                    detail: LocalizedStringKey(rVM.morningEnabled ? String(format: "%02d:%02d", rVM.morningHour, rVM.morningMinute) : "Desactivada"),
+                    detail: LocalizedStringKey(rVM.morningEnabled ? String(format: "%02d:%02d", rVM.morningHour, rVM.morningMinute) : String(localized: "Desactivada")),
                     tint: Color(hex: "#FF9500"),
                     showsChevron: false
                 )
@@ -238,7 +238,7 @@ struct SettingsView: View {
                 SettingsRow(
                     icon: "moon.stars.fill",
                     title: "Rutina de noche",
-                    detail: LocalizedStringKey(rVM.eveningEnabled ? String(format: "%02d:%02d", rVM.eveningHour, rVM.eveningMinute) : "Desactivada"),
+                    detail: LocalizedStringKey(rVM.eveningEnabled ? String(format: "%02d:%02d", rVM.eveningHour, rVM.eveningMinute) : String(localized: "Desactivada")),
                     tint: Color(hex: "#5E5CE6"),
                     showsChevron: false
                 )
@@ -264,7 +264,7 @@ struct SettingsView: View {
     }
 
     private var planningSection: some View {
-        SettingsSection(title: "Planificación") {
+        SettingsSection(title: "settings.planning") {
             Toggle(isOn: $weekStartsOnMonday) {
                 SettingsRow(
                     icon: "calendar",
@@ -294,7 +294,7 @@ struct SettingsView: View {
     }
 
     private var supportSection: some View {
-        SettingsSection(title: "Soporte y Comunidad") {
+        SettingsSection(title: "settings.support") {
             if let url = viewModel.websiteURL {
                 Link(destination: url) {
                     SettingsRow(
@@ -341,7 +341,7 @@ struct SettingsView: View {
     }
 
     private var legalSection: some View {
-        SettingsSection(title: "Legal") {
+        SettingsSection(title: "settings.legal") {
             if let url = viewModel.privacyPolicyURL {
                 Link(destination: url) {
                     SettingsRow(
@@ -373,11 +373,11 @@ struct SettingsView: View {
     }
 
     private var aboutSection: some View {
-        SettingsSection(title: "Acerca de") {
+        SettingsSection(title: "settings.about") {
             SettingsRow(
                 icon: "info.circle.fill",
                 title: "Pare Daily Focus Planner",
-                detail: "Versión \(viewModel.appVersion)",
+                detail: LocalizedStringKey(String(format: String(localized: "settings.version"), viewModel.appVersion)),
                 tint: Color.pareGreen,
                 showsChevron: false
             )

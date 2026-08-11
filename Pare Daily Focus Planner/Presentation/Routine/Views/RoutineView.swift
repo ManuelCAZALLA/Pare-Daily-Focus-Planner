@@ -100,10 +100,10 @@ struct RoutineView: View {
 
     private var header: some View {
         VStack(spacing: 6) {
-            Text("Rutina diaria")
+            Text("routine.title")
                 .font(.system(size: 34, weight: .heavy, design: .rounded))
                 .foregroundStyle(.white)
-            Text("El ritual que cierra el ciclo de tu día")
+            Text("routine.subtitle")
                 .font(.subheadline)
                 .foregroundStyle(Color(hex: "#636366"))
         }
@@ -132,7 +132,7 @@ struct RoutineView: View {
                             .foregroundStyle(Color(hex: "#FF9500"))
                             .contentTransition(.numericText())
 
-                        Text(routineVM.streakDays == 1 ? "día seguido" : "días seguidos")
+                        Text(routineVM.streakDays == 1 ? "routine.streak.one" : "routine.streak")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Color(hex: "#8E8E93"))
                             .padding(.bottom, 4)
@@ -178,7 +178,7 @@ struct RoutineView: View {
                 .frame(height: 4)
 
                 HStack {
-                    Text(bothDone ? "Día completo ✓" : morningDone ? "Mañana lista — Queda el cierre" : "Sin rituales completados hoy")
+                    Text(bothDone ? "routine.dayComplete" : morningDone ? "Mañana lista — Queda el cierre" : "Sin rituales completados hoy")
                         .font(.caption)
                         .foregroundStyle(Color(hex: "#636366"))
                     Spacer()
@@ -230,8 +230,8 @@ struct RoutineView: View {
     private var morningCard: some View {
         routineCardButton(
             emoji: "🌅",
-            title: "Mañana",
-            subtitle: routineVM.todayMorningCompleted ? "Completada" : morningSubtitle,
+            title: String(localized: "routine.morning"),
+            subtitle: routineVM.todayMorningCompleted ? String(localized: "routine.completed") : morningSubtitle,
             accentColor: Color(hex: "#FF9500"),
             secondaryColor: Color(hex: "#FFD60A"),
             isCompleted: routineVM.todayMorningCompleted,
@@ -247,8 +247,8 @@ struct RoutineView: View {
     private var eveningCard: some View {
         routineCardButton(
             emoji: "🌙",
-            title: "Noche",
-            subtitle: routineVM.todayEveningCompleted ? "Completada" : eveningSubtitle,
+            title: String(localized: "routine.evening"),
+            subtitle: routineVM.todayEveningCompleted ? String(localized: "routine.completed") : eveningSubtitle,
             accentColor: Color(hex: "#5E5CE6"),
             secondaryColor: Color(hex: "#BF5AF2"),
             isCompleted: routineVM.todayEveningCompleted,
@@ -350,14 +350,14 @@ struct RoutineView: View {
         let h = routineVM.morningHour
         let m = routineVM.morningMinute
         let timeStr = String(format: "%02d:%02d", h, m)
-        return "Preparar el día · \(timeStr)"
+        return String(localized: "Preparar el día · \(timeStr)")
     }
 
     private var eveningSubtitle: String {
         let h = routineVM.eveningHour
         let m = routineVM.eveningMinute
         let timeStr = String(format: "%02d:%02d", h, m)
-        return "Revisar y cerrar · \(timeStr)"
+        return String(localized: "Revisar y cerrar · \(timeStr)")
     }
 }
 

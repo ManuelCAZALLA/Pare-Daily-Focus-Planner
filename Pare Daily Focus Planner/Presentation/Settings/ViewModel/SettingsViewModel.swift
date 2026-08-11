@@ -11,7 +11,7 @@ final class SettingsViewModel {
 
     var emailURL: URL? {
         let emailAddress = "soportecazalla@gmail.com"
-        let subject = "Soporte Pare Daily Focus Planner".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let subject = String(localized: "Soporte Pare Daily Focus Planner").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return URL(string: "mailto:\(emailAddress)?subject=\(subject)")
     }
 

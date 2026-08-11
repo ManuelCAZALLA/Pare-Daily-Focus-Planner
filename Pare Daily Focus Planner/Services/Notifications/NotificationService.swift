@@ -51,8 +51,8 @@ final class NotificationService {
         guard notificationDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Pare · Trámites"
-        content.body = "\(title) vence el \(expiryDate.formatted(date: .abbreviated, time: .omitted))."
+        content.title = String(localized: "Pare · Trámites")
+        content.body = String(format: String(localized: "%@ vence el %@."), title, expiryDate.formatted(date: .abbreviated, time: .omitted))
         content.sound = .default
 
         let components = Calendar.current.dateComponents(

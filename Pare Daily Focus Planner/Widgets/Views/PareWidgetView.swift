@@ -56,7 +56,7 @@ struct PareWidgetView: View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 10) {
                 header
-                Text(entry.task?.title ?? "No tienes tareas pendientes")
+                Text(entry.task?.title ?? String(localized: "No tienes tareas pendientes"))
                     .font(.headline.weight(.bold))
                     .foregroundStyle(.white)
                     .lineLimit(2)

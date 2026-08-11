@@ -56,7 +56,7 @@ struct AddObligationSheet: View {
                         sectionLabel("Información básica")
                         
                         customTextField(
-                            placeholder: "Nombre del titular...",
+                            placeholder: "obligations.holder",
                             text: $holderName
                         )
                     }
@@ -67,7 +67,7 @@ struct AddObligationSheet: View {
                         
                         VStack(spacing: 12) {
                             dateToggleRow(
-                                title: "Tiene fecha de caducidad",
+                                title: "obligations.expiry",
                                 isOn: $hasExpiryDate,
                                 date: $expiryDate
                             )
@@ -88,7 +88,7 @@ struct AddObligationSheet: View {
                             Divider().background(Color(hex: "#2A2A2C"))
                             
                             dateToggleRow(
-                                title: "Cuándo empezar a prepararlo",
+                                title: "obligations.actionStart",
                                 isOn: $hasActionStartDate,
                                 date: $actionStartDate
                             )
@@ -118,13 +118,13 @@ struct AddObligationSheet: View {
                         
                         VStack(spacing: 12) {
                             customTextEditor(
-                                placeholder: "Documentos necesarios...",
+                                placeholder: "obligations.documents",
                                 text: $documentsNeeded,
                                 icon: "doc.text"
                             )
                             
                             customTextEditor(
-                                placeholder: "Notas o detalles adicionales...",
+                                placeholder: "obligations.notes",
                                 text: $notes,
                                 icon: "pencil"
                             )
@@ -137,7 +137,7 @@ struct AddObligationSheet: View {
                             HStack {
                                 Spacer()
                                 Image(systemName: "trash")
-                                Text("Eliminar trámite")
+                                Text("obligations.delete")
                                 Spacer()
                             }
                             .font(.body.weight(.semibold))
@@ -158,15 +158,15 @@ struct AddObligationSheet: View {
                 .padding(.bottom, 40)
             }
             .background(Color(hex: "#0C0C0E").ignoresSafeArea())
-            .navigationTitle(editingObligation == nil ? "Añadir trámite" : "Editar trámite")
+            .navigationTitle(editingObligation == nil ? "obligations.add" : "obligations.edit")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("obligations.cancel") { dismiss() }
                         .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Guardar") { save() }
+                    Button("obligations.save") { save() }
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.pareGreen)
                 }
@@ -303,12 +303,12 @@ struct AddObligationSheet: View {
 
     private var reminderPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("¿Cuándo quieres que te avise?")
+            Text("obligations.reminder")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.white)
 
             Picker("Aviso", selection: $alertOffset) {
-                Text("Sin aviso").tag(Optional<ObligationAlertOffset>.none)
+                Text("obligations.noAlert").tag(Optional<ObligationAlertOffset>.none)
                 ForEach(ObligationAlertOffset.allCases) { offset in
                     Text(offset.label).tag(Optional(offset))
                 }

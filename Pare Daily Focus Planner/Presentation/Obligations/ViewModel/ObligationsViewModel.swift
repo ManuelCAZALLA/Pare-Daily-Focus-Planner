@@ -130,7 +130,7 @@ final class ObligationsViewModel {
                 expiryDate.formatted(date: .abbreviated, time: .omitted)
             )
         }
-        return String(localized: "Registrado")
+        return String(localized: "obligations.registered")
     }
 
     func isRegistered(_ template: ObligationTemplate) -> Bool {

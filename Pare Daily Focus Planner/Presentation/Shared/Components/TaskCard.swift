@@ -254,7 +254,7 @@ struct TaskRowView: View {
                 HStack(spacing: 5) {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 9, weight: .bold))
-                    Text("De ayer")
+                    Text("tasks.overdue")
                         .font(.system(size: 10, weight: .semibold))
                 }
                 .foregroundStyle(.orange)
@@ -282,7 +282,7 @@ struct TaskRowView: View {
             Button {
                 onComplete()
             } label: {
-                Label("Hecho", systemImage: "checkmark.circle.fill")
+                Label("tasks.done", systemImage: "checkmark.circle.fill")
             }
             .tint(Color.pareGreen)
         }
@@ -290,7 +290,7 @@ struct TaskRowView: View {
             Button {
                 onReschedule()
             } label: {
-                Label("Mover", systemImage: "calendar.badge.clock")
+                Label("tasks.move", systemImage: "calendar.badge.clock")
             }
             .tint(Color(hex: "#007AFF"))
         }

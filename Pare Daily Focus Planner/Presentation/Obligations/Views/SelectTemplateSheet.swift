@@ -50,7 +50,7 @@ struct SelectTemplateSheet: View {
                                                 Spacer()
                                                 
                                                 if obligationsVM.isRegistered(template) {
-                                                    Text("Registrado")
+                                                    Text("obligations.registered")
                                                         .font(.caption.weight(.semibold))
                                                         .foregroundStyle(Color.pareGreen)
                                                         .padding(.horizontal, 8)
@@ -81,11 +81,11 @@ struct SelectTemplateSheet: View {
             }
         }
         .background(Color(hex: "#0C0C0E").ignoresSafeArea())
-        .navigationTitle("Seleccionar plantilla")
+        .navigationTitle("obligations.selectTemplate")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancelar") {
+                Button("obligations.cancel") {
                     dismiss()
                 }
                 .foregroundStyle(Color(hex: "#8E8E93"))
@@ -98,7 +98,7 @@ struct SelectTemplateSheet: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             
-            TextField("Buscar trámite...", text: $searchText)
+            TextField("obligations.search", text: $searchText)
                 .textFieldStyle(.plain)
                 .foregroundStyle(.white)
             
