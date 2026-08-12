@@ -76,7 +76,8 @@ struct SettingsView: View {
     // MARK: - Pro section
 
     private var proSection: some View {
-        SettingsSection(title: "Pare Pro") {
+        @Bindable var purchases = purchases
+        return SettingsSection(title: "Pare Pro") {
             if purchases.isProActive {
 
                 // ── Usuario Pro ────────────────────────────────────────
@@ -150,6 +151,22 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
             }
+
+            #if DEBUG
+            Divider().overlay(Color.white.opacity(0.08))
+
+            Toggle(isOn: $purchases.debugForcePro) {
+                SettingsRow(
+                    icon: "flask.fill",
+                    title: "Probar funciones Pro",
+                    detail: purchases.debugForcePro ? "Pro activo (test)" : "Solo en builds de depuración",
+                    tint: Color.purple,
+                    showsChevron: false
+                )
+            }
+            .tint(Color.purple)
+            .padding(.vertical, 4)
+            #endif
         }
     }
 

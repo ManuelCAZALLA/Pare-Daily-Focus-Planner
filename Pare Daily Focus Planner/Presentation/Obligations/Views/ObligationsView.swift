@@ -1,11 +1,14 @@
 // ObligationsView.swift
 import SwiftUI
+import RevenueCatUI
 
 struct ObligationsView: View {
     @Environment(ObligationsViewModel.self) private var obligationsVM
+    @Environment(PurchasesService.self) private var purchases
     @State private var showAddEditSheet = false
     @State private var showSavedObligations = false
     @State private var selectedTemplate: ObligationTemplate? = nil
+    @State private var showPaywall = false
     
     var profile: FamilyProfile? = nil
 
@@ -31,6 +34,7 @@ struct ObligationsView: View {
 
             PareFAB {
                 selectedTemplate = nil
+                obligationsVM.scannedDocumentData = nil
                 showAddEditSheet = true
             }
             .padding(.trailing, 20)
@@ -47,6 +51,7 @@ struct ObligationsView: View {
                     NavigationStack {
                         SelectTemplateSheet { template in
                             selectedTemplate = template
+                            obligationsVM.scannedDocumentData = nil
                         }
                     }
                 }
@@ -58,6 +63,10 @@ struct ObligationsView: View {
         .sheet(isPresented: $showSavedObligations) {
             SavedObligationsView()
                 .environment(obligationsVM)
+                .preferredColorScheme(.dark)
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
                 .preferredColorScheme(.dark)
         }
         .onChange(of: showAddEditSheet) { _, newValue in
@@ -110,18 +119,37 @@ struct ObligationsView: View {
     private var featuresStrip: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                NavigationLink {
-                    FamilyProfilesView()
-                } label: {
-                    featureChip("Perfiles familiares", icon: "person.3")
+                if purchases.isProActive {
+                    NavigationLink {
+                        FamilyProfilesView()
+                    } label: {
+                        featureChip("pro.familyProfiles.title", icon: "person.3", showsProBadge: true)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        featureChip("pro.familyProfiles.title", icon: "lock.fill", showsProBadge: true)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain) 
             }
         }
     }
 
-    private func featureChip(_ title: LocalizedStringKey, icon: String) -> some View {
-        Label(title, systemImage: icon)
+    private func featureChip(_ title: LocalizedStringKey, icon: String, showsProBadge: Bool = false) -> some View {
+        HStack(spacing: 6) {
+            Label(title, systemImage: icon)
+            if showsProBadge {
+                Text("pro.badge")
+                    .font(.system(size: 9, weight: .heavy))
+                    .foregroundStyle(Color(hex: "#0C0C0E"))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(Color.pareGreen, in: Capsule())
+            }
+        }
             .font(.caption.weight(.medium))
             .foregroundStyle(.secondary)
             .padding(.horizontal, 12)
@@ -199,6 +227,7 @@ struct ObligationsView: View {
                 ForEach(obligationsVM.filteredTemplates) { template in
                     Button {
                         selectedTemplate = template
+                        obligationsVM.scannedDocumentData = obligationsVM.obligation(for: template)?.scannedDocumentData
                         showAddEditSheet = true
                     } label: {
                         ObligationTemplateRow(

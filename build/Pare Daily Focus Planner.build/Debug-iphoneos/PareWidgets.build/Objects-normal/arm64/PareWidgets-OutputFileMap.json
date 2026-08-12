@@ -1,0 +1,149 @@
+{
+  "" : {
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets-primary.dia",
+    "emit-module-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets-primary-emit-module.dia",
+    "pch" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets-primary.swiftdeps"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/ObligationWidget.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidget~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/PareWidgetEntry.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetEntry~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/PareWidgets.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgets~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Provider/PareWidgetDataLoader.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetDataLoader~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Provider/PareWidgetProvider.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/PareWidgetProvider~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/RoutineWidget.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidget~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/TodayWidget.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidget~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Views/ObligationWidgetView.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/ObligationWidgetView~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Views/RoutineWidgetView.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/RoutineWidgetView~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Views/TodayWidgetView.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/TodayWidgetView~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/WidgetModels.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetModels~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/WidgetShared.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/WidgetShared~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/DerivedSources/GeneratedStringSymbols_Localizable.swift" : {
+    "const-values" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.swiftconstvalues",
+    "dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.d",
+    "diagnostics" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.dia",
+    "index-unit-output-path" : "/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.o",
+    "llvm-bc" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.bc",
+    "object" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.o",
+    "swift-dependencies" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.swiftdeps",
+    "swiftmodule" : "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/build/Pare Daily Focus Planner.build/Debug-iphoneos/PareWidgets.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable~partial.swiftmodule"
+  }
+}

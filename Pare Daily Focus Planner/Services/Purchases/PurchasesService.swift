@@ -6,6 +6,7 @@
 
 import Foundation
 import RevenueCat
+import WidgetKit
 
 // MARK: - Constantes
 
@@ -36,15 +37,35 @@ final class PurchasesService {
 
     // MARK: - Estado público
 
-    var customerInfo: CustomerInfo? = nil
+    var customerInfo: CustomerInfo? = nil {
+        didSet {
+            UserDefaults(suiteName: "group.com.manuelcazalla.pare")?
+                .set(isProActive, forKey: "isProActive")
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
 
     /// true si el entitlement "Pare Pro" está activo
     var isProActive: Bool {
-        customerInfo?.entitlements[.pareProEntitlement]?.isActive == true
+        #if DEBUG
+        if debugForcePro { return true }
+        #endif
+        return customerInfo?.entitlements[.pareProEntitlement]?.isActive == true
     }
 
     var isLoading = false
     var errorMessage: String? = nil
+
+    #if DEBUG
+    /// Override de test: fuerza el estado Pro en builds de depuración.
+    var debugForcePro = false {
+        didSet {
+            UserDefaults(suiteName: "group.com.manuelcazalla.pare")?
+                .set(isProActive, forKey: "isProActive")
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
+    #endif
 
     // MARK: - Carga inicial
 

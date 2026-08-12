@@ -21,10 +21,10 @@ struct AddObligationSheet: View {
     @State private var alertOffset: ObligationAlertOffset?
     @State private var documentsNeeded: String = ""
     @State private var notes: String = ""
-    @State private var scannedDocumentData: Data?
     @State private var showDocumentScanner = false
     @State private var showPaywall = false
     @State private var previewURL: URL?
+    @State private var escalatedAlertsEnabled = false
 
     init(template: ObligationTemplate, editingObligation: LifeObligation?) {
         self.template = template
@@ -40,7 +40,7 @@ struct AddObligationSheet: View {
             _alertOffset = State(initialValue: editingObligation.alertOffset)
             _documentsNeeded = State(initialValue: editingObligation.documentsNeeded ?? "")
             _notes = State(initialValue: editingObligation.notes ?? "")
-            _scannedDocumentData = State(initialValue: editingObligation.scannedDocumentData)
+            _escalatedAlertsEnabled = State(initialValue: editingObligation.escalatedAlertsEnabled)
         } else {
             _holderName = State(initialValue: "")
             _hasExpiryDate = State(initialValue: false)
@@ -50,7 +50,7 @@ struct AddObligationSheet: View {
             _alertOffset = State(initialValue: nil)
             _documentsNeeded = State(initialValue: "")
             _notes = State(initialValue: "")
-            _scannedDocumentData = State(initialValue: nil)
+            _escalatedAlertsEnabled = State(initialValue: false)
         }
     }
 
@@ -93,6 +93,7 @@ struct AddObligationSheet: View {
                                 .transition(.opacity.combined(with: .slide))
 
                                 reminderPicker
+                                escalatedAlertsSection
                             }
                             
                             Divider().background(Color(hex: "#2A2A2C"))
@@ -174,8 +175,11 @@ struct AddObligationSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("obligations.cancel") { dismiss() }
-                        .foregroundStyle(Color(hex: "#8E8E93"))
+                    Button("obligations.cancel") {
+                        obligationsVM.scannedDocumentData = nil
+                        dismiss()
+                    }
+                    .foregroundStyle(Color(hex: "#8E8E93"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("obligations.save") { save() }
@@ -196,7 +200,7 @@ struct AddObligationSheet: View {
         .sheet(isPresented: $showDocumentScanner) {
             DocumentScanner(
                 onScan: { data in
-                    scannedDocumentData = data
+                    obligationsVM.scannedDocumentData = data
                     showDocumentScanner = false
                 },
                 onCancel: { showDocumentScanner = false }
@@ -240,7 +244,7 @@ struct AddObligationSheet: View {
         VStack(alignment: .leading, spacing: 10) {
             sectionLabel("obligation.scan.section")
 
-            if let data = scannedDocumentData {
+            if let data = obligationsVM.scannedDocumentData {
                 HStack(spacing: 14) {
                     documentThumbnail(for: data)
 
@@ -252,7 +256,7 @@ struct AddObligationSheet: View {
                         .foregroundStyle(Color.pareGreen)
 
                         Button("obligation.scan.delete", role: .destructive) {
-                            self.scannedDocumentData = nil
+                            obligationsVM.scannedDocumentData = nil
                             previewURL = nil
                         }
                         .font(.subheadline.weight(.semibold))
@@ -406,7 +410,8 @@ struct AddObligationSheet: View {
                 alertOffset: hasExpiryDate ? alertOffset : nil,
                 notes: notes,
                 documentsNeeded: documentsNeeded,
-                scannedDocumentData: scannedDocumentData
+                scannedDocumentData: obligationsVM.scannedDocumentData,
+                escalatedAlertsEnabled: escalatedAlertsEnabled
             )
             dismiss()
         } catch {
@@ -439,6 +444,39 @@ struct AddObligationSheet: View {
         }
     }
 
+    private var escalatedAlertsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("pro.escalatedAlerts.title")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+
+            Toggle(
+                "pro.escalatedAlerts.toggle",
+                isOn: Binding(
+                    get: { escalatedAlertsEnabled },
+                    set: { newValue in
+                        if newValue && !purchases.isProActive {
+                            showPaywall = true
+                        } else {
+                            escalatedAlertsEnabled = newValue
+                            if newValue {
+                                Task { await obligationsVM.requestNotificationPermission() }
+                            }
+                        }
+                    }
+                )
+            )
+            .tint(Color.pareGreen)
+
+            if escalatedAlertsEnabled {
+                Text("pro.escalatedAlerts.schedule")
+                    .font(.caption)
+                    .foregroundStyle(Color.pareGreen)
+            }
+        }
+        .padding(.top, 4)
+    }
+
     private func delete() {
         guard let editingObligation else { return }
         do {
@@ -449,4 +487,3 @@ struct AddObligationSheet: View {
         }
     }
 }
-

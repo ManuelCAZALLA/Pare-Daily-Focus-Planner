@@ -80,13 +80,17 @@ struct OnboardingStepView: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            Image(systemName: icon)
-                .font(.system(size: 80))
-                .foregroundStyle(color)
-                .symbolEffect(.bounce, options: .repeating)
-                .frame(width: 160, height: 160)
-                .background(color.opacity(0.1))
-                .clipShape(Circle())
+            if #available(iOS 18.0, *) {
+                Image(systemName: icon)
+                    .font(.system(size: 80))
+                    .foregroundStyle(color)
+                    .symbolEffect(.bounce, options: .repeating)
+                    .frame(width: 160, height: 160)
+                    .background(color.opacity(0.1))
+                    .clipShape(Circle())
+            } else {
+                // Fallback on earlier versions
+            }
             
             VStack(spacing: 12) {
                 Text(title)

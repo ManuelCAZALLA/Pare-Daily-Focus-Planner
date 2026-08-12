@@ -7,15 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3CFD2B7D300EA7120021A2F8 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD2B7C300EA7120021A2F8 /* FirebaseAnalytics */; };
-		3CFD2B7F300EA7120021A2F8 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD2B7E300EA7120021A2F8 /* FirebaseCrashlytics */; };
 		3CFD3004301E58060021A2F8 /* ReceiptParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3003301E58060021A2F8 /* ReceiptParser */; };
 		3CFD3006301E58060021A2F8 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3005301E58060021A2F8 /* RevenueCat */; };
 		3CFD3008301E58060021A2F8 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3007301E58060021A2F8 /* RevenueCatUI */; };
+		3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3CFD5A0DA0B0C0D0E0F0A00D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3CEDE1082FD56E6C00FD1446 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3CFD5A04A0B0C0D0E0F0A004;
+			remoteInfo = PareWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3CFD5A0BA0B0C0D0E0F0A00B /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pare Daily Focus Planner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PareWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -25,6 +49,13 @@
 				Info.plist,
 			);
 			target = 3CEDE10F2FD56E6C00FD1446 /* Pare Daily Focus Planner */;
+		};
+		3CFD5A03A0B0C0D0E0F0A003 /* Exceptions for "PareWidgets" folder in "PareWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -37,6 +68,14 @@
 			path = "Pare Daily Focus Planner";
 			sourceTree = "<group>";
 		};
+		3CFD5A02A0B0C0D0E0F0A002 /* PareWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3CFD5A03A0B0C0D0E0F0A003 /* Exceptions for "PareWidgets" folder in "PareWidgets" target */,
+			);
+			path = PareWidgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,9 +85,14 @@
 			files = (
 				3CFD3006301E58060021A2F8 /* RevenueCat in Frameworks */,
 				3CFD3004301E58060021A2F8 /* ReceiptParser in Frameworks */,
-				3CFD2B7D300EA7120021A2F8 /* FirebaseAnalytics in Frameworks */,
 				3CFD3008301E58060021A2F8 /* RevenueCatUI in Frameworks */,
-				3CFD2B7F300EA7120021A2F8 /* FirebaseCrashlytics in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CFD5A06A0B0C0D0E0F0A006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				3CEDE1122FD56E6C00FD1446 /* Pare Daily Focus Planner */,
+				3CFD5A02A0B0C0D0E0F0A002 /* PareWidgets */,
 				3CEDE1112FD56E6C00FD1446 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */,
+				3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,18 +127,18 @@
 				3CEDE10C2FD56E6C00FD1446 /* Sources */,
 				3CEDE10D2FD56E6C00FD1446 /* Frameworks */,
 				3CEDE10E2FD56E6C00FD1446 /* Resources */,
+				3CFD5A0BA0B0C0D0E0F0A00B /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3CFD5A0EA0B0C0D0E0F0A00E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3CEDE1122FD56E6C00FD1446 /* Pare Daily Focus Planner */,
 			);
 			name = "Pare Daily Focus Planner";
 			packageProductDependencies = (
-				3CFD2B7C300EA7120021A2F8 /* FirebaseAnalytics */,
-				3CFD2B7E300EA7120021A2F8 /* FirebaseCrashlytics */,
 				3CFD3003301E58060021A2F8 /* ReceiptParser */,
 				3CFD3005301E58060021A2F8 /* RevenueCat */,
 				3CFD3007301E58060021A2F8 /* RevenueCatUI */,
@@ -100,6 +146,26 @@
 			productName = "Pare Daily Focus Planner";
 			productReference = 3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */;
 			productType = "com.apple.product-type.application";
+		};
+		3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CFD5A08A0B0C0D0E0F0A008 /* Build configuration list for PBXNativeTarget "PareWidgets" */;
+			buildPhases = (
+				3CFD5A05A0B0C0D0E0F0A005 /* Sources */,
+				3CFD5A06A0B0C0D0E0F0A006 /* Frameworks */,
+				3CFD5A07A0B0C0D0E0F0A007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3CFD5A02A0B0C0D0E0F0A002 /* PareWidgets */,
+			);
+			name = PareWidgets;
+			productName = PareWidgets;
+			productReference = 3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -114,6 +180,9 @@
 					3CEDE10F2FD56E6C00FD1446 = {
 						CreatedOnToolsVersion = 26.5;
 					};
+					3CFD5A04A0B0C0D0E0F0A004 = {
+						CreatedOnToolsVersion = 26.5;
+					};
 				};
 			};
 			buildConfigurationList = 3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Pare Daily Focus Planner" */;
@@ -122,11 +191,11 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 3CEDE1072FD56E6C00FD1446;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3CFD2B7B300EA7120021A2F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -135,12 +204,20 @@
 			projectRoot = "";
 			targets = (
 				3CEDE10F2FD56E6C00FD1446 /* Pare Daily Focus Planner */,
+				3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3CEDE10E2FD56E6C00FD1446 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CFD5A07A0B0C0D0E0F0A007 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -157,7 +234,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3CFD5A05A0B0C0D0E0F0A005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3CFD5A0EA0B0C0D0E0F0A00E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */;
+			targetProxy = 3CFD5A0DA0B0C0D0E0F0A00D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3CEDE11B2FD56E6E00FD1446 /* Debug */ = {
@@ -285,6 +377,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Pare Daily Focus Planner/Pare.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -305,7 +398,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner";
@@ -328,6 +421,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Pare Daily Focus Planner/Pare.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -348,7 +442,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner";
@@ -359,6 +453,74 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3CFD5A09A0B0C0D0E0F0A009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = PareWidgets/PareWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = YNAD5X38LN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PareWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner.PareWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3CFD5A0AA0B0C0D0E0F0A00A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = PareWidgets/PareWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = YNAD5X38LN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PareWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner.PareWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -387,17 +549,18 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		3CFD5A08A0B0C0D0E0F0A008 /* Build configuration list for PBXNativeTarget "PareWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CFD5A09A0B0C0D0E0F0A009 /* Debug */,
+				3CFD5A0AA0B0C0D0E0F0A00A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3CFD2B7B300EA7120021A2F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.16.0;
-			};
-		};
 		3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
@@ -409,16 +572,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3CFD2B7C300EA7120021A2F8 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3CFD2B7B300EA7120021A2F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		3CFD2B7E300EA7120021A2F8 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3CFD2B7B300EA7120021A2F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
 		3CFD3003301E58060021A2F8 /* ReceiptParser */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;

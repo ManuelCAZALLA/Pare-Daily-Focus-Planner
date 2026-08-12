@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ vence el %@.</key>
+	<string>%1$@ läuft ab, %2$@.</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld días de racha</key>
+	<string>%lld Streak-Tage</string>
+	<key>%lld/%lld</key>
+	<string>%1$lld/%2$lld</string>
+	<key>%lldd</key>
+	<string>%lldd</string>
+	<key>+ %lld más</key>
+	<string>+ %lld mehr</string>
+	<key>/%lld</key>
+	<string>/%lld</string>
+	<key>1 día antes</key>
+	<string>1 Tag vorher</string>
+	<key>1 hora antes</key>
+	<string>1 Stunde vorher</string>
+	<key>1 mes antes</key>
+	<string>1 Monat vorher</string>
+	<key>1 semana antes</key>
+	<string>1 Woche vorher</string>
+	<key>10 minutos antes</key>
+	<string>10 Minuten vorher</string>
+	<key>15 minutos antes</key>
+	<string>15 Minuten vorher</string>
+	<key>2 días antes</key>
+	<string>2 Tage vorher</string>
+	<key>2 horas antes</key>
+	<string>2 Stunden vorher</string>
+	<key>2 minutos para cerrar bien
+este día.</key>
+	<string>2 Minuten, um gut zu schließen
+an diesem Tag.</string>
+	<key>2 semanas antes</key>
+	<string>2 Wochen vorher</string>
+	<key>20 minutos antes</key>
+	<string>20 Minuten vorher</string>
+	<key>30 minutos antes</key>
+	<string>30 Minuten vorher</string>
+	<key>5 minutos antes</key>
+	<string>5 Minuten vorher</string>
+	<key>A la hora del evento</key>
+	<string>Zur Zeit des Ereignisses</string>
+	<key>Activados</key>
+	<string>Aktiviert</string>
+	<key>Activar notificaciones</key>
+	<string>Benachrichtigungen aktivieren</string>
+	<key>Ahora no</key>
+	<string>Nicht jetzt</string>
+	<key>Alta</key>
+	<string>Hoch</string>
+	<key>Aviso</key>
+	<string>Warnung</string>
+	<key>Avisos de tareas y trámites</key>
+	<string>Aufgaben- und Verfahrenshinweise</string>
+	<key>Añade el primer trámite que quieras no olvidar.</key>
+	<string>Füge den ersten Vorgang hinzu, den du nicht vergessen willst.</string>
+	<key>Añade miembros de tu familia para organizar mejor las obligaciones y trámites.</key>
+	<string>Fügen Sie Mitglieder Ihrer Familie hinzu, um Verpflichtungen und Abläufe besser zu organisieren.</string>
+	<key>Añade tareas para mañana y deja
+una nota del día.</key>
+	<string>Fügen Sie Aufgaben für morgen hinzu und gehen Sie
+eine Notiz des Tages.</string>
+	<key>Añade una nota...</key>
+	<string>Notiz hinzufügen...</string>
+	<key>Añade una tarea para empezar.</key>
+	<string>Fügen Sie eine Aufgabe hinzu, um zu beginnen.</string>
+	<key>Añade una tarea para enfocarte en lo que importa hoy.</key>
+	<string>Füge eine Aufgabe hinzu, um dich heute auf das Wesentliche zu konzentrieren.</string>
+	<key>Añadir</key>
+	<string>Hinzufügen</string>
+	<key>Añadir tarea</key>
+	<string>Aufgabe hinzufügen</string>
+	<key>Baja</key>
+	<string>Niedrig</string>
+	<key>Borrarla permanentemente</key>
+	<string>Löschen Sie es dauerhaft</string>
+	<key>Buenas noches</key>
+	<string>Guten Abend</string>
+	<key>Buenas tardes</key>
+	<string>Guten Tag</string>
+	<key>Buenas tardes 👋</key>
+	<string>Guten Tag 👋</string>
+	<key>Buenos días</key>
+	<string>Guten Morgen</string>
+	<key>Buenos días 🌅</key>
+	<string>Guten Morgen 🌅</string>
+	<key>Buenos días 👋</key>
+	<string>Guten Morgen 👋</string>
+	<key>Cada %lld días</key>
+	<string>Alle %lld Tage</string>
+	<key>Cada 2 días</key>
+	<string>Alle 2 Tage</string>
+	<key>Cada día</key>
+	<string>Jeden Tag</string>
+	<key>Cada semana</key>
+	<string>Jede Woche</string>
+	<key>Caldera (revisión anual)</key>
+	<string>Heizkessel (jährliche Wartung)</string>
+	<key>Captura y reflexión</key>
+	<string>Erfassung und Reflexion</string>
+	<key>Carnet de conducir</key>
+	<string>Führerschein</string>
+	<key>Cerrar el día</key>
+	<string>Schließen Sie den Tag ab</string>
+	<key>Certificaciones profesionales</key>
+	<string>Berufszertifizierungen</string>
+	<key>Certificado digital (FNMT)</key>
+	<string>Digitales Zertifikat (FNMT)</string>
+	<key>Certificado energético</key>
+	<string>Energieausweis</string>
+	<key>Cierre del día 🌙</key>
+	<string>Abschluss des Tages 🌙</string>
+	<key>Colegio profesional</key>
+	<string>Berufskammer</string>
+	<key>Color Identificador</key>
+	<string>Farbidentifikator</string>
+	<key>Comenzar</key>
+	<string>Fangen Sie an</string>
+	<key>Comenzar el día</key>
+	<string>Beginnen Sie den Tag</string>
+	<key>Comunidad de vecinos</key>
+	<string>Eigentümergemeinschaft</string>
+	<key>Condiciones del servicio</key>
+	<string>Nutzungsbedingungen</string>
+	<key>Consulta tu siguiente tarea y el progreso del día.</key>
+	<string>Sehen Sie sich Ihre nächste Aufgabe und den Fortschritt des Tages an.</string>
+	<key>Contrato de alquiler</key>
+	<string>Mietvertrag</string>
+	<key>Contáctanos</key>
+	<string>Kontaktieren Sie uns</string>
+	<key>Crea y haz seguimiento de tus hábitos diarios, tanto por la mañana como por la noche.</key>
+	<string>Erstellen und verfolgen Sie Ihre täglichen Gewohnheiten, morgens und abends.</string>
+	<key>Cuotas de autónomo</key>
+	<string>Freiberufler-Beiträge</string>
+	<key>Cursos con caducidad</key>
+	<string>Kurse mit Ablaufdatum</string>
+	<key>DE AYER</key>
+	<string>VON GESTERN</string>
+	<key>DNI / NIE</key>
+	<string>DNI / NIE</string>
+	<key>Declaración de la Renta</key>
+	<string>Einkommensteuererklärung</string>
+	<key>Dentista</key>
+	<string>Zahnarzt</string>
+	<key>Desactivada</key>
+	<string>Deaktiviert</string>
+	<key>Detalles adicionales</key>
+	<string>Zusätzliche Details</string>
+	<key>Detalles básicos</key>
+	<string>Grundlegende Details</string>
+	<key>Disfruta de tu tiempo libre.</key>
+	<string>Genießen Sie Ihre Freizeit.</string>
+	<key>Documentos personales</key>
+	<string>Persönliche Dokumente</string>
+	<key>Dom</key>
+	<string>Sonne</string>
+	<key>Domingo</key>
+	<string>Sonntag</string>
+	<key>Días laborables (Lun–Vie)</key>
+	<string>Werktage (Mo–Fr)</string>
+	<key>Editar Perfil</key>
+	<string>Profil bearbeiten</string>
+	<key>Editar Tarea</key>
+	<string>Aufgabe bearbeiten</string>
+	<key>El día de vencimiento</key>
+	<string>Am Ablaufdatum</string>
+	<key>Elegir fecha</key>
+	<string>Datum auswählen</string>
+	<key>Elegir otra fecha</key>
+	<string>Wählen Sie ein anderes Datum</string>
+	<key>Elige 1 tarea que, si la completas,
+el día habrá valido la pena.</key>
+	<string>Wählen Sie 1 Aufgabe aus, die, wenn sie erledigt ist,
+Der Tag wird sich gelohnt haben.</string>
+	<key>Eliminar Perfil</key>
+	<string>Profil löschen</string>
+	<key>Eliminar tarea</key>
+	<string>Aufgabe löschen</string>
+	<key>Empieza en domingo</key>
+	<string>Beginnt am Sonntag</string>
+	<key>Empieza en lunes</key>
+	<string>Beginnt am Montag</string>
+	<key>En 1 mes</key>
+	<string>In 1 Monat</string>
+	<key>En 2 semanas</key>
+	<string>In 2 Wochen</string>
+	<key>En 3 meses</key>
+	<string>In 3 Monaten</string>
+	<key>Envíanos un email para ayuda o sugerencias</key>
+	<string>Senden Sie uns eine E-Mail für Hilfe oder Vorschläge</string>
+	<key>Es momento de preparar tu día con Pare.</key>
+	<string>Es ist Zeit, Ihren Tag mit Pare vorzubereiten.</string>
+	<key>Esta acción no se puede deshacer.</key>
+	<string>Diese Aktion kann nicht rückgängig gemacht werden.</string>
+	<key>Esta tarea quedó pendiente de ayer.
+¿Qué quieres hacer con ella?</key>
+	<string>Diese Aufgabe stand seit gestern an.
+Was willst du damit machen?</string>
+	<key>Establece Rutinas</key>
+	<string>Legen Sie Routinen fest</string>
+	<key>Extintor</key>
+	<string>Feuerlöscher</string>
+	<key>Fecha de vencimiento</key>
+	<string>Ablaufdatum</string>
+	<key>Fecha para empezar</key>
+	<string>Startdatum</string>
+	<key>Fechas clave</key>
+	<string>Wichtige Daten</string>
+	<key>Finanzas</key>
+	<string>Finanzen</string>
+	<key>Gestiona Trámites</key>
+	<string>Verfahren verwalten</string>
+	<key>Gestión de suscripción no disponible en esta versión</key>
+	<string>Die Abonnementverwaltung ist in dieser Version nicht verfügbar</string>
+	<key>HOY</key>
+	<string>HEUTE</string>
+	<key>Has cerrado el día con intención.
+Mañana será otro gran día.</key>
+	<string>Sie haben den Tag mit Absicht abgeschlossen.
+Morgen wird wieder ein toller Tag.</string>
+	<key>Hogar</key>
+	<string>Zuhause</string>
+	<key>Hora de aviso</key>
+	<string>Merkzeit</string>
+	<key>Hoy</key>
+	<string>Heute</string>
+	<key>ITV</key>
+	<string>TÜV (ITV)</string>
+	<key>Imprescindible</key>
+	<string>Dringend</string>
+	<key>Información básica</key>
+	<string>Grundlegende Informationen</string>
+	<key>Jue</key>
+	<string>Do</string>
+	<key>Jueves</key>
+	<string>Donnerstag</string>
+	<key>La pasamos al día de hoy</key>
+	<string>Wir verschieben es auf heute</string>
+	<key>Licencia de conducir extranjera</key>
+	<string>Ausländischer Führerschein</string>
+	<key>Lo que lograste hoy ✅</key>
+	<string>Was du heute erreicht hast ✅</string>
+	<key>Lun</key>
+	<string>Mo</string>
+	<key>Lunes</key>
+	<string>Montag</string>
+	<key>Mantente al Día</key>
+	<string>Bleiben Sie auf dem Laufenden</string>
+	<key>Mar</key>
+	<string>Meer</string>
+	<key>Martes</key>
+	<string>Dienstag</string>
+	<key>Mañana</key>
+	<string>Morgen</string>
+	<key>Mañana lista — Queda el cierre</key>
+	<string>Morgen fertig – Schließung bleibt bestehen</string>
+	<key>Media</key>
+	<string>Mittel</string>
+	<key>Mensual el día %lld</key>
+	<string>Monatlich am Tag %lld</string>
+	<key>Miembros de la familia</key>
+	<string>Familienmitglieder</string>
+	<key>Mié</key>
+	<string>Mi</string>
+	<key>Miércoles</key>
+	<string>Mittwoch</string>
+	<key>Mover a hoy</key>
+	<string>Wechseln Sie zu heute</string>
+	<key>Nada planeado</key>
+	<string>Nichts geplant</string>
+	<key>No hay perfiles</key>
+	<string>Es sind keine Profile vorhanden</string>
+	<key>No hay tareas completadas hoy.</key>
+	<string>Heute sind keine Aufgaben erledigt.</string>
+	<key>No hay tareas para hoy</key>
+	<string>Für heute gibt es keine Aufgaben</string>
+	<key>No olvides tus papeleos importantes, facturas y obligaciones con recordatorios dedicados.</key>
+	<string>Vergessen Sie Ihre wichtigen Unterlagen, Rechnungen und Verpflichtungen nicht mit speziellen Erinnerungen.</string>
+	<key>No se repite</key>
+	<string>Wiederholt sich nicht</string>
+	<key>No tienes tareas pendientes</key>
+	<string>Sie haben keine ausstehenden Aufgaben</string>
+	<key>Nombre</key>
+	<string>Name</string>
+	<key>Nueva Tarea</key>
+	<string>Neue Aufgabe</string>
+	<key>Nuevo Perfil</key>
+	<string>Neues Profil</string>
+	<key>Opcional — una reflexión del día...</key>
+	<string>Optional – eine Reflexion des Tages...</string>
+	<key>Organiza tu Día</key>
+	<string>Organisieren Sie Ihren Tag</string>
+	<key>PARE</key>
+	<string>STOP</string>
+	<key>PRO</key>
+	<string>PRO</string>
+	<key>Pare Daily Focus Planner</key>
+	<string>Stoppen Sie den täglichen Fokusplaner</string>
+	<key>Pare Pro</key>
+	<string>Stoppen Sie Pro</string>
+	<key>Pare · Trámites</key>
+	<string>Stop · Prozeduren</string>
+	<key>Parentesco (ej. Madre, Hijo)</key>
+	<string>Beziehung (z. B. Mutter, Sohn)</string>
+	<key>Pasaporte</key>
+	<string>Reisepass</string>
+	<key>Perfiles Familiares</key>
+	<string>Familienprofile</string>
+	<key>Perfiles familiares</key>
+	<string>Familienprofile</string>
+	<key>Permiso de circulación</key>
+	<string>Zulassungsbescheinigung</string>
+	<key>Permiso de residencia</key>
+	<string>Aufenthaltsgenehmigung</string>
+	<key>Permiso de trabajo</key>
+	<string>Arbeitserlaubnis</string>
+	<key>Permite las notificaciones para que podamos recordarte tus tareas y trámites a tiempo.</key>
+	<string>Lassen Sie Benachrichtigungen zu, damit wir Sie rechtzeitig an Ihre Aufgaben und Abläufe erinnern können.</string>
+	<key>Permitir</key>
+	<string>Erlauben</string>
+	<key>Plan de pensiones</key>
+	<string>Rentenplan</string>
+	<key>Planifica tus tareas diarias y mantén el foco en lo que realmente importa con una vista de línea de tiempo.</key>
+	<string>Planen Sie Ihre täglichen Aufgaben und konzentrieren Sie sich mit der Zeitleistenansicht auf das Wesentliche.</string>
+	<key>Política de Privacidad</key>
+	<string>Datenschutzrichtlinie</string>
+	<key>Preparar el día · %@</key>
+	<string>Bereiten Sie den Tag vor · %@</string>
+	<key>Puedes añadirlas desde la vista Hoy.</key>
+	<string>Sie können sie in der Heute-Ansicht hinzufügen.</string>
+	<key>Página Web</key>
+	<string>Website</string>
+	<key>Racha de rutinas completadas</key>
+	<string>Reihe abgeschlossener Routinen</string>
+	<key>Registra un trámite para consultarlo y editarlo desde aquí.</key>
+	<string>Registrieren Sie hier ein Verfahren, um es einzusehen und zu bearbeiten.</string>
+	<key>Revisa cómo fue tu día y prepara el de mañana.</key>
+	<string>Überprüfen Sie, wie Ihr Tag verlaufen ist, und bereiten Sie sich auf morgen vor.</string>
+	<key>Revisar y cerrar · %@</key>
+	<string>Überprüfen und schließen · %@</string>
+	<key>Revisión del día</key>
+	<string>Rückblick auf den Tag</string>
+	<key>Revisión del taller</key>
+	<string>Werkstatt-Service</string>
+	<key>Revisión ginecológica</key>
+	<string>Gynäkologische Untersuchung</string>
+	<key>Revisión médica anual</key>
+	<string>Jährliche Gesundheitsuntersuchung</string>
+	<key>Revisión óptica</key>
+	<string>Augenuntersuchung</string>
+	<key>Rutina</key>
+	<string>Routine</string>
+	<key>Rutina de mañana</key>
+	<string>Morgenroutine</string>
+	<key>Rutina de noche</key>
+	<string>Nachtroutine</string>
+	<key>SIN HORA</key>
+	<string>OHNE ZEIT</string>
+	<key>Salud</key>
+	<string>Gesundheit</string>
+	<key>Se mostrará incluso con la app cerrada</key>
+	<string>Es wird auch bei geschlossener App angezeigt</string>
+	<key>Se muestran siempre</key>
+	<string>Sie werden immer angezeigt</string>
+	<key>Se ocultan al terminar</key>
+	<string>Sie verstecken sich, wenn sie fertig sind</string>
+	<key>Seguro de moto</key>
+	<string>Motorradversicherung</string>
+	<key>Seguro de vida</key>
+	<string>Lebensversicherung</string>
+	<key>Seguro del coche</key>
+	<string>Kfz-Versicherung</string>
+	<key>Seguro del hogar</key>
+	<string>Hausratversicherung</string>
+	<key>Seguro médico privado</key>
+	<string>Private Krankenversicherung</string>
+	<key>Selecciona cuándo hacerla</key>
+	<string>Wählen Sie aus, wann dies erfolgen soll</string>
+	<key>Selecciona las tareas que
+postpones a mañana.</key>
+	<string>Wählen Sie die Aufgaben aus, die
+auf morgen verschieben.</string>
+	<key>Selecciona un Avatar</key>
+	<string>Wählen Sie einen Avatar aus</string>
+	<key>Semana laboral</key>
+	<string>Arbeitswoche</string>
+	<key>Semanalmente (%lld días)</key>
+	<string>Wöchentlich (%lld Tage)</string>
+	<key>Siguiente</key>
+	<string>Als nächstes</string>
+	<key>Sin aviso</key>
+	<string>Ohne Vorankündigung</string>
+	<key>Sin rituales completados hoy</key>
+	<string>Heute wurden keine Rituale abgeschlossen</string>
+	<key>Sin trámites registrados</key>
+	<string>Keine Vorgänge registriert</string>
+	<key>Soporte Pare Daily Focus Planner</key>
+	<string>Unterstützen Sie Stop Daily Focus Planner</string>
+	<key>Suelen tardar 1 semana en dar cita</key>
+	<string>Termine dauern meist 1 Woche</string>
+	<key>Suscripciones anuales</key>
+	<string>Jährliche Abonnements</string>
+	<key>Sáb</key>
+	<string>Sa</string>
+	<key>Sábado</key>
+	<string>Samstag</string>
+	<key>Tarea añadida para mañana</key>
+	<string>Aufgabe für morgen hinzugefügt</string>
+	<key>Tarea para mañana</key>
+	<string>Aufgabe für morgen</string>
+	<key>Tarea pendiente</key>
+	<string>Ausstehende Aufgabe</string>
+	<key>Tareas completadas</key>
+	<string>Abgeschlossene Aufgaben</string>
+	<key>Tareas de hoy</key>
+	<string>Die heutigen Aufgaben</string>
+	<key>Tarjeta de crédito</key>
+	<string>Kreditkarte</string>
+	<key>Tarjeta de transporte</key>
+	<string>Fahrkarte</string>
+	<key>Tarjeta sanitaria</key>
+	<string>Gesundheitskarte</string>
+	<key>Tienes todo lo que necesitas
+para un día con propósito.</key>
+	<string>Sie haben alles, was Sie brauchen
+für einen Tag mit Sinn.</string>
+	<key>Toca para activarlos</key>
+	<string>Tippen Sie, um sie zu aktivieren</string>
+	<key>Toca para registrar</key>
+	<string>Tippen Sie hier, um sich zu registrieren</string>
+	<key>Toca para registrar tus datos y recibir avisos.</key>
+	<string>Tippen Sie hier, um Ihre Daten zu registrieren und Benachrichtigungen zu erhalten.</string>
+	<key>Todo completado.
+¡Día perfecto!</key>
+	<string>Alles abgeschlossen.
+Perfekter Tag!</string>
+	<key>Todo listo</key>
+	<string>Alles bereit</string>
+	<key>Todos los días de la semana</key>
+	<string>Jeden Tag der Woche</string>
+	<key>Trabajo y formación</key>
+	<string>Arbeit &amp; Ausbildung</string>
+	<key>Trámites guardados</key>
+	<string>Gespeicherte Prozeduren</string>
+	<key>Trámites urgentes</key>
+	<string>Dringende Verfahren</string>
+	<key>Tu %@ vence en %lld días — %@. Actúa ahora.</key>
+	<string>Dein %@ läuft in %lld Tagen ab — %@. Handle jetzt.</string>
+	<key>Tu %@ vence en %lld días. Actúa ahora.</key>
+	<string>Dein %@ läuft in %lld Tagen ab. Handle jetzt.</string>
+	<key>Tu briefing de hoy</key>
+	<string>Ihr heutiges Briefing</string>
+	<key>Tu foco de hoy</key>
+	<string>Ihr Fokus heute</string>
+	<key>Tu intención de hoy</key>
+	<string>Ihr Vorhaben für heute</string>
+	<key>Tus datos son tuyos</key>
+	<string>Ihre Daten gehören Ihnen</string>
+	<key>Términos de Uso</key>
+	<string>Nutzungsbedingungen</string>
+	<key>Título universitario homologado</key>
+	<string>Anerkannter Hochschulabschluss</string>
+	<key>Tómate 2 minutos para
+preparar un gran día.</key>
+	<string>Nehmen Sie sich 2 Minuten Zeit
+Bereiten Sie einen tollen Tag vor.</string>
+	<key>Un vistazo rápido antes de empezar.</key>
+	<string>Ein kurzer Blick, bevor wir beginnen.</string>
+	<key>Urgente</key>
+	<string>Dringend</string>
+	<key>VER</key>
+	<string>SEHEN</string>
+	<key>Vacunas</key>
+	<string>Impfungen</string>
+	<key>Valora la App</key>
+	<string>Bewerten Sie die App</string>
+	<key>Vehículo</key>
+	<string>Fahrzeug</string>
+	<key>Vence el %@</key>
+	<string>Läuft ab %@</string>
+	<key>Vie</key>
+	<string>Fr</string>
+	<key>Viernes</key>
+	<string>Freitag</string>
+	<key>Visita nuestro sitio oficial</key>
+	<string>Besuchen Sie unsere offizielle Website</string>
+	<key>camera.permission</key>
+	<string>Pare benötigt die Kamera, um Dokumente deiner Vorgänge zu scannen.</string>
+	<key>completadas</key>
+	<string>abgeschlossen</string>
+	<key>general.cancel</key>
+	<string>Abbrechen</string>
+	<key>general.close</key>
+	<string>Schließen</string>
+	<key>general.continue</key>
+	<string>Weiter</string>
+	<key>general.delete</key>
+	<string>Löschen</string>
+	<key>general.save</key>
+	<string>Speichern</string>
+	<key>obligation.scan</key>
+	<string>Dokument scannen</string>
+	<key>obligation.scan.delete</key>
+	<string>Dokument löschen</string>
+	<key>obligation.scan.proRequired</key>
+	<string>Das Scannen von Dokumenten ist eine Pro-Funktion</string>
+	<key>obligation.scan.section</key>
+	<string>Gescanntes Dokument</string>
+	<key>obligation.scan.view</key>
+	<string>Dokument anzeigen</string>
+	<key>obligations.actionStart</key>
+	<string>Wann soll mit der Zubereitung begonnen werden?</string>
+	<key>obligations.add</key>
+	<string>Verfahren hinzufügen</string>
+	<key>obligations.all</key>
+	<string>Alle Verfahren</string>
+	<key>obligations.cancel</key>
+	<string>Abbrechen</string>
+	<key>obligations.categories</key>
+	<string>Wichtige Kategorien</string>
+	<key>obligations.delete</key>
+	<string>Vorgang löschen</string>
+	<key>obligations.documents</key>
+	<string>Notwendige Unterlagen...</string>
+	<key>obligations.edit</key>
+	<string>Verfahren bearbeiten</string>
+	<key>obligations.empty</key>
+	<string>Es sind noch keine gespeicherten Prozeduren vorhanden</string>
+	<key>obligations.expiry</key>
+	<string>Hat ein Ablaufdatum</string>
+	<key>obligations.holder</key>
+	<string>Name des Besitzers...</string>
+	<key>obligations.noAlert</key>
+	<string>Ohne Vorankündigung</string>
+	<key>obligations.notes</key>
+	<string>Zusätzliche Hinweise oder Details...</string>
+	<key>obligations.registered</key>
+	<string>Registriert</string>
+	<key>obligations.reminder</key>
+	<string>Wann soll ich Sie benachrichtigen?</string>
+	<key>obligations.save</key>
+	<string>Speichern</string>
+	<key>obligations.saved</key>
+	<string>Gespeicherte Prozeduren anzeigen</string>
+	<key>obligations.saved.count</key>
+	<string>Gespeicherte Prozeduren anzeigen (%lld)</string>
+	<key>obligations.search</key>
+	<string>Suchvorgang...</string>
+	<key>obligations.selectTemplate</key>
+	<string>Vorlage auswählen</string>
+	<key>obligations.subtitle</key>
+	<string>Der Assistent für die Eingriffe, die immer vergessen werden</string>
+	<key>obligations.title</key>
+	<string>Verfahren</string>
+	<key>pendientes</key>
+	<string>Ohrringe</string>
+	<key>pro.badge</key>
+	<string>PRO</string>
+	<key>pro.escalatedAlerts.schedule</key>
+	<string>Du wirst 1 Monat, 2 Wochen, 1 Woche und 2 Tage vor Ablauf benachrichtigt.</string>
+	<key>pro.escalatedAlerts.title</key>
+	<string>Intensivierte Warnungen</string>
+	<key>pro.escalatedAlerts.toggle</key>
+	<string>Intensivierte Warnungen aktivieren</string>
+	<key>pro.familyProfiles.title</key>
+	<string>Familienprofile</string>
+	<key>pro.locked</key>
+	<string>Gesperrt</string>
+	<key>pro.widgets.locked</key>
+	<string>Widgets erfordern Pare Pro</string>
+	<key>routine.completed</key>
+	<string>Abgeschlossen</string>
+	<key>routine.dayComplete</key>
+	<string>Ganzer Tag ✓</string>
+	<key>routine.evening</key>
+	<string>Nacht</string>
+	<key>routine.morning</key>
+	<string>Morgen</string>
+	<key>routine.streak</key>
+	<string>Tage hintereinander</string>
+	<key>routine.streak.one</key>
+	<string>Tag in Folge</string>
+	<key>routine.subtitle</key>
+	<string>Das Ritual, das den Kreislauf Ihres Tages schließt</string>
+	<key>routine.title</key>
+	<string>Alltag</string>
+	<key>settings.about</key>
+	<string>Über</string>
+	<key>settings.legal</key>
+	<string>Legal</string>
+	<key>settings.notifications</key>
+	<string>Benachrichtigungen</string>
+	<key>settings.planning</key>
+	<string>Planung</string>
+	<key>settings.pro.active</key>
+	<string>Stoppen Sie Pro Active</string>
+	<key>settings.pro.active.detail</key>
+	<string>Vielen Dank für die Unterstützung der App ✨</string>
+	<key>settings.pro.manage</key>
+	<string>Abonnement verwalten</string>
+	<key>settings.pro.manage.detail</key>
+	<string>Kündigen, pausieren oder ändern Sie Ihren Plan</string>
+	<key>settings.pro.restore</key>
+	<string>Einkäufe wiederherstellen</string>
+	<key>settings.pro.restore.detail</key>
+	<string>Haben Sie Pro bereits gekauft? Holen Sie es hierher zurück</string>
+	<key>settings.pro.upgrade</key>
+	<string>Gehen Sie zum Profi</string>
+	<key>settings.pro.upgrade.detail</key>
+	<string>Schalte alles ohne Grenzen frei</string>
+	<key>settings.routine</key>
+	<string>Tagesablauf</string>
+	<key>settings.subtitle</key>
+	<string>Passen Sie an, wie Pare Sie begleitet</string>
+	<key>settings.support</key>
+	<string>Unterstützung und Gemeinschaft</string>
+	<key>settings.title</key>
+	<string>Einstellungen</string>
+	<key>settings.version</key>
+	<string>Version %@</string>
+	<key>tasks.addHint</key>
+	<string>Verwenden Sie die Schaltfläche +, um Aufgaben hinzuzufügen</string>
+	<key>tasks.allClear</key>
+	<string>Alles klar</string>
+	<key>tasks.allClear.subtitle</key>
+	<string>Es ist eine gute Zeit, sich auszuruhen und nicht den Tag zu planen.</string>
+	<key>tasks.done</key>
+	<string>Fertig</string>
+	<key>tasks.move</key>
+	<string>Bewegen</string>
+	<key>tasks.overdue</key>
+	<string>Von gestern</string>
+	<key>tasks.reschedule</key>
+	<string>Neu planen</string>
+	<key>tasks.untimed</key>
+	<string>keine Zeit</string>
+	<key>tasks.yesterday</key>
+	<string>Gestern ausstehend · Zum Verwalten tippen</string>
+	<key>widget.addTasksHint</key>
+	<string>Füge eine Aufgabe hinzu, um zu starten.</string>
+	<key>widget.days</key>
+	<string>%lld Tage</string>
+	<key>widget.noObligations</key>
+	<string>Keine dringenden Vorgänge ✓</string>
+	<key>widget.noTasks</key>
+	<string>Alles erledigt 🎯</string>
+	<key>widget.obligation.description</key>
+	<string>Der nächste anstehende Vorgang</string>
+	<key>widget.obligation.name</key>
+	<string>Dringender Vorgang</string>
+	<key>widget.obligation.short</key>
+	<string>VORGÄNGE</string>
+	<key>widget.pending.short</key>
+	<string>offen</string>
+	<key>widget.routine.description</key>
+	<string>Dein täglicher Fortschritt</string>
+	<key>widget.routine.name</key>
+	<string>Routine</string>
+	<key>widget.routine.short</key>
+	<string>ROUTINE</string>
+	<key>widget.streak</key>
+	<string>%lld Streak-Tage</string>
+	<key>widget.today.description</key>
+	<string>Deine Tagesaufgaben auf einen Blick</string>
+	<key>widget.today.label</key>
+	<string>Heute</string>
+	<key>widget.today.name</key>
+	<string>Heute</string>
+	<key>¡Buen descanso! 🌙</key>
+	<string>Gute Erholung! 🌙</string>
+	<key>¡Plan listo! 🎯</key>
+	<string>Plan fertig! 🎯</string>
+	<key>¿Cuál es tu intención de hoy?</key>
+	<string>Was ist Ihr Vorsatz für heute?</string>
+	<key>¿Eliminar tarea?</key>
+	<string>Aufgabe löschen?</string>
+	<key>¿Quieres recibir un aviso en tu dispositivo cuando llegue la hora de esta tarea?</key>
+	<string>Möchtest du eine Benachrichtigung auf deinem Gerät erhalten, wenn es Zeit für diese Aufgabe ist?</string>
+	<key>¿Qué fue lo más importante?</key>
+	<string>Was war das Wichtigste?</string>
+	<key>¿Qué necesitas hacer?</key>
+	<string>Was möchtest du tun?</string>
+	<key>¿Qué pasa a mañana?</key>
+	<string>Was passiert morgen?</string>
+	<key>¿Qué tienes que hacer mañana?</key>
+	<string>Was hast du morgen zu tun?</string>
+	<key>¿Te gusta Pare? Déjanos una reseña</key>
+	<string>Magst du Pare? Hinterlassen Sie uns eine Bewertung</string>
+	<key>⚡</key>
+	<string>⚡</string>
+	<key>✍️</key>
+	<string>✍️</string>
+	<key>🌅</key>
+	<string>🌅</string>
+	<key>🌙</key>
+	<string>🌙</string>
+	<key>🎉</key>
+	<string>🎉</string>
+	<key>🔥</key>
+	<string>🔥</string>
+	<key>😶</key>
+	<string>😶</string>
+</dict>
+</plist>

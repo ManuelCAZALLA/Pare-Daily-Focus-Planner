@@ -43,11 +43,49 @@ final class NotificationService {
     }
 
     func schedule(for obligation: LifeObligation, title: String) {
-        guard let expiryDate = obligation.expiryDate,
-              let alertOffset = obligation.alertOffset else { return }
+        guard let expiryDate = obligation.expiryDate else { return }
 
+        if obligation.escalatedAlertsEnabled {
+            [90, 30, 14, 7].forEach { daysBeforeExpiry in
+                scheduleObligationNotification(
+                    for: obligation,
+                    title: title,
+                    expiryDate: expiryDate,
+                    daysBeforeExpiry: daysBeforeExpiry
+                )
+            }
+        } else if let alertOffset = obligation.alertOffset {
+            scheduleObligationNotification(
+                for: obligation,
+                title: title,
+                expiryDate: expiryDate,
+                timeIntervalBefore: alertOffset.timeIntervalBefore
+            )
+        }
+    }
+
+    private func scheduleObligationNotification(
+        for obligation: LifeObligation,
+        title: String,
+        expiryDate: Date,
+        daysBeforeExpiry: Int
+    ) {
+        scheduleObligationNotification(
+            for: obligation,
+            title: title,
+            expiryDate: expiryDate,
+            timeIntervalBefore: TimeInterval(daysBeforeExpiry * 24 * 60 * 60)
+        )
+    }
+
+    private func scheduleObligationNotification(
+        for obligation: LifeObligation,
+        title: String,
+        expiryDate: Date,
+        timeIntervalBefore: TimeInterval
+    ) {
         let notificationDate = Calendar.current.startOfDay(for: expiryDate)
-            .addingTimeInterval(-alertOffset.timeIntervalBefore + 9 * 60 * 60)
+            .addingTimeInterval(-timeIntervalBefore + 9 * 60 * 60)
         guard notificationDate > Date() else { return }
 
         let content = UNMutableNotificationContent()

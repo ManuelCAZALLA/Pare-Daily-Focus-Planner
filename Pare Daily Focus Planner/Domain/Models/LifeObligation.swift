@@ -14,6 +14,7 @@ final class LifeObligation {
     var estimatedCost: String?
     var documentsNeeded: String?
     @Attribute(.externalStorage) var scannedDocumentData: Data? = nil
+    var escalatedAlertsEnabled: Bool = false
     var notificationIDs: [String] = []
     var alertOffsetRaw: String?
     var createdAt: Date

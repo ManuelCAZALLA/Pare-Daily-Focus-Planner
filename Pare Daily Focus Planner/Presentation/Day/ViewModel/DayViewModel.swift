@@ -1,5 +1,6 @@
 // DayViewModel.swift
 import Foundation
+import WidgetKit
 
 @Observable
 @MainActor
@@ -64,6 +65,7 @@ final class DayViewModel {
             self.completingTaskIDs.remove(task.id)
             self.notificationService.cancel(for: task)
             try? self.taskRepository.complete(task)
+            WidgetCenter.shared.reloadTimelines(ofKind: "TodayWidget")
             self.loadDay(for: self.selectedDate)
         }
     }

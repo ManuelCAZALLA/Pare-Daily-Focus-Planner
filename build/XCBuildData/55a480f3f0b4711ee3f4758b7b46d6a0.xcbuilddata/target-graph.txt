@@ -1,0 +1,2 @@
+Target dependency graph (1 target)
+Target 'PareWidgets' in project 'Pare Daily Focus Planner' (no dependencies)

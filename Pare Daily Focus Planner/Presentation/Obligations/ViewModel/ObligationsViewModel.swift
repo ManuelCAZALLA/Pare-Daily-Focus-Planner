@@ -28,6 +28,7 @@ final class ObligationsViewModel {
     var familyProfile: FamilyProfile?
     var searchText: String = ""
     var savedObligations: [LifeObligation] = []
+    var scannedDocumentData: Data? = nil
 
     init(
         repository: ObligationRepositoryProtocol,
@@ -74,7 +75,8 @@ final class ObligationsViewModel {
         alertOffset: ObligationAlertOffset?,
         notes: String,
         documentsNeeded: String,
-        scannedDocumentData: Data?
+        scannedDocumentData: Data?,
+        escalatedAlertsEnabled: Bool
     ) throws {
         let obligation = existing ?? LifeObligation(templateID: template.id)
         obligation.familyProfile = familyProfile
@@ -86,6 +88,7 @@ final class ObligationsViewModel {
         obligation.notes = notes.nilIfEmpty
         obligation.documentsNeeded = documentsNeeded.nilIfEmpty
         obligation.scannedDocumentData = scannedDocumentData
+        obligation.escalatedAlertsEnabled = expiryDate != nil && escalatedAlertsEnabled
         try repository.save(obligation)
         notificationService?.schedule(for: obligation, title: template.title)
         try repository.save(obligation)

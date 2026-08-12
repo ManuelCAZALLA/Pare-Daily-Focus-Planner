@@ -32,14 +32,12 @@ struct PareApp: App {
         _notificationService = State(initialValue: notifications)
 
         // ── RevenueCat ──────────────────────────────────────────────────
-        // IMPORTANTE: cambia esta key por la de producción antes de subir
-        // a App Store. Nunca subas la test key a producción.
         #if DEBUG
         Purchases.logLevel = .debug
         #else
         Purchases.logLevel = .warn
         #endif
-        Purchases.configure(withAPIKey: "test_fJpOtRkRhnbdRhEBVtGhcmMKXwa")
+        Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
     }
 
     var body: some Scene {

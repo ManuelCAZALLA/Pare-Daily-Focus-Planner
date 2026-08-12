@@ -20,6 +20,7 @@ struct SavedObligationsView: View {
                             if let template = template(for: obligation) {
                                 Button {
                                     selectedTemplate = template
+                                    obligationsVM.scannedDocumentData = obligation.scannedDocumentData
                                 } label: {
                                     SavedObligationRow(obligation: obligation, template: template)
                                 }

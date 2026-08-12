@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 import UserNotifications
+import WidgetKit
 
 // MARK: - RoutineViewModel
 
@@ -105,6 +106,7 @@ final class RoutineViewModel {
         ritual.intentionTaskID = intentionTaskID
         context.insert(ritual)
         try? context.save()
+        WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
         withAnimation { todayMorningCompleted = true }
         streakDays = calculateStreak()
     }
@@ -125,6 +127,7 @@ final class RoutineViewModel {
             try? taskRepository.save(task)
         }
 
+        WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
         withAnimation { todayEveningCompleted = true }
         streakDays = calculateStreak()
     }

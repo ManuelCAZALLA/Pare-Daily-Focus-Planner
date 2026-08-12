@@ -1,0 +1,72 @@
+{
+  "source": "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Views/ObligationWidgetView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "widget.obligation.short",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 30
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget.days",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 135
+        }
+      },
+      {
+        "comment": "",
+        "key": "✓",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget.noObligations",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget.obligation.short",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget.noObligations",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 121
+        }
+      }
+    ]
+  },
+  "version": 1
+}

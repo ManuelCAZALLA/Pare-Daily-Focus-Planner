@@ -1,0 +1,32 @@
+{
+  "source": "/Users/manuelcazallacolmenero/Desktop/Pare: Daily Focus Planner/PareWidgets/Views/RoutineWidgetView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "widget.routine.short",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 10
+        }
+      },
+      {
+        "comment": "",
+        "key": "🔥",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 22
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget.streak",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 24
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -9,6 +9,7 @@ struct ContentView: View {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("hasSeenOnboardingPaywall") private var hasSeenOnboardingPaywall = false
     @State private var showOnboardingPaywall = false
+    @State private var selectedTab = 0
     
     var body: some View {
         Group {
@@ -19,6 +20,7 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .onOpenURL(perform: handleDeepLink)
         .task {
             await purchases.loadCustomerInfo()
             guard !hasSeenOnboardingPaywall, !purchases.isProActive else { return }
@@ -39,7 +41,7 @@ struct ContentView: View {
 
     @ViewBuilder
     private var mainTabView: some View {
-        let tabView = TabView {
+        let tabView = TabView(selection: $selectedTab) {
             NavigationStack {
                 DayView()
                     .frame(maxWidth: 900)
@@ -48,6 +50,7 @@ struct ContentView: View {
             .tabItem {
                 Label("Hoy", systemImage: "sun.max.fill")
             }
+            .tag(0)
 
             NavigationStack {
                 RoutineView()
@@ -57,6 +60,7 @@ struct ContentView: View {
             .tabItem {
                 Label("Rutina", systemImage: "moon.stars.fill")
             }
+            .tag(1)
 
             NavigationStack {
                 ObligationsView()
@@ -66,6 +70,7 @@ struct ContentView: View {
             .tabItem {
                 Label("obligations.title", systemImage: "doc.text.fill")
             }
+            .tag(2)
 
             NavigationStack {
                 SettingsView()
@@ -75,6 +80,7 @@ struct ContentView: View {
             .tabItem {
                 Label("settings.title", systemImage: "gearshape.fill")
             }
+            .tag(3)
         }
         .tint(Color.pareGreen)
 
@@ -88,5 +94,19 @@ struct ContentView: View {
         #else
         tabView
         #endif
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "pare" else { return }
+        switch url.host {
+        case "today":
+            selectedTab = 0
+        case "routine":
+            selectedTab = 1
+        case "obligations":
+            selectedTab = 2
+        default:
+            break
+        }
     }
 }

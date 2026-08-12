@@ -16,7 +16,7 @@ final class SettingsViewModel {
     }
 
     var websiteURL: URL? {
-        URL(string: "https://manuelcazalla.github.io/LocalizatuCoche-Web/")
+        nil
     }
 
     var privacyPolicyURL: URL? {
@@ -28,7 +28,7 @@ final class SettingsViewModel {
     }
 
     var rateAppURL: URL? {
-        let appId = "TU_APP_ID"
+        guard let appId = AppStoreConstants.appStoreID else { return nil }
         return URL(string: "https://apps.apple.com/app/id\(appId)?action=write-review")
     }
 }
