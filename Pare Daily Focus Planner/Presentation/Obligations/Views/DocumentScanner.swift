@@ -1,6 +1,4 @@
 import SwiftUI
-
-#if !os(watchOS)
 import VisionKit
 import PDFKit
 
@@ -59,4 +57,4 @@ struct DocumentScanner: UIViewControllerRepresentable {
         }
     }
 }
-#endif
+

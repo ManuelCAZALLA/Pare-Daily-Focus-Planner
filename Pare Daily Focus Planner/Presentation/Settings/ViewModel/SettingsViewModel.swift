@@ -16,7 +16,7 @@ final class SettingsViewModel {
     }
 
     var websiteURL: URL? {
-        nil
+        URL(string: "https://manuelcazalla.github.io/Pare-Web/")
     }
 
     var privacyPolicyURL: URL? {
