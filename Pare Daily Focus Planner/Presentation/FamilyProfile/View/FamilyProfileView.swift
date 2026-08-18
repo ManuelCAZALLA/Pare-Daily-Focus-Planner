@@ -7,12 +7,25 @@
 
 import SwiftUI
 import SwiftData
+import RevenueCatUI
 
 struct FamilyProfilesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(PurchasesService.self) private var purchases
     @Query(sort: \FamilyProfile.name) private var profiles: [FamilyProfile]
     
     @State private var showAddSheet = false
+    @State private var showPaywall = false
+    
+    private let maxFreeProfiles = 1
+    private let maxProProfiles = 6
+    
+    private var canAddMore: Bool {
+        if purchases.isProActive {
+            return profiles.count < maxProProfiles
+        }
+        return profiles.count < maxFreeProfiles
+    }
     
     var body: some View {
         NavigationStack {
@@ -30,7 +43,6 @@ struct FamilyProfilesView: View {
                                 ProfileObligationsView(profile: profile)
                             } label: {
                                 HStack(spacing: 16) {
-                                    // Avatar con fondo circular de su color asignado
                                     Text(profile.avatar)
                                         .font(.system(size: 24))
                                         .frame(width: 48, height: 48)
@@ -58,6 +70,38 @@ struct FamilyProfilesView: View {
                     } header: {
                         Text("Miembros de la familia")
                     }
+                    
+                    if !purchases.isProActive && profiles.count >= maxFreeProfiles {
+                        Section {
+                            VStack(spacing: 10) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "lock.fill")
+                                        .foregroundStyle(Color.pareGreen)
+                                    Text("Versión gratuita: 1 perfil máximo")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(.white)
+                                }
+                                Text("Desbloquea hasta 6 perfiles familiares con DaySorted Pro.")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                                
+                                Button {
+                                    showPaywall = true
+                                } label: {
+                                    Text("Desbloquear Pro")
+                                        .font(.subheadline.weight(.bold))
+                                        .foregroundStyle(.black)
+                                        .padding(.horizontal, 20)
+                                        .padding(.vertical, 10)
+                                        .background(Color.pareGreen, in: Capsule())
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                        }
+                    }
                 }
             }
             .navigationTitle("Perfiles Familiares")
@@ -65,15 +109,24 @@ struct FamilyProfilesView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        showAddSheet = true
+                        if canAddMore {
+                            showAddSheet = true
+                        } else {
+                            showPaywall = true
+                        }
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
                     }
+                    .disabled(!canAddMore && !purchases.isProActive)
                 }
             }
             .sheet(isPresented: $showAddSheet) {
                 AddFamilyProfileSheet()
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+                    .preferredColorScheme(.dark)
             }
         }
     }

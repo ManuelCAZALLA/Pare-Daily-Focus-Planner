@@ -19,6 +19,9 @@ struct ObligationWidgetView: View {
     var body: some View {
         switch family {
         case .systemSmall: small
+        case .systemLarge: large
+        case .accessoryRectangular: accessoryRectangular
+        case .accessoryInline: accessoryInline
         default: medium
         }
     }
@@ -65,7 +68,7 @@ struct ObligationWidgetView: View {
                 Spacer(minLength: 0)
             }
         }
-        .widgetURL(URL(string: "pare://obligations"))
+        .widgetURL(URL(string: "daysorted://obligations"))
     }
 
     // MARK: - Medium
@@ -94,7 +97,7 @@ struct ObligationWidgetView: View {
                 Spacer(minLength: 0)
             }
         }
-        .widgetURL(URL(string: "pare://obligations"))
+        .widgetURL(URL(string: "daysorted://obligations"))
     }
 
     private func obligationRow(_ obligation: WidgetObligation) -> some View {
@@ -140,6 +143,104 @@ struct ObligationWidgetView: View {
 
     private func categoryName(for templateID: String) -> String {
         ObligationTemplate.all.first { $0.title == templateID }?.category.title ?? ""
+    }
+
+    // MARK: - Large
+
+    private var large: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            PareWidgetHeader(title: String(localized: "widget.obligation.short"))
+
+            if entry.obligations.isEmpty {
+                Spacer(minLength: 0)
+                HStack(spacing: 12) {
+                    Image(systemName: "checkmark.shield.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(Color.pareGreen)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(String(localized: "widget.noObligations"))
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                        Text(String(localized: "widget.allClearObligations"))
+                            .font(.system(size: 12, weight: .regular, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.5))
+                    }
+                }
+                Spacer(minLength: 0)
+            } else {
+                VStack(spacing: 10) {
+                    ForEach(entry.obligations) { obligation in
+                        obligationRowLarge(obligation)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+        }
+        .widgetURL(URL(string: "daysorted://obligations"))
+    }
+
+    private func obligationRowLarge(_ obligation: WidgetObligation) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: obligation.categoryIcon)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Color.urgency(obligation.daysRemaining))
+                .frame(width: 30)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(obligation.title)
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                Text(categoryName(for: obligation.title))
+                    .font(.system(size: 12, weight: .regular, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.5))
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 6)
+
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text("\(obligation.daysRemaining)")
+                    .font(.system(size: 26, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.urgency(obligation.daysRemaining))
+                Text(daysUnit(obligation.daysRemaining))
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.5))
+            }
+        }
+    }
+
+    // MARK: - Lock Screen Accessories
+
+    private var accessoryRectangular: some View {
+        HStack(spacing: 6) {
+            if let urgent = entry.urgentObligation {
+                Image(systemName: urgent.categoryIcon)
+                    .foregroundStyle(Color.urgency(urgent.daysRemaining))
+                Text(urgent.title)
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                Spacer()
+                Text("\(urgent.daysRemaining)d")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.urgency(urgent.daysRemaining))
+            } else {
+                Image(systemName: "checkmark.shield.fill")
+                    .foregroundStyle(Color.pareGreen)
+                Text(String(localized: "widget.noObligations"))
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+        }
+    }
+
+    private var accessoryInline: some View {
+        if let urgent = entry.urgentObligation {
+            Label("\(urgent.title) - \(urgent.daysRemaining)d", systemImage: urgent.categoryIcon)
+        } else {
+            Label(String(localized: "widget.noObligations"), systemImage: "checkmark.shield")
+        }
     }
 }
 

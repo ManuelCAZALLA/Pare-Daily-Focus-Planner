@@ -50,31 +50,35 @@ final class LifeObligation {
 }
 
 enum ObligationAlertOffset: String, CaseIterable, Identifiable, Codable {
+    case threeMonths
     case oneMonth
     case twoWeeks
-    case oneWeek
-    case twoDays
     case onExpiry
 
     var id: String { rawValue }
 
     var label: String {
         switch self {
+        case .threeMonths: return String(localized: "3 meses antes")
         case .oneMonth: return String(localized: "1 mes antes")
         case .twoWeeks: return String(localized: "2 semanas antes")
-        case .oneWeek: return String(localized: "1 semana antes")
-        case .twoDays: return String(localized: "2 días antes")
         case .onExpiry: return String(localized: "El día de vencimiento")
         }
     }
 
     var timeIntervalBefore: TimeInterval {
         switch self {
+        case .threeMonths: return 90 * 24 * 60 * 60
         case .oneMonth: return 30 * 24 * 60 * 60
         case .twoWeeks: return 14 * 24 * 60 * 60
-        case .oneWeek: return 7 * 24 * 60 * 60
-        case .twoDays: return 2 * 24 * 60 * 60
         case .onExpiry: return 0
+        }
+    }
+
+    var isProFeature: Bool {
+        switch self {
+        case .threeMonths: return true
+        case .oneMonth, .twoWeeks, .onExpiry: return false
         }
     }
 }

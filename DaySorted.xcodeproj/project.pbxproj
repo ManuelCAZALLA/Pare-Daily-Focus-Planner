@@ -10,7 +10,7 @@
 		3CFD3004301E58060021A2F8 /* ReceiptParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3003301E58060021A2F8 /* ReceiptParser */; };
 		3CFD3006301E58060021A2F8 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3005301E58060021A2F8 /* RevenueCat */; };
 		3CFD3008301E58060021A2F8 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3007301E58060021A2F8 /* RevenueCatUI */; };
-		3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,31 +24,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3CFD5A0BA0B0C0D0E0F0A00B /* Embed App Extensions */ = {
+		3CFD5A0BA0B0C0D0E0F0A00B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed App Extensions */,
+				3CFD5A0CA0B0C0D0E0F0A00C /* PareWidgets.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pare Daily Focus Planner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CEDE1102FD56E6C00FD1446 /* DaySorted.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DaySorted.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PareWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3CFD2B80300EA7130021A2F8 /* Exceptions for "Pare Daily Focus Planner" folder in "Pare Daily Focus Planner" target */ = {
+		3CFD2B80300EA7130021A2F8 /* Exceptions for "Pare Daily Focus Planner" folder in "DaySorted" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 3CEDE10F2FD56E6C00FD1446 /* Pare Daily Focus Planner */;
+			target = 3CEDE10F2FD56E6C00FD1446 /* DaySorted */;
 		};
 		3CFD5A03A0B0C0D0E0F0A003 /* Exceptions for "PareWidgets" folder in "PareWidgets" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -63,7 +63,7 @@
 		3CEDE1122FD56E6C00FD1446 /* Pare Daily Focus Planner */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3CFD2B80300EA7130021A2F8 /* Exceptions for "Pare Daily Focus Planner" folder in "Pare Daily Focus Planner" target */,
+				3CFD2B80300EA7130021A2F8 /* Exceptions for "Pare Daily Focus Planner" folder in "DaySorted" target */,
 			);
 			path = "Pare Daily Focus Planner";
 			sourceTree = "<group>";
@@ -111,7 +111,7 @@
 		3CEDE1112FD56E6C00FD1446 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */,
+				3CEDE1102FD56E6C00FD1446 /* DaySorted.app */,
 				3CFD5A01A0B0C0D0E0F0A001 /* PareWidgets.appex */,
 			);
 			name = Products;
@@ -120,14 +120,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3CEDE10F2FD56E6C00FD1446 /* Pare Daily Focus Planner */ = {
+		3CEDE10F2FD56E6C00FD1446 /* DaySorted */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3CEDE11D2FD56E6E00FD1446 /* Build configuration list for PBXNativeTarget "Pare Daily Focus Planner" */;
+			buildConfigurationList = 3CEDE11D2FD56E6E00FD1446 /* Build configuration list for PBXNativeTarget "DaySorted" */;
 			buildPhases = (
 				3CEDE10C2FD56E6C00FD1446 /* Sources */,
 				3CEDE10D2FD56E6C00FD1446 /* Frameworks */,
 				3CEDE10E2FD56E6C00FD1446 /* Resources */,
-				3CFD5A0BA0B0C0D0E0F0A00B /* Embed App Extensions */,
+				3CFD5A0BA0B0C0D0E0F0A00B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -137,14 +137,14 @@
 			fileSystemSynchronizedGroups = (
 				3CEDE1122FD56E6C00FD1446 /* Pare Daily Focus Planner */,
 			);
-			name = "Pare Daily Focus Planner";
+			name = DaySorted;
 			packageProductDependencies = (
 				3CFD3003301E58060021A2F8 /* ReceiptParser */,
 				3CFD3005301E58060021A2F8 /* RevenueCat */,
 				3CFD3007301E58060021A2F8 /* RevenueCatUI */,
 			);
 			productName = "Pare Daily Focus Planner";
-			productReference = 3CEDE1102FD56E6C00FD1446 /* Pare Daily Focus Planner.app */;
+			productReference = 3CEDE1102FD56E6C00FD1446 /* DaySorted.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */ = {
@@ -185,7 +185,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Pare Daily Focus Planner" */;
+			buildConfigurationList = 3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "DaySorted" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -203,7 +203,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3CEDE10F2FD56E6C00FD1446 /* Pare Daily Focus Planner */,
+				3CEDE10F2FD56E6C00FD1446 /* DaySorted */,
 				3CFD5A04A0B0C0D0E0F0A004 /* PareWidgets */,
 			);
 		};
@@ -257,6 +257,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -321,6 +322,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -389,7 +391,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pare Daily Focus Planner/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Pare: Daily Focus Planner";
+				INFOPLIST_KEY_CFBundleDisplayName = DaySorted;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -401,7 +403,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner";
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.DaySorted-Daily-Focus-Planner";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -433,7 +435,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pare Daily Focus Planner/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Pare: Daily Focus Planner";
+				INFOPLIST_KEY_CFBundleDisplayName = DaySorted;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -445,7 +447,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner";
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.DaySorted-Daily-Focus-Planner";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -479,7 +481,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner.PareWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.DaySorted-Daily-Focus-Planner.PareWidgets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -513,7 +515,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.Pare--Daily-Focus-Planner.PareWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "comManuelCazalla.DaySorted-Daily-Focus-Planner.PareWidgets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -531,7 +533,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Pare Daily Focus Planner" */ = {
+		3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "DaySorted" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3CEDE11B2FD56E6E00FD1446 /* Debug */,
@@ -540,7 +542,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3CEDE11D2FD56E6E00FD1446 /* Build configuration list for PBXNativeTarget "Pare Daily Focus Planner" */ = {
+		3CEDE11D2FD56E6E00FD1446 /* Build configuration list for PBXNativeTarget "DaySorted" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3CEDE11E2FD56E6E00FD1446 /* Debug */,

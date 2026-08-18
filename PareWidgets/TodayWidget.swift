@@ -16,6 +16,13 @@ struct TodayWidget: Widget {
         }
         .configurationDisplayName(String(localized: "widget.today.name"))
         .description(String(localized: "widget.today.description"))
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .systemLarge,
+            .accessoryCircular,
+            .accessoryRectangular,
+            .accessoryInline
+        ])
     }
 }

@@ -4,8 +4,10 @@ import SwiftUI
 extension Color {
 
     // MARK: - Brand
-    static let pareGreen     = Color(hex: "#22C55E")
-    static let pareGreenDark = Color(hex: "#15803D")
+    static let daysortedGreen = Color(hex: "#22C55E")
+    static let daysortedGreenDark = Color(hex: "#15803D")
+    static let pareGreen     = daysortedGreen
+    static let pareGreenDark = daysortedGreenDark
 
     // MARK: - Priority
     static func priority(_ p: Int) -> Color {
@@ -71,7 +73,7 @@ struct PareWidgetHeader: View {
                 .frame(width: 18, height: 18)
                 .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
 
-            Text("PARE")
+            Text("DAYSORTED")
                 .font(.system(size: 11, weight: .heavy, design: .rounded))
                 .kerning(1.2)
                 .foregroundStyle(.white)
@@ -103,7 +105,7 @@ enum WidgetFormatters {
 // MARK: - Acceso Pro (App Group compartido con la app)
 
 enum WidgetProAccess {
-    static let appGroupID = "group.com.manuelcazalla.pare"
+    static let appGroupID = "group.com.manuelcazalla.daysorted"
 
     static var isProActive: Bool {
         UserDefaults(suiteName: appGroupID)?.bool(forKey: "isProActive") ?? false

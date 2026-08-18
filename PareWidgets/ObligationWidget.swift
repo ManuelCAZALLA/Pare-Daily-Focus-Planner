@@ -16,6 +16,12 @@ struct ObligationWidget: Widget {
         }
         .configurationDisplayName(String(localized: "widget.obligation.name"))
         .description(String(localized: "widget.obligation.description"))
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .systemLarge,
+            .accessoryRectangular,
+            .accessoryInline
+        ])
     }
 }

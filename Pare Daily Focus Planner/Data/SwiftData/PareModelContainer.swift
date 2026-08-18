@@ -3,7 +3,7 @@ import Foundation
 import SwiftData
 
 enum PareAppGroup {
-    static let id = "group.com.manuelcazalla.pare"
+    static let id = "group.com.manuelcazalla.daysorted"
 
     /// Contenedor compartido con el widget (App Group)
     static var containerURL: URL {
@@ -16,7 +16,22 @@ enum PareAppGroup {
     }
 
     static var storeURL: URL {
-        containerURL.appendingPathComponent("pare.sqlite")
+        let newURL = containerURL.appendingPathComponent("daysorted.sqlite")
+        let oldURL = containerURL.appendingPathComponent("pare.sqlite")
+        if !FileManager.default.fileExists(atPath: newURL.path) && FileManager.default.fileExists(atPath: oldURL.path) {
+            try? FileManager.default.moveItem(at: oldURL, to: newURL)
+            let oldWal = containerURL.appendingPathComponent("pare.sqlite-wal")
+            let newWal = containerURL.appendingPathComponent("daysorted.sqlite-wal")
+            if FileManager.default.fileExists(atPath: oldWal.path) {
+                try? FileManager.default.moveItem(at: oldWal, to: newWal)
+            }
+            let oldShm = containerURL.appendingPathComponent("pare.sqlite-shm")
+            let newShm = containerURL.appendingPathComponent("daysorted.sqlite-shm")
+            if FileManager.default.fileExists(atPath: oldShm.path) {
+                try? FileManager.default.moveItem(at: oldShm, to: newShm)
+            }
+        }
+        return newURL
     }
 }
 

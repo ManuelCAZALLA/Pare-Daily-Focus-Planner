@@ -4,8 +4,20 @@ import WidgetKit
 
 struct RoutineWidgetView: View {
     let entry: PareWidgetEntry
+    @Environment(\.widgetFamily) private var family
 
     var body: some View {
+        switch family {
+        case .accessoryCircular: accessoryCircular
+        case .accessoryRectangular: accessoryRectangular
+        case .systemMedium: medium
+        default: small
+        }
+    }
+
+    // MARK: - Small
+
+    private var small: some View {
         VStack(spacing: 10) {
             PareWidgetHeader(title: String(localized: "widget.routine.short"))
 
@@ -27,7 +39,78 @@ struct RoutineWidgetView: View {
             }
         }
         .overlay(glow)
-        .widgetURL(URL(string: "pare://routine"))
+        .widgetURL(URL(string: "daysorted://routine"))
+    }
+
+    // MARK: - Medium
+
+    private var medium: some View {
+        VStack(spacing: 10) {
+            PareWidgetHeader(title: String(localized: "widget.routine.short"))
+
+            HStack(spacing: 24) {
+                VStack(spacing: 6) {
+                    indicator(emoji: "🌅", done: entry.morningDone)
+                    Text("Mañana")
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.6))
+                }
+
+                VStack(spacing: 6) {
+                    indicator(emoji: "🌙", done: entry.eveningDone)
+                    Text("Noche")
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.6))
+                }
+            }
+
+            HStack(spacing: 4) {
+                Text("🔥")
+                    .font(.system(size: 12))
+                Text(String(format: String(localized: "widget.streak"), entry.streak))
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+        }
+        .overlay(glow)
+        .widgetURL(URL(string: "daysorted://routine"))
+    }
+
+    // MARK: - Lock Screen Accessories
+
+    private var accessoryCircular: some View {
+        ZStack {
+            Circle()
+                .fill(Color.pareGreen.opacity(0.16))
+            VStack(spacing: 2) {
+                HStack(spacing: 4) {
+                    Text("🌅").font(.system(size: 10))
+                    Text("🌙").font(.system(size: 10))
+                }
+                Text("\(entry.streak)")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+            }
+        }
+    }
+
+    private var accessoryRectangular: some View {
+        HStack(spacing: 8) {
+            Text(entry.morningDone ? "🌅" : "🌅")
+                .font(.system(size: 14))
+                .opacity(entry.morningDone ? 1 : 0.4)
+            Text(entry.eveningDone ? "🌙" : "🌙")
+                .font(.system(size: 14))
+                .opacity(entry.eveningDone ? 1 : 0.4)
+            Spacer()
+            HStack(spacing: 2) {
+                Text("🔥")
+                    .font(.system(size: 10))
+                Text("\(entry.streak)")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+            }
+        }
     }
 
     private func indicator(emoji: String, done: Bool) -> some View {
@@ -52,7 +135,6 @@ struct RoutineWidgetView: View {
         .frame(width: 56, height: 56)
     }
 
-    /// Glow sutil de fondo
     private var glow: some View {
         RadialGradient(
             colors: [Color.pareGreen.opacity(0.16), .clear],

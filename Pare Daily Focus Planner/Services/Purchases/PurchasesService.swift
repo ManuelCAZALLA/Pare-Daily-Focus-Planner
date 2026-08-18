@@ -12,7 +12,8 @@ import WidgetKit
 
 extension String {
     /// Nombre exacto del entitlement en el dashboard de RevenueCat
-    static let pareProEntitlement = "Pare Pro"
+    static let daySortedProEntitlement = "DaySorted Pro"
+    static let pareProEntitlement = "DaySorted Pro"
 }
 
 // MARK: - PurchasesService
@@ -39,18 +40,18 @@ final class PurchasesService {
 
     var customerInfo: CustomerInfo? = nil {
         didSet {
-            UserDefaults(suiteName: "group.com.manuelcazalla.pare")?
+            UserDefaults(suiteName: "group.com.manuelcazalla.daysorted")?
                 .set(isProActive, forKey: "isProActive")
             WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
-    /// true si el entitlement "Pare Pro" está activo
+    /// true si el entitlement "DaySorted Pro" está activo
     var isProActive: Bool {
         #if DEBUG
         if debugForcePro { return true }
         #endif
-        return customerInfo?.entitlements[.pareProEntitlement]?.isActive == true
+        return customerInfo?.entitlements[.daySortedProEntitlement]?.isActive == true || customerInfo?.entitlements[.pareProEntitlement]?.isActive == true
     }
 
     var isLoading = false
@@ -60,7 +61,7 @@ final class PurchasesService {
     /// Override de test: fuerza el estado Pro en builds de depuración.
     var debugForcePro = false {
         didSet {
-            UserDefaults(suiteName: "group.com.manuelcazalla.pare")?
+            UserDefaults(suiteName: "group.com.manuelcazalla.daysorted")?
                 .set(isProActive, forKey: "isProActive")
             WidgetCenter.shared.reloadAllTimelines()
         }

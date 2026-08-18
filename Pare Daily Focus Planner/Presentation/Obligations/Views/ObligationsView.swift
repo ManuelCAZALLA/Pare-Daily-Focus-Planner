@@ -33,9 +33,13 @@ struct ObligationsView: View {
             }
 
             PareFAB {
-                selectedTemplate = nil
-                obligationsVM.scannedDocumentData = nil
-                showAddEditSheet = true
+                if obligationsVM.canAddObligation {
+                    selectedTemplate = nil
+                    obligationsVM.scannedDocumentData = nil
+                    showAddEditSheet = true
+                } else {
+                    showPaywall = true
+                }
             }
             .padding(.trailing, 20)
             .padding(.bottom, 32)
@@ -89,30 +93,31 @@ struct ObligationsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            
-            Button {
-                showSavedObligations = true
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "tray.full.fill")
-                    Text(obligationsVM.savedObligations.isEmpty
-                         ? String(localized: "obligations.saved")
-                         : String(format: String(localized: "obligations.saved.count"), obligationsVM.savedObligations.count))
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.bold))
+            HStack(spacing: 12) {
+                Button {
+                    showSavedObligations = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "tray.full.fill")
+                        Text(obligationsVM.savedObligations.isEmpty
+                             ? String(localized: "obligations.saved")
+                             : obligationsVM.obligationCountDisplay)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.bold))
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.pareGreen)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(Color.pareGreen.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .strokeBorder(Color.pareGreen.opacity(0.25), lineWidth: 1)
+                    )
                 }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.pareGreen)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
-                .background(Color.pareGreen.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(Color.pareGreen.opacity(0.25), lineWidth: 1)
-                )
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 

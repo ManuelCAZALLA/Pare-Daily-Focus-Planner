@@ -15,11 +15,20 @@ struct DayView: View {
     @State private var showRescheduleFor: PareTask? = nil
     @State private var rescheduleDate = Date()
     @State private var selectedDate = Date()
-    @State private var overdueTaskAction: PareTask? = nil   // sheet de acción para tareas de ayer
+    @State private var overdueTaskAction: PareTask? = nil
     @State private var showPaywall = false
+    @State private var showHistoryLimitAlert = false
 
     // Navegación entre semanas
     @State private var weekOffset: Int = 0
+
+    // Límite de historial para versión gratuita (7 días)
+    private let maxFreeHistoryDays = 7
+
+    private var minAllowedDate: Date {
+        if purchases.isProActive { return Date.distantPast }
+        return Calendar.current.date(byAdding: .day, value: -maxFreeHistoryDays, to: Calendar.current.startOfDay(for: Date())) ?? Date()
+    }
 
     // Ajuste de planificación (ver SettingsView)
     @AppStorage("weekStartsOnMonday") private var weekStartsOnMonday: Bool = true
@@ -89,6 +98,14 @@ struct DayView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallView()
                 .preferredColorScheme(.dark)
+        }
+        .alert("Historial limitado", isPresented: $showHistoryLimitAlert) {
+            Button("Cancelar", role: .cancel) {}
+            Button("Desbloquear Pro") {
+                showPaywall = true
+            }
+        } message: {
+            Text("La versión gratuita muestra los últimos \(maxFreeHistoryDays) días. Con DaySorted Pro puedes acceder a todo tu historial.")
         }
         .onAppear { dayVM.loadDay(for: selectedDate) }
         .onChange(of: selectedDate) { _, new in dayVM.loadDay(for: new) }
@@ -250,6 +267,10 @@ struct DayView: View {
                 let hasTask    = !dayVM.tasksToday.isEmpty && Calendar.current.isDate(day, inSameDayAs: selectedDate)
 
                 Button {
+                    if day < minAllowedDate {
+                        showHistoryLimitAlert = true
+                        return
+                    }
                     let generator = UIImpactFeedbackGenerator(style: .light)
                     generator.impactOccurred()
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
@@ -287,10 +308,18 @@ struct DayView: View {
                             Text(day.formatted(.dateTime.day()))
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
                                 .foregroundStyle(
+                                    day < minAllowedDate ? Color(hex: "#48484A") :
                                     isSelected ? .black :
                                     isToday ? Color.pareGreen :
                                     .white
                                 )
+
+                            if day < minAllowedDate && !purchases.isProActive {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 7, weight: .bold))
+                                    .foregroundStyle(Color(hex: "#48484A"))
+                                    .offset(x: 12, y: -10)
+                            }
                         }
 
                         Circle()

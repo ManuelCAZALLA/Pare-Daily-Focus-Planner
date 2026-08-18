@@ -1,10 +1,10 @@
-// PareApp.swift
+// DaySortedApp.swift
 import SwiftUI
 import SwiftData
 import RevenueCat
 
 @main
-struct PareApp: App {
+struct DaySortedApp: App {
 
     @State private var dayViewModel: DayViewModel
     @State private var routineViewModel: RoutineViewModel
@@ -27,7 +27,8 @@ struct PareApp: App {
         ))
         _obligationsViewModel = State(initialValue: ObligationsViewModel(
             repository: obligationsRepo,
-            notificationService: notifications
+            notificationService: notifications,
+            purchasesService: PurchasesService.shared
         ))
         _notificationService = State(initialValue: notifications)
 

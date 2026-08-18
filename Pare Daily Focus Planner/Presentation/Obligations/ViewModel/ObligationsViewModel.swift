@@ -22,6 +22,7 @@ enum ObligationUrgency: String, CaseIterable {
 final class ObligationsViewModel {
     private let repository: ObligationRepositoryProtocol
     private let notificationService: NotificationService?
+    private let purchasesService: PurchasesService?
 
     var categories: [LifeAdminCategory] = LifeAdminCategory.allCases
     var selectedCategory: LifeAdminCategory?
@@ -30,14 +31,30 @@ final class ObligationsViewModel {
     var savedObligations: [LifeObligation] = []
     var scannedDocumentData: Data? = nil
 
+    private let maxFreeObligations = 5
+
+    var canAddObligation: Bool {
+        if purchasesService?.isProActive == true { return true }
+        return savedObligations.count < maxFreeObligations
+    }
+
+    var obligationCountDisplay: String {
+        if purchasesService?.isProActive == true {
+            return String(format: String(localized: "%d trámites"), savedObligations.count)
+        }
+        return String(format: String(localized: "%d de %d trámites"), savedObligations.count, maxFreeObligations)
+    }
+
     init(
         repository: ObligationRepositoryProtocol,
         notificationService: NotificationService? = nil,
-        familyProfile: FamilyProfile? = nil
+        familyProfile: FamilyProfile? = nil,
+        purchasesService: PurchasesService? = nil
     ) {
         self.repository = repository
         self.notificationService = notificationService
         self.familyProfile = familyProfile
+        self.purchasesService = purchasesService
     }
 
     var registeredTemplates: [ObligationTemplate] {

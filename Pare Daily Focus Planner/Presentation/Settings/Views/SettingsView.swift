@@ -77,7 +77,7 @@ struct SettingsView: View {
 
     private var proSection: some View {
         @Bindable var purchases = purchases
-        return SettingsSection(title: "Pare Pro") {
+        return SettingsSection(title: "DaySorted Pro") {
             if purchases.isProActive {
 
                 // ── Usuario Pro ────────────────────────────────────────
@@ -88,6 +88,18 @@ struct SettingsView: View {
                     tint: Color.pareGreen,
                     showsChevron: false
                 )
+
+                Divider().overlay(Color.white.opacity(0.08))
+
+                // Lista de ventajas Pro
+                VStack(alignment: .leading, spacing: 8) {
+                    proFeatureRow(icon: "person.3", title: "Hasta 6 perfiles familiares")
+                    proFeatureRow(icon: "bell.badge.fill", title: "Avisos escalonados (3 meses, 1 mes, 2 semanas)")
+                    proFeatureRow(icon: "doc.text.fill", title: "Trámites ilimitados")
+                    proFeatureRow(icon: "clock.arrow.circlepath", title: "Historial completo sin límites")
+                    proFeatureRow(icon: "rectangle.stack.fill", title: "Widgets Pro (medium, large, lock screen)")
+                }
+                .padding(.vertical, 8)
 
                 Divider().overlay(Color.white.opacity(0.08))
 
@@ -135,6 +147,18 @@ struct SettingsView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+
+                Divider().overlay(Color.white.opacity(0.08))
+
+                // Resumen de lo que desbloquea Pro
+                VStack(alignment: .leading, spacing: 6) {
+                    proFeatureRow(icon: "person.3", title: "6 perfiles familiares")
+                    proFeatureRow(icon: "bell.badge.fill", title: "Avisos escalonados")
+                    proFeatureRow(icon: "doc.text.fill", title: "Trámites ilimitados")
+                    proFeatureRow(icon: "clock.arrow.circlepath", title: "Historial completo")
+                    proFeatureRow(icon: "rectangle.stack.fill", title: "Widgets Pro")
+                }
+                .padding(.vertical, 8)
 
                 Divider().overlay(Color.white.opacity(0.08))
 
@@ -347,7 +371,7 @@ struct SettingsView: View {
                     SettingsRow(
                         icon: "star.fill",
                         title: "Valora la App",
-                        detail: "¿Te gusta Pare? Déjanos una reseña",
+                        detail: "¿Te gusta DaySorted? Déjanos una reseña",
                         tint: .yellow,
                         showsChevron: true
                     )
@@ -393,11 +417,23 @@ struct SettingsView: View {
         SettingsSection(title: "settings.about") {
             SettingsRow(
                 icon: "info.circle.fill",
-                title: "Pare Daily Focus Planner",
+                title: "DaySorted Daily Focus Planner",
                 detail: LocalizedStringKey(String(format: String(localized: "settings.version"), viewModel.appVersion)),
                 tint: Color.pareGreen,
                 showsChevron: false
             )
+        }
+    }
+
+    private func proFeatureRow(icon: String, title: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Color.pareGreen)
+                .frame(width: 18)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 }

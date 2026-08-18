@@ -21,7 +21,7 @@ final class NotificationService {
         guard notificationDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Pare"
+        content.title = "DaySorted"
         content.body  = task.title
         content.sound = .default
 
@@ -89,7 +89,7 @@ final class NotificationService {
         guard notificationDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "Pare · Trámites")
+        content.title = String(localized: "DaySorted · Trámites")
         content.body = String(format: String(localized: "%@ vence el %@."), title, expiryDate.formatted(date: .abbreviated, time: .omitted))
         content.sound = .default
 

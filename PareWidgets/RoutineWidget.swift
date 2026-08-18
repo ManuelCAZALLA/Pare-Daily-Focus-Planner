@@ -16,6 +16,11 @@ struct RoutineWidget: Widget {
         }
         .configurationDisplayName(String(localized: "widget.routine.name"))
         .description(String(localized: "widget.routine.description"))
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .accessoryCircular,
+            .accessoryRectangular
+        ])
     }
 }

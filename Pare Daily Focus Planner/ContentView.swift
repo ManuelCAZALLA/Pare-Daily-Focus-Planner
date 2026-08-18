@@ -97,7 +97,7 @@ struct ContentView: View {
     }
 
     private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "pare" else { return }
+        guard url.scheme == "daysorted" || url.scheme == "pare" else { return }
         switch url.host {
         case "today":
             selectedTab = 0

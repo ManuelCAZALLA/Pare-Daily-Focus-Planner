@@ -4,14 +4,22 @@ import Foundation
 import SwiftData
 
 enum PareWidgetStore {
-    static let id = "group.com.manuelcazalla.pare"
+    static let id = "group.com.manuelcazalla.daysorted"
 
     static var containerURL: URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: id)
     }
 
     static var storeURL: URL? {
-        containerURL?.appendingPathComponent("pare.sqlite")
+        guard let containerURL = containerURL else { return nil }
+        let newURL = containerURL.appendingPathComponent("daysorted.sqlite")
+        let oldURL = containerURL.appendingPathComponent("pare.sqlite")
+        if FileManager.default.fileExists(atPath: newURL.path) {
+            return newURL
+        } else if FileManager.default.fileExists(atPath: oldURL.path) {
+            return oldURL
+        }
+        return newURL
     }
 }
 

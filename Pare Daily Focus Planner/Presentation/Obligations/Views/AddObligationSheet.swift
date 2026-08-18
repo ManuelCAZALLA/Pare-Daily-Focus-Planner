@@ -428,7 +428,18 @@ struct AddObligationSheet: View {
             Picker("Aviso", selection: $alertOffset) {
                 Text("obligations.noAlert").tag(Optional<ObligationAlertOffset>.none)
                 ForEach(ObligationAlertOffset.allCases) { offset in
-                    Text(offset.label).tag(Optional(offset))
+                    if offset.isProFeature && !purchases.isProActive {
+                        HStack {
+                            Text(offset.label)
+                            Spacer()
+                            Image(systemName: "lock.fill")
+                                .font(.caption)
+                                .foregroundStyle(Color.pareGreen)
+                        }
+                        .tag(Optional<ObligationAlertOffset>.none)
+                    } else {
+                        Text(offset.label).tag(Optional(offset))
+                    }
                 }
             }
             .pickerStyle(.menu)
@@ -438,7 +449,12 @@ struct AddObligationSheet: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(hex: "#0C0C0E"), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .onChange(of: alertOffset) { _, newValue in
-                guard newValue != nil else { return }
+                guard let newValue else { return }
+                if newValue.isProFeature && !purchases.isProActive {
+                    alertOffset = nil
+                    showPaywall = true
+                    return
+                }
                 Task { await obligationsVM.requestNotificationPermission() }
             }
         }
