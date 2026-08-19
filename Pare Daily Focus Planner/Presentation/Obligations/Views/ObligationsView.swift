@@ -225,15 +225,24 @@ struct ObligationsView: View {
 
             if obligationsVM.filteredTemplates.isEmpty {
                 EmptyStateView.noObligations {
-                    selectedTemplate = nil
-                    showAddEditSheet = true
+                    if obligationsVM.canAddObligation {
+                        selectedTemplate = nil
+                        showAddEditSheet = true
+                    } else {
+                        showPaywall = true
+                    }
                 }
             } else {
                 ForEach(obligationsVM.filteredTemplates) { template in
                     Button {
-                        selectedTemplate = template
-                        obligationsVM.scannedDocumentData = obligationsVM.obligation(for: template)?.scannedDocumentData
-                        showAddEditSheet = true
+                        let isRegistered = obligationsVM.isRegistered(template)
+                        if isRegistered || obligationsVM.canAddObligation {
+                            selectedTemplate = template
+                            obligationsVM.scannedDocumentData = obligationsVM.obligation(for: template)?.scannedDocumentData
+                            showAddEditSheet = true
+                        } else {
+                            showPaywall = true
+                        }
                     } label: {
                         ObligationTemplateRow(
                             template: template,

@@ -400,6 +400,10 @@ struct AddObligationSheet: View {
     }
 
     private func save() {
+        if editingObligation == nil && !obligationsVM.canAddObligation {
+            showPaywall = true
+            return
+        }
         do {
             try obligationsVM.save(
                 template: template,

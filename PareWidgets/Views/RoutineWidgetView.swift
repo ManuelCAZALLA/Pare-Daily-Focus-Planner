@@ -51,14 +51,14 @@ struct RoutineWidgetView: View {
             HStack(spacing: 24) {
                 VStack(spacing: 6) {
                     indicator(emoji: "🌅", done: entry.morningDone)
-                    Text("Mañana")
+                    Text(String(localized: "widget.routine.morning"))
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.6))
                 }
 
                 VStack(spacing: 6) {
                     indicator(emoji: "🌙", done: entry.eveningDone)
-                    Text("Noche")
+                    Text(String(localized: "widget.routine.evening"))
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.6))
                 }

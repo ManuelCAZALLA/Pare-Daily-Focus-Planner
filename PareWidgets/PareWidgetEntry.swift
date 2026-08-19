@@ -19,10 +19,10 @@ struct PareWidgetEntry: TimelineEntry {
             WidgetTask(id: UUID(), title: "Enviar presupuesto", isCompleted: false, priority: 2, scheduledTime: nil),
             WidgetTask(id: UUID(), title: "Llamar al dentista", isCompleted: true, priority: 1, scheduledTime: nil)
         ],
-        urgentObligation: WidgetObligation(id: UUID(), title: "ITV", daysRemaining: 12, categoryIcon: "car.fill"),
+        urgentObligation: WidgetObligation(id: UUID(), title: "ITV", daysRemaining: 12, categoryIcon: "car.fill", categoryName: String(localized: "Vehículo")),
         obligations: [
-            WidgetObligation(id: UUID(), title: "ITV", daysRemaining: 12, categoryIcon: "car.fill"),
-            WidgetObligation(id: UUID(), title: "Seguro del coche", daysRemaining: 45, categoryIcon: "car.fill")
+            WidgetObligation(id: UUID(), title: "ITV", daysRemaining: 12, categoryIcon: "car.fill", categoryName: String(localized: "Vehículo")),
+            WidgetObligation(id: UUID(), title: "Seguro del coche", daysRemaining: 45, categoryIcon: "car.fill", categoryName: String(localized: "Vehículo"))
         ],
         morningDone: true,
         eveningDone: false,
@@ -44,4 +44,5 @@ struct WidgetObligation: Identifiable {
     let title: String
     let daysRemaining: Int
     let categoryIcon: String
+    let categoryName: String
 }

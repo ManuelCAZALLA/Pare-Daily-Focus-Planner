@@ -72,7 +72,8 @@ struct PareWidgetDataLoader {
                 id: obligation.id,
                 title: template?.title ?? obligation.templateID,
                 daysRemaining: days,
-                categoryIcon: template?.category.systemImage ?? "doc.text.fill"
+                categoryIcon: template?.category.systemImage ?? "doc.text.fill",
+                categoryName: template?.category.title ?? ""
             )
         }
 

@@ -112,7 +112,7 @@ struct ObligationWidgetView: View {
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(1)
-                Text(categoryName(for: obligation.title))
+                Text(categoryName(for: obligation))
                     .font(.system(size: 11, weight: .regular, design: .rounded))
                     .foregroundStyle(.white.opacity(0.5))
                     .lineLimit(1)
@@ -141,8 +141,8 @@ struct ObligationWidgetView: View {
         return String(parts[1]).trimmingCharacters(in: .whitespaces)
     }
 
-    private func categoryName(for templateID: String) -> String {
-        ObligationTemplate.all.first { $0.title == templateID }?.category.title ?? ""
+    private func categoryName(for obligation: WidgetObligation) -> String {
+        obligation.categoryName
     }
 
     // MARK: - Large
@@ -191,7 +191,7 @@ struct ObligationWidgetView: View {
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(1)
-                Text(categoryName(for: obligation.title))
+                Text(categoryName(for: obligation))
                     .font(.system(size: 12, weight: .regular, design: .rounded))
                     .foregroundStyle(.white.opacity(0.5))
                     .lineLimit(1)
