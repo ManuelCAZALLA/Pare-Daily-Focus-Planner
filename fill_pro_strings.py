@@ -4,8 +4,8 @@ del módulo Obligaciones) en el catálogo de la app y resincroniza el del widget
 import json
 import shutil
 
-APP_CATALOG = "Pare Daily Focus Planner/Resources/Localizable.xcstrings"
-WIDGET_CATALOG = "PareWidgets/Resources/Localizable.xcstrings"
+APP_CATALOG = "Recuerda tus Trámites/Resources/Localizable.xcstrings"
+WIDGET_CATALOG = "TramiteWidgets/Resources/Localizable.xcstrings"
 
 entries = {
     "pro.badge": {l: "PRO" for l in ["ar", "de", "en", "es", "fr", "it", "pt"]},
@@ -56,13 +56,13 @@ entries = {
         "ar": "مقفل",
     },
     "pro.widgets.locked": {
-        "es": "Los widgets requieren DaySorted Pro",
-        "en": "Widgets require DaySorted Pro",
-        "de": "Widgets erfordern DaySorted Pro",
-        "fr": "Les widgets nécessitent DaySorted Pro",
-        "it": "I widget richiedono DaySorted Pro",
-        "pt": "Os widgets requerem DaySorted Pro",
-        "ar": "تتطلب الأدوات DaySorted Pro",
+        "es": "Los widgets requieren Recuerda tus Trámites Pro",
+        "en": "Widgets require Recuerda tus Trámites Pro",
+        "de": "Widgets erfordern Recuerda tus Trámites Pro",
+        "fr": "Les widgets nécessitent Recuerda tus Trámites Pro",
+        "it": "I widget richiedono Recuerda tus Trámites Pro",
+        "pt": "Os widgets requerem Recuerda tus Trámites Pro",
+        "ar": "تتطلب الأدوات Recuerda tus Trámites Pro",
     },
     "Toca para registrar": {
         "es": "Toca para registrar",

@@ -1,0 +1,6 @@
+# Xcode
+build/
+DerivedData/
+
+# macOS
+.DS_Store

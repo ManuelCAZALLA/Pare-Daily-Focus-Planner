@@ -1,7 +1,7 @@
 import json
 
 try:
-    with open("Pare Daily Focus Planner/Resources/Localizable.xcstrings", "r") as f:
+    with open("Recuerda tus Trámites/Resources/Localizable.xcstrings", "r") as f:
         data = json.load(f)
         
     strings = data.get("strings", {})

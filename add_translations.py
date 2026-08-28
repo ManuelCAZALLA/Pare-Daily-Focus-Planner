@@ -9,7 +9,7 @@ translations = {
   "¿Qué fue lo más importante?": "What was the most important?",
   "¿Qué pasa a mañana?": "What moves to tomorrow?",
   "¿Qué tienes que hacer mañana?": "What do you have to do tomorrow?",
-  "¿Te gusta DaySorted? Déjanos una reseña": "Do you like DaySorted? Leave a review",
+  "¿Te gusta Recuerda tus Trámites? Déjanos una reseña": "Do you like Recuerda tus Trámites? Leave a review",
   "/%lld": "/%lld",
   "%d rondas": "%d rounds",
   "%d tareas trasladadas": "%d tasks moved",
@@ -78,7 +78,7 @@ translations = {
   "Parentesco (ej. Madre, Hijo)": "Relationship (e.g. Mother, Son)",
   "Pendiente de ayer · toca para gestionar": "Pending from yesterday · tap to manage",
   "Perfiles Familiares": "Family Profiles",
-  "Personaliza cómo te acompaña DaySorted": "Customize how DaySorted accompanies you",
+  "Personaliza cómo te acompaña Recuerda tus Trámites": "Customize how Recuerda tus Trámites accompanies you",
   "Planificación": "Planning",
   "Política de Privacidad": "Privacy Policy",
   "Puedes añadirlas desde la vista Hoy.": "You can add them from the Today view.",
@@ -147,11 +147,11 @@ translations = {
   "Gestionar suscripción": "Manage subscription",
   "Gracias por apoyar la app ✨": "Thanks for supporting the app ✨",
   "Hazte Pro": "Get Pro",
-  "DaySorted Pro activo": "DaySorted Pro active",
+  "Recuerda tus Trámites Pro activo": "Recuerda tus Trámites Pro active",
   "Restaurar compras": "Restore purchases",
-  "DAYSORTED": "DAYSORTED",
-  "DaySorted Daily Focus Planner": "DaySorted Daily Focus Planner",
-  "DaySorted Pro": "DaySorted Pro",
+  "RECUERDA TUS TRÁMITES": "RECUERDA TUS TRÁMITES",
+  "Recuerda tus Trámites": "Recuerda tus Trámites",
+  "Recuerda tus Trámites Pro": "Recuerda tus Trámites Pro",
   "VER": "VIEW",
   "⚡": "⚡",
   "✍️": "✍️",
@@ -162,7 +162,7 @@ translations = {
   "😶": "😶"
 }
 
-path = "Pare Daily Focus Planner/Resources/Localizable.xcstrings"
+path = "Recuerda tus Trámites/Resources/Localizable.xcstrings"
 with open(path, "r") as f:
     data = json.load(f)
 
