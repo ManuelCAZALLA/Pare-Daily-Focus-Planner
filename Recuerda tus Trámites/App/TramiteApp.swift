@@ -9,6 +9,7 @@ struct TramiteApp: App {
     @State private var dayViewModel: DayViewModel
     @State private var routineViewModel: RoutineViewModel
     @State private var obligationsViewModel: ObligationsViewModel
+    @State private var ideasViewModel: IdeasViewModel
     @State private var notificationService = NotificationService()
 
     init() {
@@ -30,6 +31,9 @@ struct TramiteApp: App {
             notificationService: notifications,
             purchasesService: PurchasesService.shared
         ))
+        _ideasViewModel = State(initialValue: IdeasViewModel(
+            repository: IdeaRepository(context: context)
+        ))
         _notificationService = State(initialValue: notifications)
 
         // ── RevenueCat ──────────────────────────────────────────────────
@@ -47,6 +51,7 @@ struct TramiteApp: App {
                 .environment(dayViewModel)
                 .environment(routineViewModel)
                 .environment(obligationsViewModel)
+                .environment(ideasViewModel)
                 .environment(notificationService)
                 .environment(PurchasesService.shared)   // ← Pro status global
         }

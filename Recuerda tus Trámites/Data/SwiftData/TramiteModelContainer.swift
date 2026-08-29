@@ -46,7 +46,7 @@ enum TramiteAppGroup {
 
 enum TramiteModelContainer {
     static let shared: ModelContainer = {
-        let schema = Schema([TramiteTask.self, WeekPlan.self, LifeObligation.self, DailyRitual.self, FamilyProfile.self])
+        let schema = Schema([TramiteTask.self, WeekPlan.self, LifeObligation.self, DailyRitual.self, FamilyProfile.self, TramiteIdea.self])
         let config = ModelConfiguration(schema: schema, url: TramiteAppGroup.storeURL)
         do {
             return try ModelContainer(for: schema, configurations: [config])
@@ -57,7 +57,7 @@ enum TramiteModelContainer {
 
     /// Para previews y tests
     static let preview: ModelContainer = {
-        let schema = Schema([TramiteTask.self, WeekPlan.self, LifeObligation.self, DailyRitual.self, FamilyProfile.self])
+        let schema = Schema([TramiteTask.self, WeekPlan.self, LifeObligation.self, DailyRitual.self, FamilyProfile.self, TramiteIdea.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try! ModelContainer(for: schema, configurations: [config])
     }()

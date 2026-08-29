@@ -20,6 +20,17 @@ extension Color {
     static let tramiteTextSecondary  = Color(hex: "#8E8E93")
     static let tramiteTextTertiary   = Color(hex: "#48484A")
 
+    // MARK: - Ideas (muro de post-its)
+    static func ideaCategory(_ category: IdeaCategory) -> Color {
+        switch category {
+        case .idea:    return Color(hex: "#FACC15")  // amarillo post-it
+        case .tramite: return Color(hex: "#4ADE80")  // verde
+        case .familia: return Color(hex: "#60A5FA")  // azul
+        case .casa:    return Color(hex: "#FB923C")  // naranja
+        case .otro:    return Color(hex: "#A78BFA")  // violeta
+        }
+    }
+
     // MARK: - Priority
     static func priority(_ p: Priority) -> Color {
         switch p {

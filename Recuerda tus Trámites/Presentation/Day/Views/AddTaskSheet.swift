@@ -27,8 +27,21 @@ struct AddTaskSheet: View {
     // MARK: - Edit mode
     var editingTask: TramiteTask? = nil
 
-    init(editingTask: TramiteTask? = nil, initialScheduledDate: Date = Date()) {
+    /// Título con el que arranca el formulario en modo crear (conversión desde ideas).
+    var initialTitle: String = ""
+
+    /// Se invoca justo después de crear una nueva tarea (conversión desde ideas).
+    var onCreated: (() -> Void)? = nil
+
+    init(
+        editingTask: TramiteTask? = nil,
+        initialScheduledDate: Date = Date(),
+        initialTitle: String = "",
+        onCreated: (() -> Void)? = nil
+    ) {
         self.editingTask = editingTask
+        self.initialTitle = initialTitle
+        self.onCreated = onCreated
         _scheduledDate = State(initialValue: editingTask?.scheduledDate ?? initialScheduledDate)
     }
 
@@ -119,6 +132,7 @@ struct AddTaskSheet: View {
         .onAppear {
             titleFocused = true
             if let task = editingTask { populate(from: task) }
+            else if !initialTitle.isEmpty { title = initialTitle }
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
@@ -697,6 +711,7 @@ struct AddTaskSheet: View {
             task.alertOffset   = hasTime ? reminder : nil
             task.recurrenceRaw = hasRecurrence ? encodeRecurrence(recurrence) : nil
             dayVM.addTask(task)
+            onCreated?()
         }
         dismiss()
     }

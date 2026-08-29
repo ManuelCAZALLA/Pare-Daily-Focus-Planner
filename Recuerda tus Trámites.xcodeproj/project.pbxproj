@@ -43,7 +43,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3CFD2B80300EA7130021A2F8 /* Exceptions for "Recuerda tus Trámites" folder in "Tramites" target */ = {
+		3CFD2B80300EA7130021A2F8 /* Exceptions for "Recuerda tus Trámites" folder in "Tramites" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -60,10 +60,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */ = {
+		3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3CFD2B80300EA7130021A2F8 /* Exceptions for "Recuerda tus Trámites" folder in "Tramites" target */,
+				3CFD2B80300EA7130021A2F8 /* Exceptions for "Recuerda tus Trámites" folder in "Tramites" target */,
 			);
 			path = "Recuerda tus Trámites";
 			sourceTree = "<group>";
@@ -102,7 +102,7 @@
 		3CEDE1072FD56E6C00FD1446 = {
 			isa = PBXGroup;
 			children = (
-				3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */,
+				3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */,
 				3CFD5A02A0B0C0D0E0F0A002 /* TramiteWidgets */,
 				3CEDE1112FD56E6C00FD1446 /* Products */,
 			);
@@ -135,7 +135,7 @@
 				3CFD5A0EA0B0C0D0E0F0A00E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */,
+				3CEDE1122FD56E6C00FD1446 /* Recuerda tus Trámites */,
 			);
 			name = Tramites;
 			packageProductDependencies = (
@@ -185,7 +185,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Tramites" */;
+			buildConfigurationList = 3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Recuerda tus Trámites" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -403,7 +403,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.manuelcazalla.recuerdatustramites";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -447,7 +447,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.manuelcazalla.recuerdatustramites";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -482,7 +482,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.manuelcazalla.recuerdatustramites.TramiteWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites.TramiteWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -517,7 +517,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.manuelcazalla.recuerdatustramites.TramiteWidgets";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites.TramiteWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -535,7 +535,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Tramites" */ = {
+		3CEDE10B2FD56E6C00FD1446 /* Build configuration list for PBXProject "Recuerda tus Trámites" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3CEDE11B2FD56E6E00FD1446 /* Debug */,

@@ -73,6 +73,16 @@ struct ContentView: View {
             .tag(2)
 
             NavigationStack {
+                IdeasView()
+                    .frame(maxWidth: 900)
+                    .frame(maxWidth: .infinity)
+            }
+            .tabItem {
+                Label("ideas.title", systemImage: "lightbulb.fill")
+            }
+            .tag(3)
+
+            NavigationStack {
                 SettingsView()
                     .frame(maxWidth: 900)
                     .frame(maxWidth: .infinity)
@@ -80,7 +90,7 @@ struct ContentView: View {
             .tabItem {
                 Label("settings.title", systemImage: "gearshape.fill")
             }
-            .tag(3)
+            .tag(4)
         }
         .tint(Color.tramiteGreen)
 
@@ -105,6 +115,8 @@ struct ContentView: View {
             selectedTab = 1
         case "obligations":
             selectedTab = 2
+        case "ideas":
+            selectedTab = 3
         default:
             break
         }
