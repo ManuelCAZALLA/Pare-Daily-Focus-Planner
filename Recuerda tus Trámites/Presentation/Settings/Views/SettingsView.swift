@@ -87,7 +87,7 @@ struct SettingsView: View {
                 // Lista de ventajas Pro
                 VStack(alignment: .leading, spacing: 8) {
                     proFeatureRow(icon: "person.3", title: "Hasta 6 perfiles familiares")
-                    proFeatureRow(icon: "bell.badge.fill", title: "Avisos escalonados (3 meses, 1 mes, 2 semanas)")
+                    proFeatureRow(icon: "bell.badge.fill", title: "Avisos escalonados (1 mes, 2 semanas, 1 semana y 2 días)")
                     proFeatureRow(icon: "doc.text.fill", title: "Trámites ilimitados")
                     proFeatureRow(icon: "clock.arrow.circlepath", title: "Historial completo sin límites")
                     proFeatureRow(icon: "rectangle.stack.fill", title: "Widgets Pro (medium, large, lock screen)")

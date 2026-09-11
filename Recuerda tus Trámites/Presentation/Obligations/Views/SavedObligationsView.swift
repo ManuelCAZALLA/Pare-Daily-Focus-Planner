@@ -3,7 +3,10 @@ import SwiftUI
 struct SavedObligationsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(ObligationsViewModel.self) private var obligationsVM
+    @Environment(PurchasesService.self) private var purchases
     @State private var selectedTemplate: ObligationTemplate?
+    @State private var exportURL: URL?
+    @State private var showShareSheet = false
 
     var body: some View {
         NavigationStack {
@@ -26,6 +29,14 @@ struct SavedObligationsView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .listRowBackground(Color(hex: "#1A1A1C"))
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button {
+                                        export(obligation, template: template)
+                                    } label: {
+                                        Label("Exportar PDF", systemImage: "square.and.arrow.up")
+                                    }
+                                    .tint(Color.tramiteGreen)
+                                }
                             }
                         }
                     }
@@ -51,6 +62,24 @@ struct SavedObligationsView: View {
             }
         }
         .onAppear { obligationsVM.load() }
+        .sheet(isPresented: $showShareSheet) {
+            if let exportURL {
+                ShareSheet(items: [exportURL])
+            }
+        }
+    }
+
+    private func export(_ obligation: LifeObligation, template: ObligationTemplate) {
+        guard purchases.isProActive else {
+            purchases.showPaywall = true
+            return
+        }
+        do {
+            exportURL = try ObligationPDFExporter.export(obligation: obligation, template: template)
+            showShareSheet = true
+        } catch {
+            print("Failed to export obligation PDF: \(error)")
+        }
     }
 
     private func template(for obligation: LifeObligation) -> ObligationTemplate? {

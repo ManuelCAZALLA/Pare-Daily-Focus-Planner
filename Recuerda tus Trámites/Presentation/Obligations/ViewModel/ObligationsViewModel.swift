@@ -94,7 +94,7 @@ final class ObligationsViewModel {
         documentsNeeded: String,
         scannedDocumentData: Data?,
         escalatedAlertsEnabled: Bool
-    ) throws {
+    ) async throws {
         let obligation = existing ?? LifeObligation(templateID: template.id)
         obligation.familyProfile = familyProfile
         notificationService?.cancel(for: obligation)
@@ -107,7 +107,8 @@ final class ObligationsViewModel {
         obligation.scannedDocumentData = scannedDocumentData
         obligation.escalatedAlertsEnabled = expiryDate != nil && escalatedAlertsEnabled
         try repository.save(obligation)
-        notificationService?.schedule(for: obligation, title: template.title)
+        obligation.notificationIDs = await notificationService?.schedule(for: obligation, title: template.title) ?? []
+        try repository.save(obligation)
         load()
     }
 

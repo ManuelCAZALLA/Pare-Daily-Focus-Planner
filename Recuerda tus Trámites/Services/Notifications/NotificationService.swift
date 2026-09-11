@@ -6,6 +6,7 @@ import UserNotifications
 final class NotificationService {
     var isAuthorized: Bool = false
     var pendingCount: Int = 0
+    private let maximumManagedNotifications = 60
 
     func requestPermission() async {
         let center = UNUserNotificationCenter.current()
@@ -42,51 +43,50 @@ final class NotificationService {
         task.notificationIDs.removeAll()
     }
 
-    func schedule(for obligation: LifeObligation, title: String) {
-        guard let expiryDate = obligation.expiryDate else { return }
+    /// Devuelve únicamente IDs que iOS ha aceptado. iOS admite hasta 64 avisos
+    /// locales pendientes; dejamos margen para avisos de tareas y rutinas.
+    func schedule(for obligation: LifeObligation, title: String) async -> [String] {
+        guard let expiryDate = obligation.expiryDate else { return [] }
+        let pending = await UNUserNotificationCenter.current().pendingNotificationRequests()
+        let slots = max(0, maximumManagedNotifications - pending.count)
+        guard slots > 0 else { return [] }
 
+        let calendar = Calendar.current
+        let dates: [Date]
         if obligation.escalatedAlertsEnabled {
-            [90, 30, 14, 7].forEach { daysBeforeExpiry in
-                scheduleObligationNotification(
-                    for: obligation,
-                    title: title,
-                    expiryDate: expiryDate,
-                    daysBeforeExpiry: daysBeforeExpiry
-                )
-            }
+            // Debe coincidir con lo que se promete en la interfaz.
+            dates = [
+                calendar.date(byAdding: .month, value: -1, to: expiryDate),
+                calendar.date(byAdding: .day, value: -14, to: expiryDate),
+                calendar.date(byAdding: .day, value: -7, to: expiryDate),
+                calendar.date(byAdding: .day, value: -2, to: expiryDate)
+            ].compactMap { $0 }
         } else if let alertOffset = obligation.alertOffset {
-            scheduleObligationNotification(
-                for: obligation,
+            dates = [expiryDate.addingTimeInterval(-alertOffset.timeIntervalBefore)]
+        } else {
+            dates = []
+        }
+
+        var ids: [String] = []
+        for date in dates.sorted() where ids.count < slots {
+            if let id = await scheduleObligationNotification(
                 title: title,
                 expiryDate: expiryDate,
-                timeIntervalBefore: alertOffset.timeIntervalBefore
-            )
+                notificationDate: date
+            ) {
+                ids.append(id)
+            }
         }
+        return ids
     }
 
     private func scheduleObligationNotification(
-        for obligation: LifeObligation,
         title: String,
         expiryDate: Date,
-        daysBeforeExpiry: Int
-    ) {
-        scheduleObligationNotification(
-            for: obligation,
-            title: title,
-            expiryDate: expiryDate,
-            timeIntervalBefore: TimeInterval(daysBeforeExpiry * 24 * 60 * 60)
-        )
-    }
-
-    private func scheduleObligationNotification(
-        for obligation: LifeObligation,
-        title: String,
-        expiryDate: Date,
-        timeIntervalBefore: TimeInterval
-    ) {
-        let notificationDate = Calendar.current.startOfDay(for: expiryDate)
-            .addingTimeInterval(-timeIntervalBefore + 9 * 60 * 60)
-        guard notificationDate > Date() else { return }
+        notificationDate: Date
+    ) async -> String? {
+        let notificationDate = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: notificationDate) ?? notificationDate
+        guard notificationDate > Date() else { return nil }
 
         let content = UNMutableNotificationContent()
         content.title = String(localized: "Trámites")
@@ -104,8 +104,12 @@ final class NotificationService {
             trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         )
 
-        UNUserNotificationCenter.current().add(request)
-        obligation.notificationIDs.append(id)
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+            return id
+        } catch {
+            return nil
+        }
     }
 
     func cancel(for obligation: LifeObligation) {

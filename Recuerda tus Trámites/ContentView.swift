@@ -34,13 +34,11 @@ struct ContentView: View {
             PaywallView(displayCloseButton: true)
                 .onPurchaseCompleted { customerInfo in
                     purchases.customerInfo = customerInfo
-                    hasSeenOnboardingPaywall = true
-                    purchases.showPaywall = false
+                    handlePurchaseSuccess()
                 }
                 .onRestoreCompleted { customerInfo in
                     purchases.customerInfo = customerInfo
-                    hasSeenOnboardingPaywall = true
-                    purchases.showPaywall = false
+                    handlePurchaseSuccess()
                 }
                 .onPurchaseFailure { error in
                     // No mostramos el alert crudo de StoreKit ("Purchase was cancelled").
@@ -61,6 +59,17 @@ struct ContentView: View {
             Button("OK", role: .cancel) { purchaseErrorMessage = nil }
         } message: {
             Text(purchaseErrorMessage ?? "")
+        }
+    }
+
+    /// Refresca el estado Pro desde RevenueCat y cierra el paywall.
+    /// El CustomerInfo que devuelve RevenueCatUI en el callback puede venir desactualizado
+    /// en sandbox; hacer un fetch explícito garantiza que los entitlements estén presentes.
+    private func handlePurchaseSuccess() {
+        hasSeenOnboardingPaywall = true
+        purchases.showPaywall = false
+        Task {
+            await purchases.loadCustomerInfo()
         }
     }
 

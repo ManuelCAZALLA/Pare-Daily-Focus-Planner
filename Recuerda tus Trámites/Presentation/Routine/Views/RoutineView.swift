@@ -31,6 +31,9 @@ struct RoutineView: View {
                     streakCard
                         .padding(.horizontal, 20)
 
+                    weeklyProgress
+                        .padding(.horizontal, 20)
+
                     HStack(spacing: 14) {
                         morningCard
                         eveningCard
@@ -214,6 +217,42 @@ struct RoutineView: View {
         .offset(y: appeared ? 0 : 20)
         .opacity(appeared ? 1 : 0)
         .animation(.spring(duration: 0.6).delay(0.1), value: appeared)
+    }
+
+    private var weeklyProgress: some View {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let days = (-6...0).compactMap { calendar.date(byAdding: .day, value: $0, to: today) }
+
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Esta semana")
+                    .font(.headline.weight(.bold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Text("Mañana · Noche")
+                    .font(.caption)
+                    .foregroundStyle(Color(hex: "#8E8E93"))
+            }
+            HStack(spacing: 0) {
+                ForEach(days, id: \.self) { day in
+                    let status = routineVM.routineStatus(for: day)
+                    VStack(spacing: 7) {
+                        Text(day.formatted(.dateTime.weekday(.narrow)))
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(calendar.isDateInToday(day) ? Color.tramiteGreen : Color(hex: "#8E8E93"))
+                        HStack(spacing: 3) {
+                            Circle().fill(status.morning ? Color(hex: "#FF9500") : Color(hex: "#2A2A2C")).frame(width: 8, height: 8)
+                            Circle().fill(status.evening ? Color(hex: "#5E5CE6") : Color(hex: "#2A2A2C")).frame(width: 8, height: 8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .padding(16)
+        .background(Color(hex: "#141416"), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 1))
     }
 
     private func statusDot(completed: Bool, icon: String) -> some View {

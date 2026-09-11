@@ -9,6 +9,7 @@ import SwiftData
 struct ProfileObligationsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PurchasesService.self) private var purchases
+    @Environment(NotificationService.self) private var notificationService
     let profile: FamilyProfile
     
     @State private var viewModel: ObligationsViewModel?
@@ -42,6 +43,7 @@ struct ProfileObligationsView: View {
                 let repo = ObligationRepository(context: modelContext)
                 viewModel = ObligationsViewModel(
                     repository: repo,
+                    notificationService: notificationService,
                     familyProfile: profile,
                     purchasesService: purchases
                 )

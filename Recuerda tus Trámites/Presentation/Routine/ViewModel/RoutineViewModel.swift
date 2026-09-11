@@ -21,6 +21,7 @@ final class RoutineViewModel {
     var todayMorningCompleted: Bool = false
     var todayEveningCompleted: Bool = false
     var streakDays: Int = 0
+    var errorMessage: String?
 
     // MARK: - Configuración (observables, persistidas en UserDefaults)
     var morningEnabled: Bool = UserDefaults.standard.object(forKey: "routine.morningEnabled") as? Bool ?? true {
@@ -88,6 +89,7 @@ final class RoutineViewModel {
         self.context = context
         self.taskRepository = taskRepository
         loadStreakAndStatus()
+        scheduleNotifications()
     }
 
     // MARK: - Carga de estado
@@ -99,37 +101,50 @@ final class RoutineViewModel {
         streakDays = calculateStreak()
     }
 
-    // MARK: - Completar Morning
+    // MARK: - Completar rituales
 
-    func completeMorning(intentionTaskID: UUID?) {
+    @discardableResult
+    func completeMorning(intentionTaskID: UUID?) -> Bool {
+        guard !todayMorningCompleted else { return true }
         let ritual = DailyRitual(date: Date(), type: .morning)
         ritual.intentionTaskID = intentionTaskID
         context.insert(ritual)
-        try? context.save()
-        WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
-        withAnimation { todayMorningCompleted = true }
-        streakDays = calculateStreak()
+        do {
+            try context.save()
+            WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
+            withAnimation { todayMorningCompleted = true }
+            streakDays = calculateStreak()
+            return true
+        } catch {
+            context.delete(ritual)
+            errorMessage = String(localized: "No se pudo guardar la rutina. Inténtalo de nuevo.")
+            return false
+        }
     }
 
-    // MARK: - Completar Evening
-
-    func completeEvening(note: String?, carriedOverTasks: [TramiteTask]) {
+    @discardableResult
+    func completeEvening(note: String?, carriedOverTasks: [TramiteTask]) -> Bool {
+        guard !todayEveningCompleted else { return true }
         let ritual = DailyRitual(date: Date(), type: .evening)
         ritual.eveningNote = note.flatMap { $0.isEmpty ? nil : $0 }
         ritual.carriedOverTaskIDs = carriedOverTasks.map(\.id)
         context.insert(ritual)
-        try? context.save()
-
-        // Posponer tareas seleccionadas a mañana
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
-        for task in carriedOverTasks {
-            task.scheduledDate = tomorrow
-            try? taskRepository.save(task)
+        do {
+            try context.save()
+            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
+            for task in carriedOverTasks {
+                task.scheduledDate = tomorrow
+                try taskRepository.save(task)
+            }
+            WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
+            withAnimation { todayEveningCompleted = true }
+            streakDays = calculateStreak()
+            return true
+        } catch {
+            context.delete(ritual)
+            errorMessage = String(localized: "No se pudo guardar la rutina. Inténtalo de nuevo.")
+            return false
         }
-
-        WidgetCenter.shared.reloadTimelines(ofKind: "RoutineWidget")
-        withAnimation { todayEveningCompleted = true }
-        streakDays = calculateStreak()
     }
 
     // MARK: - Notificaciones
@@ -161,6 +176,15 @@ final class RoutineViewModel {
     }
 
     // MARK: - Urgente trámites para briefing
+
+    func title(for obligation: LifeObligation) -> String {
+        ObligationTemplate.all.first(where: { $0.id == obligation.templateID })?.title ?? obligation.templateID
+    }
+
+    func routineStatus(for date: Date) -> (morning: Bool, evening: Bool) {
+        let day = Calendar.current.startOfDay(for: date)
+        return (hasRitual(for: day, type: .morning), hasRitual(for: day, type: .evening))
+    }
 
     func urgentObligations() -> [LifeObligation] {
         let descriptor = FetchDescriptor<LifeObligation>()
@@ -225,6 +249,12 @@ final class RoutineViewModel {
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request)
+        Task {
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+            } catch {
+                errorMessage = String(localized: "No se pudo programar el aviso de rutina.")
+            }
+        }
     }
 }

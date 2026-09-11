@@ -58,6 +58,14 @@ struct MorningFlowSheet: View {
         }
         .preferredColorScheme(.dark)
         .presentationCornerRadius(32)
+        .alert("No se pudo completar la rutina", isPresented: Binding(
+            get: { routineVM.errorMessage != nil },
+            set: { if !$0 { routineVM.errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { routineVM.errorMessage = nil }
+        } message: {
+            Text(routineVM.errorMessage ?? "")
+        }
         .onAppear {
             withAnimation(.spring(duration: 0.6)) { appear = true }
         }
@@ -120,7 +128,7 @@ struct MorningFlowSheet: View {
             }
             .padding(.horizontal, 28)
 
-            let pending = dayVM.tasksToday.filter { !$0.isCompleted }.prefix(6)
+            let pending = routineVM.tasksForToday().filter { !$0.isCompleted }.prefix(6)
             if pending.isEmpty {
                 emptyTasksPlaceholder
             } else {
@@ -230,7 +238,7 @@ struct MorningFlowSheet: View {
 
                 // Tarea intención seleccionada
                 if let id = selectedTaskID,
-                   let task = dayVM.tasksToday.first(where: { $0.id == id }) {
+                   let task = routineVM.tasksForToday().first(where: { $0.id == id }) {
                     briefingSectionHeader("Tu intención de hoy", icon: "⚡")
                     HStack(spacing: 14) {
                         ZStack {
@@ -252,7 +260,7 @@ struct MorningFlowSheet: View {
                 }
 
                 // Tareas del día
-                let pending = dayVM.tasksToday.filter { !$0.isCompleted }
+                let pending = routineVM.tasksForToday().filter { !$0.isCompleted }
                 if !pending.isEmpty {
                     briefingSectionHeader("Tareas de hoy", icon: "📋")
                     VStack(spacing: 6) {
@@ -288,7 +296,7 @@ struct MorningFlowSheet: View {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .font(.caption)
                                     .foregroundStyle(Color.orange)
-                                Text(ob.templateID)
+                                Text(routineVM.title(for: ob))
                                     .font(.subheadline)
                                     .foregroundStyle(Color(hex: "#EBEBF5"))
                                     .lineLimit(1)
@@ -373,8 +381,9 @@ struct MorningFlowSheet: View {
                 if step < totalSteps - 1 {
                     withAnimation(.spring(duration: 0.4)) { step += 1 }
                 } else {
-                    routineVM.completeMorning(intentionTaskID: selectedTaskID)
-                    dismiss()
+                    if routineVM.completeMorning(intentionTaskID: selectedTaskID) {
+                        dismiss()
+                    }
                 }
             } label: {
                 HStack(spacing: 8) {
@@ -431,7 +440,7 @@ struct EveningFlowSheet: View {
     @State private var appear = false
     @State private var newTaskAdded = false
 
-    private let totalSteps = 4
+    private let totalSteps = 5
 
     var body: some View {
         ZStack {
@@ -468,6 +477,14 @@ struct EveningFlowSheet: View {
         }
         .preferredColorScheme(.dark)
         .presentationCornerRadius(32)
+        .alert("No se pudo completar la rutina", isPresented: Binding(
+            get: { routineVM.errorMessage != nil },
+            set: { if !$0 { routineVM.errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { routineVM.errorMessage = nil }
+        } message: {
+            Text(routineVM.errorMessage ?? "")
+        }
         .onAppear {
             withAnimation(.spring(duration: 0.6)) { appear = true }
         }
@@ -828,10 +845,11 @@ struct EveningFlowSheet: View {
                 if step < totalSteps - 1 {
                     withAnimation(.spring(duration: 0.4)) { step += 1 }
                 } else {
-                    let tasks = dayVM.tasksToday.filter { carriedTasks.contains($0.id) }
-                    routineVM.completeEvening(note: eveningNote, carriedOverTasks: tasks)
-                    dayVM.loadDay(for: dayVM.selectedDate)
-                    dismiss()
+                    let tasks = routineVM.tasksForToday().filter { carriedTasks.contains($0.id) }
+                    if routineVM.completeEvening(note: eveningNote, carriedOverTasks: tasks) {
+                        dayVM.loadDay(for: dayVM.selectedDate)
+                        dismiss()
+                    }
                 }
             } label: {
                 HStack(spacing: 8) {

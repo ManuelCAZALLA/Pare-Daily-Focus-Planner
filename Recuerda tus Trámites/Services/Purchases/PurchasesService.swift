@@ -64,25 +64,21 @@ final class PurchasesService {
 
     private var lastProState: Bool? = nil
 
-    /// true si existe cualquier entitlement activo o si coincide alguno de los nombres conocidos
+    /// true si existe cualquier entitlement activo o si coincide alguno de los nombres conocidos.
     var isProActive: Bool {
         #if DEBUG
         if debugForcePro { return true }
         #endif
         guard let customerInfo else { return false }
-        
-        // 1. Si el usuario tiene cualquier entitlement activo devuelto por RevenueCat, es Pro
+
+        // 1. Si el usuario tiene cualquier entitlement activo devuelto por RevenueCat, es Pro.
         if !customerInfo.entitlements.active.isEmpty {
             return true
         }
 
-        // 2. Comprobación fallback de nombres específicos de entitlement
+        // 2. Fallback por nombre: solo sirven los entitlements que pertenecen a esta app.
         return customerInfo.entitlements[.tramiteProEntitlement]?.isActive == true
             || customerInfo.entitlements[.legacyProEntitlement]?.isActive == true
-            || customerInfo.entitlements["pro"]?.isActive == true
-            || customerInfo.entitlements["pro_access"]?.isActive == true
-            || customerInfo.entitlements["recuerda_tus_tramites_pro"]?.isActive == true
-            || customerInfo.entitlements["Recuerda tus Tramites Pro"]?.isActive == true
     }
 
     /// Control centralizado para la presentación del Paywall en el nivel raíz (evita errores de anclaje de UI en iPadOS)

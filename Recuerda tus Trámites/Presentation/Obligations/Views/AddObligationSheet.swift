@@ -399,22 +399,24 @@ struct AddObligationSheet: View {
             purchases.showPaywall = true
             return
         }
-        do {
-            try obligationsVM.save(
-                template: template,
-                existing: editingObligation,
-                holderName: holderName,
-                expiryDate: hasExpiryDate ? expiryDate : nil,
-                actionStartDate: hasActionStartDate ? actionStartDate : nil,
-                alertOffset: hasExpiryDate ? alertOffset : nil,
-                notes: notes,
-                documentsNeeded: documentsNeeded,
-                scannedDocumentData: obligationsVM.scannedDocumentData,
-                escalatedAlertsEnabled: escalatedAlertsEnabled
-            )
-            dismiss()
-        } catch {
-            print("Failed to save obligation: \(error)")
+        Task {
+            do {
+                try await obligationsVM.save(
+                    template: template,
+                    existing: editingObligation,
+                    holderName: holderName,
+                    expiryDate: hasExpiryDate ? expiryDate : nil,
+                    actionStartDate: hasActionStartDate ? actionStartDate : nil,
+                    alertOffset: hasExpiryDate ? alertOffset : nil,
+                    notes: notes,
+                    documentsNeeded: documentsNeeded,
+                    scannedDocumentData: obligationsVM.scannedDocumentData,
+                    escalatedAlertsEnabled: escalatedAlertsEnabled
+                )
+                dismiss()
+            } catch {
+                print("Failed to save obligation: \(error)")
+            }
         }
     }
 
