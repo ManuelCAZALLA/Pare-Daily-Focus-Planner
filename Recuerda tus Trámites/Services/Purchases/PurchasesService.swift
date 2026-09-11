@@ -38,25 +38,63 @@ final class PurchasesService {
 
     // MARK: - Estado público
 
+    /// Pro Tip: NO ejecutamos trabajo pesado (WidgetKit reload) sincrónicamente en el
+    /// `didSet` de customerInfo. Durante una compra StoreKit requiere que el hilo principal
+    /// responda con rapidez; bloquearlo aquí puede provocar que la transacción se cancele
+    /// silenciosamente ("Purchase was cancelled") como veíamos.
     var customerInfo: CustomerInfo? = nil {
         didSet {
+            let newPro = isProActive
+            let oldPro = lastProState
+            lastProState = newPro
+
+            // Solo propagar cuando el estado Pro realmente cambia (o es el primer valor)
+            guard oldPro != newPro || oldPro == nil else { return }
+
             UserDefaults(suiteName: "group.com.manuelcazalla.recuerdatustramites")?
-                .set(isProActive, forKey: "isProActive")
-            WidgetCenter.shared.reloadAllTimelines()
+                .set(newPro, forKey: "isProActive")
+
+            // El reload de widgets se difiere para no bloquear el hilo principal
+            // durante una operación de StoreKit en curso.
+            DispatchQueue.main.async {
+                WidgetCenter.shared.reloadAllTimelines()
+            }
         }
     }
 
-    /// true si el entitlement "Recuerda tus Trámites Pro" está activo
+    private var lastProState: Bool? = nil
+
+    /// true si existe cualquier entitlement activo o si coincide alguno de los nombres conocidos
     var isProActive: Bool {
         #if DEBUG
         if debugForcePro { return true }
         #endif
-        return customerInfo?.entitlements[.tramiteProEntitlement]?.isActive == true
-            || customerInfo?.entitlements[.legacyProEntitlement]?.isActive == true
+        guard let customerInfo else { return false }
+        
+        // 1. Si el usuario tiene cualquier entitlement activo devuelto por RevenueCat, es Pro
+        if !customerInfo.entitlements.active.isEmpty {
+            return true
+        }
+
+        // 2. Comprobación fallback de nombres específicos de entitlement
+        return customerInfo.entitlements[.tramiteProEntitlement]?.isActive == true
+            || customerInfo.entitlements[.legacyProEntitlement]?.isActive == true
+            || customerInfo.entitlements["pro"]?.isActive == true
+            || customerInfo.entitlements["pro_access"]?.isActive == true
+            || customerInfo.entitlements["recuerda_tus_tramites_pro"]?.isActive == true
+            || customerInfo.entitlements["Recuerda tus Tramites Pro"]?.isActive == true
     }
 
+    /// Control centralizado para la presentación del Paywall en el nivel raíz (evita errores de anclaje de UI en iPadOS)
+    var showPaywall = false
+
     var isLoading = false
+
+    /// Estado de error visible para la UI
     var errorMessage: String? = nil
+
+    /// Para que la UI pueda saber si la carga inicial terminó (evitar pantalla vacía)
+    var didCompleteInitialLoad = false
 
     #if DEBUG
     /// Override de test: fuerza el estado Pro en builds de depuración.
@@ -72,26 +110,44 @@ final class PurchasesService {
     // MARK: - Carga inicial
 
     /// Llamar en .task {} de la pantalla raíz o en ContentView.onAppear
-    func loadCustomerInfo() async {
-        do {
-            customerInfo = try await Purchases.shared.customerInfo()
-        } catch {
-            errorMessage = error.localizedDescription
+    func loadCustomerInfo(retries: Int = 3) async {
+        isLoading = true
+        defer {
+            isLoading = false
+            didCompleteInitialLoad = true
+        }
+        for attempt in 0..<retries {
+            do {
+                customerInfo = try await Purchases.shared.customerInfo()
+                errorMessage = nil
+                return
+            } catch {
+                errorMessage = error.localizedDescription
+                if attempt < retries - 1 {
+                    try? await Task.sleep(for: .seconds(Double(attempt + 1)))
+                }
+            }
         }
     }
 
     // MARK: - Restaurar compras
 
     @discardableResult
-    func restorePurchases() async -> Bool {
+    func restorePurchases(retries: Int = 2) async -> Bool {
         isLoading = true
         defer { isLoading = false }
-        do {
-            customerInfo = try await Purchases.shared.restorePurchases()
-            return isProActive
-        } catch {
-            errorMessage = error.localizedDescription
-            return false
+        for attempt in 0..<retries {
+            do {
+                customerInfo = try await Purchases.shared.restorePurchases()
+                errorMessage = nil
+                return isProActive
+            } catch {
+                errorMessage = error.localizedDescription
+                if attempt < retries - 1 {
+                    try? await Task.sleep(for: .seconds(Double(attempt + 1)))
+                }
+            }
         }
+        return false
     }
 }

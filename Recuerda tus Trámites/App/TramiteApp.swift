@@ -13,6 +13,14 @@ struct TramiteApp: App {
     @State private var notificationService = NotificationService()
 
     init() {
+        // ── RevenueCat ──────────────────────────────────────────────────
+        #if DEBUG
+        Purchases.logLevel = .debug
+        #else
+        Purchases.logLevel = .warn
+        #endif
+        Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
+
         let context  = TramiteModelContainer.shared.mainContext
         let taskRepo = TaskRepository(context: context)
         let obligationsRepo = ObligationRepository(context: context)
@@ -35,14 +43,6 @@ struct TramiteApp: App {
             repository: IdeaRepository(context: context)
         ))
         _notificationService = State(initialValue: notifications)
-
-        // ── RevenueCat ──────────────────────────────────────────────────
-        #if DEBUG
-        Purchases.logLevel = .debug
-        #else
-        Purchases.logLevel = .warn
-        #endif
-        Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
     }
 
     var body: some Scene {

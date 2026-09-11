@@ -16,7 +16,6 @@ struct DayView: View {
     @State private var rescheduleDate = Date()
     @State private var selectedDate = Date()
     @State private var overdueTaskAction: TramiteTask? = nil
-    @State private var showPaywall = false
     @State private var showHistoryLimitAlert = false
 
     // Navegación entre semanas
@@ -95,14 +94,10 @@ struct DayView: View {
                 }
             }
         }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
-                .preferredColorScheme(.dark)
-        }
         .alert("Historial limitado", isPresented: $showHistoryLimitAlert) {
             Button("Cancelar", role: .cancel) {}
             Button("Desbloquear Pro") {
-                showPaywall = true
+                purchases.showPaywall = true
             }
         } message: {
             Text("La versión gratuita muestra los últimos \(maxFreeHistoryDays) días. Con Recuerda tus Trámites Pro puedes acceder a todo tu historial.")
@@ -161,7 +156,7 @@ struct DayView: View {
 
             if !purchases.isProActive {
                 Button {
-                    showPaywall = true
+                    purchases.showPaywall = true
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "sparkles")

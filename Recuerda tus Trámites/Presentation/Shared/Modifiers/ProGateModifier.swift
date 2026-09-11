@@ -3,7 +3,6 @@ import RevenueCatUI
 
 struct ProGateModifier: ViewModifier {
     @Environment(PurchasesService.self) private var purchases
-    @State private var showPaywall = false
 
     let isProFeature: Bool
     let action: () -> Void
@@ -12,14 +11,10 @@ struct ProGateModifier: ViewModifier {
         content
             .onTapGesture {
                 if isProFeature && !purchases.isProActive {
-                    showPaywall = true
+                    purchases.showPaywall = true
                 } else {
                     action()
                 }
-            }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
-                    .preferredColorScheme(.dark)
             }
     }
 }

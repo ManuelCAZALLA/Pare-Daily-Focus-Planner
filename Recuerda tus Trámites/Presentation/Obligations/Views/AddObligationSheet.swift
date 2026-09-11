@@ -22,7 +22,6 @@ struct AddObligationSheet: View {
     @State private var documentsNeeded: String = ""
     @State private var notes: String = ""
     @State private var showDocumentScanner = false
-    @State private var showPaywall = false
     @State private var previewURL: URL?
     @State private var escalatedAlertsEnabled = false
 
@@ -192,10 +191,6 @@ struct AddObligationSheet: View {
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(28)
         .preferredColorScheme(.dark)
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
-                .preferredColorScheme(.dark)
-        }
         #if !os(watchOS)
         .sheet(isPresented: $showDocumentScanner) {
             DocumentScanner(
@@ -272,7 +267,7 @@ struct AddObligationSheet: View {
                     if purchases.isProActive {
                         showDocumentScanner = true
                     } else {
-                        showPaywall = true
+                        purchases.showPaywall = true
                     }
                 } label: {
                     Label("obligation.scan", systemImage: "doc.viewfinder")
@@ -401,7 +396,7 @@ struct AddObligationSheet: View {
 
     private func save() {
         if editingObligation == nil && !obligationsVM.canAddObligation {
-            showPaywall = true
+            purchases.showPaywall = true
             return
         }
         do {
@@ -452,11 +447,11 @@ struct AddObligationSheet: View {
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(hex: "#0C0C0E"), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .onChange(of: alertOffset) { _, newValue in
+            .onChange(of: alertOffset) { oldValue, newValue in
                 guard let newValue else { return }
                 if newValue.isProFeature && !purchases.isProActive {
                     alertOffset = nil
-                    showPaywall = true
+                    purchases.showPaywall = true
                     return
                 }
                 Task { await obligationsVM.requestNotificationPermission() }
@@ -476,7 +471,7 @@ struct AddObligationSheet: View {
                     get: { escalatedAlertsEnabled },
                     set: { newValue in
                         if newValue && !purchases.isProActive {
-                            showPaywall = true
+                            purchases.showPaywall = true
                         } else {
                             escalatedAlertsEnabled = newValue
                             if newValue {

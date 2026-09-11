@@ -8,10 +8,11 @@ struct ContentView: View {
     @Environment(PurchasesService.self) private var purchases
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("hasSeenOnboardingPaywall") private var hasSeenOnboardingPaywall = false
-    @State private var showOnboardingPaywall = false
     @State private var selectedTab = 0
+    @State private var purchaseErrorMessage: String?
     
     var body: some View {
+        @Bindable var purchases = purchases
         Group {
             if hasSeenOnboarding {
                 mainTabView
@@ -23,20 +24,57 @@ struct ContentView: View {
         .onOpenURL(perform: handleDeepLink)
         .task {
             await purchases.loadCustomerInfo()
-            guard !hasSeenOnboardingPaywall, !purchases.isProActive else { return }
-            hasSeenOnboardingPaywall = true
-            showOnboardingPaywall = true
+            await maybeShowOnboardingPaywall()
         }
-        .fullScreenCover(isPresented: $showOnboardingPaywall) {
-            PaywallView()
-                .onPurchaseCompleted { _ in
-                    showOnboardingPaywall = false
+        .onChange(of: hasSeenOnboarding) { _, completed in
+            guard completed else { return }
+            Task { await maybeShowOnboardingPaywall() }
+        }
+        .fullScreenCover(isPresented: $purchases.showPaywall) {
+            PaywallView(displayCloseButton: true)
+                .onPurchaseCompleted { customerInfo in
+                    purchases.customerInfo = customerInfo
+                    hasSeenOnboardingPaywall = true
+                    purchases.showPaywall = false
                 }
-                .onRestoreCompleted { _ in
-                    showOnboardingPaywall = false
+                .onRestoreCompleted { customerInfo in
+                    purchases.customerInfo = customerInfo
+                    hasSeenOnboardingPaywall = true
+                    purchases.showPaywall = false
+                }
+                .onPurchaseFailure { error in
+                    // No mostramos el alert crudo de StoreKit ("Purchase was cancelled").
+                    // En sandbox (revisión de Apple) un fallo suele deberse a Error 11
+                    // (InvalidCredentialsError), un problema de configuración del bundle ID
+                    // o la API key de RevenueCat, no de la UI.
+                    purchaseErrorMessage = failureMessage(for: error)
                 }
                 .preferredColorScheme(.dark)
         }
+        .alert(
+            "No se pudo completar la compra",
+            isPresented: Binding(
+                get: { purchaseErrorMessage != nil },
+                set: { if !$0 { purchaseErrorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { purchaseErrorMessage = nil }
+        } message: {
+            Text(purchaseErrorMessage ?? "")
+        }
+    }
+
+    /// Muestra el paywall de onboarding una única vez, tras verificar el estado Pro.
+    /// NUNCA lo muestra mientras el usuario está aún en el flujo de Onboarding inicial (hasSeenOnboarding == false).
+    /// Espera 600ms tras la inicialización para permitir que UIWindowScene y sidebarAdaptable en iPadOS estén asentados.
+    @MainActor
+    private func maybeShowOnboardingPaywall() async {
+        guard !purchases.isProActive else { return }
+        guard !hasSeenOnboardingPaywall else { return }
+        guard hasSeenOnboarding else { return }
+        
+        try? await Task.sleep(for: .milliseconds(600))
+        purchases.showPaywall = true
     }
 
     @ViewBuilder
@@ -120,5 +158,18 @@ struct ContentView: View {
         default:
             break
         }
+    }
+
+    /// Convierte un error de compra de RevenueCat en un mensaje útil para el usuario,
+    /// evitando mostrar el texto críptico que ve el revisor de Apple en sandbox.
+    private func failureMessage(for error: Error) -> String {
+        let ns = error as NSError
+        if ns.code == 11 || ns.localizedDescription.localizedCaseInsensitiveContains("credentials") || ns.localizedDescription.localizedCaseInsensitiveContains("invalid api key") {
+            return "No se ha podido conectar con la tienda. Vuelve a intentarlo en unos minutos."
+        }
+        if ns.code == 2 || ns.localizedDescription.localizedCaseInsensitiveContains("cancel") {
+            return "Has cancelado la compra."
+        }
+        return "No se ha podido completar la compra. Inténtalo de nuevo."
     }
 }

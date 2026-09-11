@@ -8,7 +8,6 @@ struct ObligationsView: View {
     @State private var showAddEditSheet = false
     @State private var showSavedObligations = false
     @State private var selectedTemplate: ObligationTemplate? = nil
-    @State private var showPaywall = false
     
     var profile: FamilyProfile? = nil
 
@@ -38,7 +37,7 @@ struct ObligationsView: View {
                     obligationsVM.scannedDocumentData = nil
                     showAddEditSheet = true
                 } else {
-                    showPaywall = true
+                    purchases.showPaywall = true
                 }
             }
             .padding(.trailing, 20)
@@ -67,10 +66,6 @@ struct ObligationsView: View {
         .sheet(isPresented: $showSavedObligations) {
             SavedObligationsView()
                 .environment(obligationsVM)
-                .preferredColorScheme(.dark)
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
                 .preferredColorScheme(.dark)
         }
         .onChange(of: showAddEditSheet) { _, newValue in
@@ -133,7 +128,7 @@ struct ObligationsView: View {
                     .buttonStyle(.plain)
                 } else {
                     Button {
-                        showPaywall = true
+                        purchases.showPaywall = true
                     } label: {
                         featureChip("pro.familyProfiles.title", icon: "lock.fill", showsProBadge: true)
                     }
@@ -229,7 +224,7 @@ struct ObligationsView: View {
                         selectedTemplate = nil
                         showAddEditSheet = true
                     } else {
-                        showPaywall = true
+                        purchases.showPaywall = true
                     }
                 }
             } else {
@@ -241,7 +236,7 @@ struct ObligationsView: View {
                             obligationsVM.scannedDocumentData = obligationsVM.obligation(for: template)?.scannedDocumentData
                             showAddEditSheet = true
                         } else {
-                            showPaywall = true
+                            purchases.showPaywall = true
                         }
                     } label: {
                         ObligationTemplateRow(

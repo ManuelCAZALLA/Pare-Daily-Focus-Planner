@@ -108,7 +108,6 @@ final class ObligationsViewModel {
         obligation.escalatedAlertsEnabled = expiryDate != nil && escalatedAlertsEnabled
         try repository.save(obligation)
         notificationService?.schedule(for: obligation, title: template.title)
-        try repository.save(obligation)
         load()
     }
 

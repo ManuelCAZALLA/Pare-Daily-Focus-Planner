@@ -8,10 +8,10 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B80B6AC9-CE99-4968-A7E8-2FCC85D22D45"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Recuerda tus Trámites/Presentation/Day/Views/AddTaskSheet.swift"
+            filePath = "Recuerda tus Tr&#xe1;mites/Presentation/Day/Views/AddTaskSheet.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1"

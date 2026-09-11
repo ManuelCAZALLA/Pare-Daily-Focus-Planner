@@ -15,7 +15,6 @@ struct FamilyProfilesView: View {
     @Query(sort: \FamilyProfile.name) private var profiles: [FamilyProfile]
     
     @State private var showAddSheet = false
-    @State private var showPaywall = false
     
     private let maxFreeProfiles = 1
     private let maxProProfiles = 6
@@ -87,7 +86,7 @@ struct FamilyProfilesView: View {
                                     .multilineTextAlignment(.center)
                                 
                                 Button {
-                                    showPaywall = true
+                                    purchases.showPaywall = true
                                 } label: {
                                     Text("Desbloquear Pro")
                                         .font(.subheadline.weight(.bold))
@@ -112,21 +111,17 @@ struct FamilyProfilesView: View {
                         if canAddMore {
                             showAddSheet = true
                         } else {
-                            showPaywall = true
+                            purchases.showPaywall = true
                         }
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
                     }
-                    .disabled(!canAddMore && !purchases.isProActive)
+                    .disabled(!canAddMore && purchases.isProActive)
                 }
             }
             .sheet(isPresented: $showAddSheet) {
                 AddFamilyProfileSheet()
-            }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
-                    .preferredColorScheme(.dark)
             }
         }
     }

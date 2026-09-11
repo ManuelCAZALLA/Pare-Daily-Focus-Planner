@@ -12,7 +12,6 @@ struct SettingsView: View {
     @AppStorage("autoHideCompletedTasks") private var autoHideCompletedTasks: Bool = true
 
     // Sheets de monetización
-    @State private var showPaywall = false
     @State private var showCustomerCenter = false
 
     var body: some View {
@@ -37,12 +36,6 @@ struct SettingsView: View {
         }
         .task { await notificationService.refreshAuthorizationStatus() }
         .task { await purchases.loadCustomerInfo() }    // ← cargar estado Pro
-        // Paywall gestionado 100% por RevenueCat (diseñado en su dashboard)
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
-                .onRestoreCompleted { _ in showPaywall = false }
-                .preferredColorScheme(.dark)
-        }
         // Customer Center para usuarios Pro (cancelar, reembolso, cambiar plan…)
         .sheet(isPresented: $showCustomerCenter) {
 #if canImport(RevenueCatUI)
@@ -117,7 +110,7 @@ struct SettingsView: View {
             } else {
 
                 // ── Usuario Free ───────────────────────────────────────
-                Button { showPaywall = true } label: {
+                Button { purchases.showPaywall = true } label: {
                     HStack(spacing: 14) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
