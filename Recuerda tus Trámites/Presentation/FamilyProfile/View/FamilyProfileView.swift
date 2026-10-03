@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import RevenueCatUI
+
 
 struct FamilyProfilesView: View {
     @Environment(\.modelContext) private var modelContext

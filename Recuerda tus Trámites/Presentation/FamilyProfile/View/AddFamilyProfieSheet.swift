@@ -35,7 +35,7 @@ struct AddFamilyProfileSheet: View {
                 }
 
                 Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    ScrollView(.horizontal) {
                         HStack(spacing: 12) {
                             ForEach(avatars, id: \.self) { avatar in
                                 let unselectedBG = Color(.systemGroupedBackground)
@@ -65,6 +65,7 @@ struct AddFamilyProfileSheet: View {
                         }
                         .padding(.vertical, 4)
                     }
+                    .scrollIndicators(.hidden, axes: .horizontal)
                 } header: {
                     Text("Selecciona un Avatar")
                 }

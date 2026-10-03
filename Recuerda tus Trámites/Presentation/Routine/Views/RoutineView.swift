@@ -23,7 +23,7 @@ struct RoutineView: View {
         ZStack {
             backgroundLayer.ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(spacing: 28) {
                     header
                         .padding(.top, 16)
@@ -43,6 +43,7 @@ struct RoutineView: View {
                     Spacer(minLength: 100)
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .sheet(isPresented: Binding(
             get: { routineVM.showMorningFlow },

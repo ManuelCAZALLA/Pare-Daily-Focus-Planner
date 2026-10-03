@@ -72,7 +72,7 @@ struct TramiteWidgetDataLoader {
         .sorted { $0.1 < $1.1 }
 
         let widgetObligations = dated.prefix(2).map { obligation, days in
-            let template = ObligationTemplate.all.first { $0.id == obligation.templateID }
+            let template = ObligationTemplate.template(forID: obligation.templateID)
             return WidgetObligation(
                 id: obligation.id,
                 title: template?.title ?? obligation.templateID,

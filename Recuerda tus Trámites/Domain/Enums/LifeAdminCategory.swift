@@ -34,6 +34,10 @@ enum LifeAdminCategory: String, CaseIterable, Identifiable, Codable {
     }
 
     var items: [ObligationTemplate] {
-        ObligationTemplate.all.filter { $0.category == self }
+        items(for: .current)
+    }
+
+    func items(for country: TramiteCountry) -> [ObligationTemplate] {
+        ObligationTemplate.catalog(for: country).filter { $0.category == self }
     }
 }

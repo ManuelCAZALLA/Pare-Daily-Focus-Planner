@@ -3,6 +3,7 @@ import SwiftUI
 import SwiftData
 import RevenueCatUI
 
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PurchasesService.self) private var purchases

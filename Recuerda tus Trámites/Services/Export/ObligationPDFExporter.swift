@@ -30,12 +30,17 @@ enum ObligationPDFExporter {
                 draw(title.uppercased(), font: .systemFont(ofSize: 10, weight: .bold), color: .secondaryLabel, spacing: 4)
                 draw(value, font: .systemFont(ofSize: 15), spacing: 18)
             }
-            field("Titular", obligation.holderName)
-            field("Fecha de vencimiento", obligation.expiryDate.map(formatter.string(from:)))
-            field("Fecha para empezar", obligation.actionStartDate.map(formatter.string(from:)))
-            field("Documentación necesaria", obligation.documentsNeeded)
-            field("Notas", obligation.notes)
-            draw("Generado el \(formatter.string(from: Date()))", font: .systemFont(ofSize: 10), color: .secondaryLabel, spacing: 0)
+            field(String(localized: "Titular"), obligation.holderName)
+            field(String(localized: "Fecha de vencimiento"), obligation.expiryDate.map(formatter.string(from:)))
+            field(String(localized: "Fecha para empezar"), obligation.actionStartDate.map(formatter.string(from:)))
+            field(String(localized: "Documentación necesaria"), obligation.documentsNeeded)
+            field(String(localized: "Notas"), obligation.notes)
+            draw(
+                String(format: String(localized: "Generado el %@"), formatter.string(from: Date())),
+                font: .systemFont(ofSize: 10),
+                color: .secondaryLabel,
+                spacing: 0
+            )
         }
 
         let document = PDFDocument(data: summaryData)!

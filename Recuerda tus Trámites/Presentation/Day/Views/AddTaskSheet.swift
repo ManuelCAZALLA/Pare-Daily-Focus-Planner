@@ -54,7 +54,7 @@ struct AddTaskSheet: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(spacing: 16) {
 
                     // ── Quick suggestions (solo modo crear)
@@ -95,6 +95,7 @@ struct AddTaskSheet: View {
                 .padding(.top, 12)
                 .padding(.bottom, 40)
             }
+            .scrollIndicators(.hidden)
             .background(Color(hex: "#0C0C0E"))
             .navigationTitle(editingTask == nil ? "Nueva Tarea" : "Editar Tarea")
             .navigationBarTitleDisplayMode(.inline)
@@ -150,7 +151,7 @@ struct AddTaskSheet: View {
             VStack(alignment: .leading, spacing: 10) {
                 sectionLabel("Sugerencias rápidas")
 
-                ScrollView(.horizontal, showsIndicators: false) {
+                ScrollView(.horizontal) {
                     HStack(spacing: 10) {
                         ForEach(Array(suggestions)) { task in
                             Button {
@@ -204,6 +205,7 @@ struct AddTaskSheet: View {
                         }
                     }
                 }
+                .scrollIndicators(.hidden, axes: .horizontal)
                 .padding(.horizontal, 2)
                 .padding(.vertical, 2)
             }
@@ -243,7 +245,7 @@ struct AddTaskSheet: View {
         VStack(alignment: .leading, spacing: 10) {
             sectionLabel("Prioridad")
 
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal) {
                 HStack(spacing: 8) {
                     ForEach(Priority.allCases, id: \.rawValue) { p in
                         Button {
@@ -286,6 +288,7 @@ struct AddTaskSheet: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden, axes: .horizontal)
         }
     }
 
@@ -296,7 +299,7 @@ struct AddTaskSheet: View {
             sectionLabel("Fecha")
 
             ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) {
+                ScrollView(.horizontal) {
                     HStack(spacing: 8) {
                         ForEach(nextDays(60), id: \.self) { day in
                             let isSelected = Calendar.current.isDate(day, inSameDayAs: scheduledDate)
@@ -371,6 +374,7 @@ struct AddTaskSheet: View {
                     .padding(.horizontal, 2)
                     .padding(.vertical, 4)
                 }
+                .scrollIndicators(.hidden, axes: .horizontal)
                 .onAppear {
                     proxy.scrollTo(
                         Calendar.current.startOfDay(for: scheduledDate),

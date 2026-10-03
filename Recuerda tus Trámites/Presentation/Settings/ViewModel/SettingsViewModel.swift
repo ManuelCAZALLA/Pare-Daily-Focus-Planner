@@ -1,12 +1,12 @@
 import SwiftUI
-import StoreKit
+
 
 @Observable
 final class SettingsViewModel {
 
     // Versión de la app
     var appVersion: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.2"
     }
 
     var emailURL: URL? {

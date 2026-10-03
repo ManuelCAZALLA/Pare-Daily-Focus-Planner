@@ -2,7 +2,7 @@
 import SwiftUI
 import PDFKit
 import QuickLook
-import RevenueCatUI
+
 
 struct AddObligationSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -55,7 +55,7 @@ struct AddObligationSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(spacing: 20) {
                     // Header section detailing the template
                     headerCard
@@ -169,6 +169,7 @@ struct AddObligationSheet: View {
                 .padding(.top, 12)
                 .padding(.bottom, 40)
             }
+            .scrollIndicators(.hidden)
             .background(Color(hex: "#0C0C0E").ignoresSafeArea())
             .navigationTitle(editingObligation == nil ? "obligations.add" : "obligations.edit")
             .navigationBarTitleDisplayMode(.inline)

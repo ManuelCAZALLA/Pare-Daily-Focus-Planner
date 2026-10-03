@@ -20,23 +20,22 @@ struct SavedObligationsView: View {
                 } else {
                     List {
                         ForEach(obligationsVM.savedObligations, id: \.id) { obligation in
-                            if let template = template(for: obligation) {
+                            let template = obligationsVM.templateOrFallback(for: obligation)
+                            Button {
+                                selectedTemplate = template
+                                obligationsVM.scannedDocumentData = obligation.scannedDocumentData
+                            } label: {
+                                SavedObligationRow(obligation: obligation, template: template)
+                            }
+                            .buttonStyle(.plain)
+                            .listRowBackground(Color(hex: "#1A1A1C"))
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 Button {
-                                    selectedTemplate = template
-                                    obligationsVM.scannedDocumentData = obligation.scannedDocumentData
+                                    export(obligation, template: template)
                                 } label: {
-                                    SavedObligationRow(obligation: obligation, template: template)
+                                    Label("Exportar PDF", systemImage: "square.and.arrow.up")
                                 }
-                                .buttonStyle(.plain)
-                                .listRowBackground(Color(hex: "#1A1A1C"))
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    Button {
-                                        export(obligation, template: template)
-                                    } label: {
-                                        Label("Exportar PDF", systemImage: "square.and.arrow.up")
-                                    }
-                                    .tint(Color.tramiteGreen)
-                                }
+                                .tint(Color.tramiteGreen)
                             }
                         }
                     }
@@ -80,10 +79,6 @@ struct SavedObligationsView: View {
         } catch {
             print("Failed to export obligation PDF: \(error)")
         }
-    }
-
-    private func template(for obligation: LifeObligation) -> ObligationTemplate? {
-        ObligationTemplate.all.first { $0.id == obligation.templateID }
     }
 }
 

@@ -17,6 +17,10 @@ final class DayViewModel {
     // IDs de tareas completándose — para animación de salida
     var completingTaskIDs: Set<UUID> = []
 
+    // Días con tareas pendientes para el indicador del strip semanal.
+    // Caché por recarga: completar, añadir o mover una tarea lo invalida.
+    private var daysWithPendingTasks: [Date: Bool] = [:]
+
     // Ajuste de planificación (ver SettingsView). Se lee directamente de
     // UserDefaults en vez de usar @AppStorage porque este tipo no es una
     // View: no necesitamos invalidación automática, solo el valor actual
@@ -34,6 +38,7 @@ final class DayViewModel {
     }
 
     func loadDay(for date: Date) {
+        daysWithPendingTasks = [:]
         selectedDate = Calendar.current.startOfDay(for: date)
 
         let fetched = taskRepository.tasks(for: selectedDate)
@@ -101,6 +106,17 @@ final class DayViewModel {
         notificationService.cancel(for: task)
         try? taskRepository.delete(task)
         loadDay(for: selectedDate)
+    }
+
+    /// Indica si hay al menos una tarea pendiente en el día indicado.
+    /// Consulta el repositorio la primera vez y cachea el resultado
+    /// hasta la próxima recarga (`loadDay`).
+    func hasTasks(on date: Date) -> Bool {
+        let day = Calendar.current.startOfDay(for: date)
+        if let cached = daysWithPendingTasks[day] { return cached }
+        let hasPending = taskRepository.tasks(for: day).contains { !$0.isCompleted }
+        daysWithPendingTasks[day] = hasPending
+        return hasPending
     }
 
     // MARK: - Private

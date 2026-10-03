@@ -23,6 +23,7 @@ final class ObligationsViewModel {
     private let repository: ObligationRepositoryProtocol
     private let notificationService: NotificationService?
     private let purchasesService: PurchasesService?
+    private let countryStore: CountryStore?
 
     var categories: [LifeAdminCategory] = LifeAdminCategory.allCases
     var selectedCategory: LifeAdminCategory?
@@ -32,6 +33,10 @@ final class ObligationsViewModel {
     var scannedDocumentData: Data? = nil
 
     private let maxFreeObligations = 5
+
+    var country: TramiteCountry {
+        countryStore?.country ?? .current
+    }
 
     var canAddObligation: Bool {
         if purchasesService?.isProActive == true { return true }
@@ -49,26 +54,47 @@ final class ObligationsViewModel {
         repository: ObligationRepositoryProtocol,
         notificationService: NotificationService? = nil,
         familyProfile: FamilyProfile? = nil,
-        purchasesService: PurchasesService? = nil
+        purchasesService: PurchasesService? = nil,
+        countryStore: CountryStore? = nil
     ) {
         self.repository = repository
         self.notificationService = notificationService
         self.familyProfile = familyProfile
         self.purchasesService = purchasesService
+        self.countryStore = countryStore
     }
 
     var registeredTemplates: [ObligationTemplate] {
-        savedObligations.compactMap { obligation in
-            ObligationTemplate.all.first { $0.id == obligation.templateID }
-        }
+        savedObligations.compactMap { template(for: $0) }
     }
 
     var filteredTemplates: [ObligationTemplate] {
-        let base = selectedCategory?.items ?? ObligationTemplate.all
+        let base = selectedCategory?.items(for: country) ?? ObligationTemplate.catalog(for: country)
         let filtered = searchText.isEmpty
             ? base
             : base.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
         return filtered
+    }
+
+    func setCountry(_ country: TramiteCountry) {
+        countryStore?.set(country)
+    }
+
+    /// Título de un trámite guardado, resuelto contra el catálogo del país activo.
+    func template(for obligation: LifeObligation) -> ObligationTemplate? {
+        ObligationTemplate.template(forID: obligation.templateID, country: country)
+    }
+
+    /// Como `template(for:)` pero nunca devuelve nil: si el trámite se guardó con una
+    /// plantilla que ya no existe (catálogo antiguo o cambio de país) se muestra igual
+    /// para que ningún trámite guardado desaparezca de la lista.
+    func templateOrFallback(for obligation: LifeObligation) -> ObligationTemplate {
+        template(for: obligation)
+            ?? ObligationTemplate(
+                id: obligation.templateID,
+                category: .personalDocuments,
+                title: obligation.templateID
+            )
     }
 
     func load() {

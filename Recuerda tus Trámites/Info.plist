@@ -13,10 +13,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Recuerda tus Trámites necesita la cámara para escanear documentos de tus trámites.</string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

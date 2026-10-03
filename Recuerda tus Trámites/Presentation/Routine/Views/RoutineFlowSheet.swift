@@ -132,7 +132,7 @@ struct MorningFlowSheet: View {
             if pending.isEmpty {
                 emptyTasksPlaceholder
             } else {
-                ScrollView(showsIndicators: false) {
+                ScrollView {
                     VStack(spacing: 10) {
                         ForEach(Array(pending)) { task in
                             intentionTaskRow(task)
@@ -140,6 +140,7 @@ struct MorningFlowSheet: View {
                     }
                     .padding(.horizontal, 20)
                 }
+                .scrollIndicators(.hidden)
             }
         }
     }
@@ -225,7 +226,7 @@ struct MorningFlowSheet: View {
     // MARK: - Paso 2: Briefing
 
     private var briefingView: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tu briefing de hoy")
@@ -316,6 +317,7 @@ struct MorningFlowSheet: View {
             }
             .padding(.horizontal, 24)
         }
+        .scrollIndicators(.hidden)
     }
 
     private func briefingSectionHeader(_ title: LocalizedStringKey, icon: String) -> some View {
@@ -573,7 +575,7 @@ struct EveningFlowSheet: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
-                ScrollView(showsIndicators: false) {
+                ScrollView {
                     VStack(spacing: 8) {
                         ForEach(completed) { task in
                             HStack(spacing: 12) {
@@ -594,6 +596,7 @@ struct EveningFlowSheet: View {
                     }
                     .padding(.horizontal, 20)
                 }
+                .scrollIndicators(.hidden)
             }
         }
     }
@@ -625,7 +628,7 @@ struct EveningFlowSheet: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
-                ScrollView(showsIndicators: false) {
+                ScrollView {
                     VStack(spacing: 8) {
                         ForEach(pending) { task in
                             carryOverRow(task)
@@ -633,6 +636,7 @@ struct EveningFlowSheet: View {
                     }
                     .padding(.horizontal, 20)
                 }
+                .scrollIndicators(.hidden)
             }
         }
     }
@@ -684,7 +688,7 @@ struct EveningFlowSheet: View {
     // MARK: - Paso 3: Quick capture + nota
 
     private var quickCaptureAndNote: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Captura y reflexión")
@@ -763,6 +767,7 @@ struct EveningFlowSheet: View {
             }
             .padding(.horizontal, 24)
         }
+        .scrollIndicators(.hidden)
     }
 
     private func addQuickCaptureTask() {

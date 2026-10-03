@@ -14,7 +14,7 @@ struct IdeasView: View {
         ZStack(alignment: .bottomTrailing) {
             Color(hex: "#0C0C0E").ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     header
                     categoryStrip
@@ -24,14 +24,15 @@ struct IdeasView: View {
                 .padding(.top, 16)
                 .padding(.bottom, 110)
             }
+            .scrollIndicators(.hidden)
 
             TramiteFAB {
-                let generator = UIImpactFeedbackGenerator(style: .medium)
-                generator.impactOccurred()
                 showAddSheet = true
             }
             .padding(.trailing, 20)
             .padding(.bottom, 32)
+            // Vibración media al abrir el sheet (solo al abrir, no al cerrar)
+            .sensoryFeedback(.impact(weight: .medium), trigger: showAddSheet) { _, new in new }
         }
         .sheet(isPresented: $showAddSheet) {
             AddIdeaSheet(initialCategory: ideasVM.selectedCategory)
@@ -71,7 +72,7 @@ struct IdeasView: View {
     // MARK: - Category strip
 
     private var categoryStrip: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        ScrollView(.horizontal) {
             HStack(spacing: 8) {
                 categoryChip(category: nil, label: String(localized: "ideas.all"), icon: "square.grid.2x2.fill")
 
@@ -81,6 +82,7 @@ struct IdeasView: View {
             }
             .padding(.vertical, 2)
         }
+        .scrollIndicators(.hidden, axes: .horizontal)
     }
 
     private func categoryChip(category: IdeaCategory?, label: String, icon: String) -> some View {
@@ -210,12 +212,12 @@ private struct MockIdeaRepository: IdeaRepositoryProtocol {
         return idea
     }
 
-    make("Renovar el DNI antes de que caduque", .tramite, pinned: true)
-    make("Cambiar la cerradura del trastero", .casa)
-    make("Llamar a mamá el viernes", .familia)
-    make("Probar el nuevo café del barrio", .otro)
-    make("Buscar seguro de hogar más barato", .tramite)
-    make("Regalo de cumpleaños de Lucía", .familia)
+    _ = make("Renovar el DNI antes de que caduque", .tramite, pinned: true)
+    _ = make("Cambiar la cerradura del trastero", .casa)
+    _ = make("Llamar a mamá el viernes", .familia)
+    _ = make("Probar el nuevo café del barrio", .otro)
+    _ = make("Buscar seguro de hogar más barato", .tramite)
+    _ = make("Regalo de cumpleaños de Lucía", .familia)
     vm.load()
 
     return IdeasView()

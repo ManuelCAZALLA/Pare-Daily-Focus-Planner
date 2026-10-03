@@ -1,6 +1,6 @@
 // ObligationsView.swift
 import SwiftUI
-import RevenueCatUI
+
 
 struct ObligationsView: View {
     @Environment(ObligationsViewModel.self) private var obligationsVM
@@ -16,12 +16,13 @@ struct ObligationsView: View {
         ZStack(alignment: .bottomTrailing) {
             Color(hex: "#0C0C0E").ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     if profile == nil {
                         header
                         featuresStrip
                     }
+                    countryBar
                     searchBar
                     categoriesSection
                     templatesSection
@@ -30,6 +31,7 @@ struct ObligationsView: View {
                 .padding(.top, 16)
                 .padding(.bottom, 100)
             }
+            .scrollIndicators(.hidden)
 
             TramiteFAB {
                 if obligationsVM.canAddObligation {
@@ -117,7 +119,7 @@ struct ObligationsView: View {
     }
 
     private var featuresStrip: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        ScrollView(.horizontal) {
             HStack(spacing: 10) {
                 if purchases.isProActive {
                     NavigationLink {
@@ -136,6 +138,7 @@ struct ObligationsView: View {
                 }
             }
         }
+        .scrollIndicators(.hidden, axes: .horizontal)
     }
 
     private func featureChip(_ title: LocalizedStringKey, icon: String, showsProBadge: Bool = false) -> some View {
@@ -156,6 +159,22 @@ struct ObligationsView: View {
             .padding(.vertical, 8)
             .background(Color(hex: "#1A1A1C"), in: Capsule())
             .overlay(Capsule().strokeBorder(Color(hex: "#2A2A2C"), lineWidth: 1))
+    }
+
+    private var countryBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "globe.europe.africa.fill")
+                .font(.caption)
+                .foregroundStyle(Color.tramiteGreen)
+            Text(String(format: String(localized: "Trámites de %@"), obligationsVM.country.displayName))
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.secondary)
+            Spacer()
+            CountryMenuButton(current: obligationsVM.country) { country in
+                obligationsVM.setCountry(country)
+            }
+        }
+        .padding(.horizontal, 4)
     }
 
     private var searchBar: some View {
@@ -196,6 +215,7 @@ struct ObligationsView: View {
                 ForEach(obligationsVM.categories) { category in
                     CategoryCard(
                         category: category,
+                        count: category.items(for: obligationsVM.country).count,
                         isSelected: obligationsVM.selectedCategory == category
                     ) {
                         if obligationsVM.selectedCategory == category {
@@ -255,6 +275,7 @@ struct ObligationsView: View {
 
 private struct CategoryCard: View {
     let category: LifeAdminCategory
+    let count: Int
     let isSelected: Bool
     let action: () -> Void
 
@@ -271,7 +292,7 @@ private struct CategoryCard: View {
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
 
-                Text("\(category.items.count)")
+                Text("\(count)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

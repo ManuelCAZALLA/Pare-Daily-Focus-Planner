@@ -121,7 +121,7 @@ struct SelectTemplateSheet: View {
     }
 
     private func filteredTemplates(for category: LifeAdminCategory) -> [ObligationTemplate] {
-        let items = category.items
+        let items = category.items(for: obligationsVM.country)
         if searchText.isEmpty {
             return items
         }

@@ -16,7 +16,7 @@ struct AddIdeaSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
 
                     // ── Texto ─────────────────────────────────────────────
@@ -51,7 +51,7 @@ struct AddIdeaSheet: View {
                             .font(.subheadline.weight(.bold))
                             .foregroundStyle(Color(hex: "#8E8E93"))
 
-                        ScrollView(.horizontal, showsIndicators: false) {
+                        ScrollView(.horizontal) {
                             HStack(spacing: 8) {
                                 ForEach(IdeaCategory.allCases) { category in
                                     Button {
@@ -95,6 +95,7 @@ struct AddIdeaSheet: View {
                                 }
                             }
                         }
+                        .scrollIndicators(.hidden, axes: .horizontal)
                     }
 
                     // ── Eliminar (modo edición) ────────────────────────────
@@ -127,6 +128,7 @@ struct AddIdeaSheet: View {
                 .padding(.top, 16)
                 .padding(.bottom, 24)
             }
+            .scrollIndicators(.hidden)
             .background(Color(hex: "#0C0C0E"))
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(editingIdea == nil ? "ideas.newTitle" : "ideas.editTitle")

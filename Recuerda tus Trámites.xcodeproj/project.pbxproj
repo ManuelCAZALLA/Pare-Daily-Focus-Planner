@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3CFD3004301E58060021A2F8 /* ReceiptParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3003301E58060021A2F8 /* ReceiptParser */; };
-		3CFD3006301E58060021A2F8 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3005301E58060021A2F8 /* RevenueCat */; };
-		3CFD3008301E58060021A2F8 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3CFD3007301E58060021A2F8 /* RevenueCatUI */; };
+		3C796F5D307105F800544EB7 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 3C796F5C307105F800544EB7 /* RevenueCat */; };
+		3C796F5F307105F800544EB7 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3C796F5E307105F800544EB7 /* RevenueCatUI */; };
 		3CFD5A0CA0B0C0D0E0F0A00C /* TramiteWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3CFD5A01A0B0C0D0E0F0A001 /* TramiteWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -83,9 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CFD3006301E58060021A2F8 /* RevenueCat in Frameworks */,
-				3CFD3004301E58060021A2F8 /* ReceiptParser in Frameworks */,
-				3CFD3008301E58060021A2F8 /* RevenueCatUI in Frameworks */,
+				3C796F5F307105F800544EB7 /* RevenueCatUI in Frameworks */,
+				3C796F5D307105F800544EB7 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,20 +137,12 @@
 			);
 			name = Tramites;
 			packageProductDependencies = (
-				3CFD3003301E58060021A2F8 /* ReceiptParser */,
-				3CFD3005301E58060021A2F8 /* RevenueCat */,
-				3CFD3007301E58060021A2F8 /* RevenueCatUI */,
+				3C796F5C307105F800544EB7 /* RevenueCat */,
+				3C796F5E307105F800544EB7 /* RevenueCatUI */,
 			);
 			productName = "Recuerda tus Trámites";
 			productReference = 3CEDE1102FD56E6C00FD1446 /* Tramites.app */;
 			productType = "com.apple.product-type.application";
-			attributes = {
-				SystemCapabilities = {
-					com.apple.InAppPurchase = {
-						enabled = 1;
-					};
-				};
-			};
 		};
 		3CFD5A04A0B0C0D0E0F0A004 /* TramiteWidgets */ = {
 			isa = PBXNativeTarget;
@@ -203,7 +193,7 @@
 			mainGroup = 3CEDE1072FD56E6C00FD1446;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+				3C796F5B307105F800544EB7 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3CEDE1112FD56E6C00FD1446 /* Products */;
@@ -399,6 +389,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Recuerda tus Trámites/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Recuerda tus Trámites";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Recuerda tus Trámites necesita la cámara para escanear documentos de tus trámites.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -409,7 +401,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -443,6 +435,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Recuerda tus Trámites/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Recuerda tus Trámites";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Recuerda tus Trámites necesita la cámara para escanear documentos de tus trámites.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -453,7 +447,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -488,7 +482,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites.TramiteWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -523,7 +517,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuelcazalla.recuerdatustramites.TramiteWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -572,30 +566,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+		3C796F5B307105F800544EB7 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.83.0;
+				minimumVersion = 5.92.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3CFD3003301E58060021A2F8 /* ReceiptParser */ = {
+		3C796F5C307105F800544EB7 /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
-			productName = ReceiptParser;
-		};
-		3CFD3005301E58060021A2F8 /* RevenueCat */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			package = 3C796F5B307105F800544EB7 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCat;
 		};
-		3CFD3007301E58060021A2F8 /* RevenueCatUI */ = {
+		3C796F5E307105F800544EB7 /* RevenueCatUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3CFD3002301E58050021A2F8 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			package = 3C796F5B307105F800544EB7 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCatUI;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -11,6 +11,7 @@ struct TramiteApp: App {
     @State private var obligationsViewModel: ObligationsViewModel
     @State private var ideasViewModel: IdeasViewModel
     @State private var notificationService = NotificationService()
+    @State private var countryStore: CountryStore
 
     init() {
         // ── RevenueCat ──────────────────────────────────────────────────
@@ -25,6 +26,7 @@ struct TramiteApp: App {
         let taskRepo = TaskRepository(context: context)
         let obligationsRepo = ObligationRepository(context: context)
         let notifications = NotificationService()
+        let countries = CountryStore()
 
         _dayViewModel      = State(initialValue: DayViewModel(
             taskRepository: taskRepo,
@@ -37,12 +39,14 @@ struct TramiteApp: App {
         _obligationsViewModel = State(initialValue: ObligationsViewModel(
             repository: obligationsRepo,
             notificationService: notifications,
-            purchasesService: PurchasesService.shared
+            purchasesService: PurchasesService.shared,
+            countryStore: countries
         ))
         _ideasViewModel = State(initialValue: IdeasViewModel(
             repository: IdeaRepository(context: context)
         ))
         _notificationService = State(initialValue: notifications)
+        _countryStore = State(initialValue: countries)
     }
 
     var body: some Scene {
@@ -53,6 +57,7 @@ struct TramiteApp: App {
                 .environment(obligationsViewModel)
                 .environment(ideasViewModel)
                 .environment(notificationService)
+                .environment(countryStore)
                 .environment(PurchasesService.shared)   // ← Pro status global
         }
         .modelContainer(TramiteModelContainer.shared)

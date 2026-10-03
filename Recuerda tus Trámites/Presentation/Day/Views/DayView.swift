@@ -1,7 +1,10 @@
 // DayView.swift
 import SwiftUI
 import SwiftData
-import RevenueCatUI
+
+
+// Límite de historial para versión gratuita (7 días)
+private let maxFreeHistoryDays = 7
 
 struct DayView: View {
 
@@ -21,23 +24,8 @@ struct DayView: View {
     // Navegación entre semanas
     @State private var weekOffset: Int = 0
 
-    // Límite de historial para versión gratuita (7 días)
-    private let maxFreeHistoryDays = 7
-
-    private var minAllowedDate: Date {
-        if purchases.isProActive { return Date.distantPast }
-        return Calendar.current.date(byAdding: .day, value: -maxFreeHistoryDays, to: Calendar.current.startOfDay(for: Date())) ?? Date()
-    }
-
     // Ajuste de planificación (ver SettingsView)
     @AppStorage("weekStartsOnMonday") private var weekStartsOnMonday: Bool = true
-
-    // Calendario que respeta el día de inicio de semana elegido en Ajustes
-    private var calendar: Calendar {
-        var cal = Calendar.current
-        cal.firstWeekday = weekStartsOnMonday ? 2 : 1 // 1 = domingo, 2 = lunes
-        return cal
-    }
 
     // MARK: - Body
     var body: some View {
@@ -56,7 +44,7 @@ struct DayView: View {
                     .frame(height: 1)
                     .padding(.horizontal, 24)
 
-                ScrollView(showsIndicators: false) {
+                ScrollView {
                     LazyVStack(spacing: 0) {
                         if !dayVM.overdueFromYesterday.isEmpty {
                             overdueBanner
@@ -67,6 +55,7 @@ struct DayView: View {
                             .padding(.bottom, 120)
                     }
                 }
+                .scrollIndicators(.hidden)
             }
 
             fabButton
@@ -246,88 +235,18 @@ struct DayView: View {
     private var weekStrip: some View {
         TabView(selection: $weekOffset) {
             ForEach(-50...50, id: \.self) { offset in
-                weekView(for: offset)
-                    .tag(offset)
+                WeekPageView(
+                    offset: offset,
+                    selectedDate: $selectedDate,
+                    weekStartsOnMonday: weekStartsOnMonday,
+                    showHistoryLimitAlert: $showHistoryLimitAlert
+                )
+                .tag(offset)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-    }
-
-    private func weekView(for offset: Int) -> some View {
-        let days = weekDays(for: offset)
-        return HStack(spacing: 6) {
-            ForEach(days, id: \.self) { day in
-                let isSelected = Calendar.current.isDate(day, inSameDayAs: selectedDate)
-                let isToday    = Calendar.current.isDateInToday(day)
-                let hasTask    = !dayVM.tasksToday.isEmpty && Calendar.current.isDate(day, inSameDayAs: selectedDate)
-
-                Button {
-                    if day < minAllowedDate {
-                        showHistoryLimitAlert = true
-                        return
-                    }
-                    let generator = UIImpactFeedbackGenerator(style: .light)
-                    generator.impactOccurred()
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                        selectedDate = day
-                    }
-                } label: {
-                    VStack(spacing: 7) {
-                        Text(day.formatted(.dateTime.weekday(.narrow)))
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(
-                                isSelected ? (isToday ? Color.tramiteGreen : .white) :
-                                isToday ? Color.tramiteGreen.opacity(0.7) :
-                                Color(hex: "#48484A")
-                            )
-
-                        ZStack {
-                            Circle()
-                                .fill(
-                                    isSelected
-                                    ? AnyShapeStyle(
-                                        isToday
-                                        ? LinearGradient(colors: [Color.tramiteGreen.opacity(0.9), Color.tramiteGreen], startPoint: .top, endPoint: .bottom)
-                                        : LinearGradient(colors: [.white, .white], startPoint: .top, endPoint: .bottom)
-                                      )
-                                    : AnyShapeStyle(isToday ? Color.tramiteGreen.opacity(0.1) : Color.clear)
-                                )
-                                .frame(width: 38, height: 38)
-                                .overlay(
-                                    Circle()
-                                        .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
-                                        .opacity(isSelected || isToday ? 0 : 1)
-                                )
-                                .shadow(color: isSelected && isToday ? Color.tramiteGreen.opacity(0.35) : .clear, radius: 8, y: 3)
-
-                            Text(day.formatted(.dateTime.day()))
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundStyle(
-                                    day < minAllowedDate ? Color(hex: "#48484A") :
-                                    isSelected ? .black :
-                                    isToday ? Color.tramiteGreen :
-                                    .white
-                                )
-
-                            if day < minAllowedDate && !purchases.isProActive {
-                                Image(systemName: "lock.fill")
-                                    .font(.system(size: 7, weight: .bold))
-                                    .foregroundStyle(Color(hex: "#48484A"))
-                                    .offset(x: 12, y: -10)
-                            }
-                        }
-
-                        Circle()
-                            .fill(isSelected ? Color.tramiteGreen : Color.tramiteGreen.opacity(0.4))
-                            .frame(width: 4, height: 4)
-                            .opacity(hasTask ? 1 : 0)
-                    }
-                }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity)
-            }
-        }
-        .padding(.horizontal, 20)
+        // Tacto sutil al cambiar de día (sustituye a UIImpactFeedbackGenerator)
+        .sensoryFeedback(.impact(weight: .light), trigger: selectedDate)
     }
 
     // MARK: - Timeline content
@@ -535,8 +454,6 @@ struct DayView: View {
 
     private var fabButton: some View {
         Button {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
             showAddTask = true
         } label: {
             ZStack {
@@ -565,6 +482,9 @@ struct DayView: View {
             }
         }
         .buttonStyle(SpringButtonStyle())
+        .accessibilityLabel("Añadir tarea")
+        // Vibración media al abrir el sheet (solo al abrir, no al cerrar)
+        .sensoryFeedback(.impact(weight: .medium), trigger: showAddTask) { _, new in new }
     }
 
     // MARK: - Helpers
@@ -576,17 +496,6 @@ struct DayView: View {
         case 12..<18: return String(localized: "Buenas tardes")
         default:       return String(localized: "Buenas noches")
         }
-    }
-
-    private func weekDays(for offset: Int) -> [Date] {
-        let cal = calendar
-        let startOfCurrentWeek = cal.date(from: cal.dateComponents(
-            [.yearForWeekOfYear, .weekOfYear], from: Date()
-        )) ?? Date()
-
-        let startOfTargetWeek = cal.date(byAdding: .weekOfYear, value: offset, to: startOfCurrentWeek) ?? startOfCurrentWeek
-
-        return (0..<7).compactMap { cal.date(byAdding: .day, value: $0, to: startOfTargetWeek) }
     }
 
     private func isCurrentTask(_ task: TramiteTask, in tasks: [TramiteTask]) -> Bool {
@@ -601,6 +510,120 @@ struct DayView: View {
             }
             return false
         }())
+    }
+}
+
+// MARK: - WeekPageView
+
+/// Una página del strip semanal.
+/// Vista aparte para que su `body` —que consulta tareas de cada día—
+/// solo se evalúe al mostrarse la página, en vez de para las 101
+/// páginas que construye el `ForEach` del strip.
+private struct WeekPageView: View {
+    let offset: Int
+    @Binding var selectedDate: Date
+    let weekStartsOnMonday: Bool
+    @Binding var showHistoryLimitAlert: Bool
+
+    @Environment(DayViewModel.self) private var dayVM
+    @Environment(PurchasesService.self) private var purchases
+
+    // Calendario que respeta el día de inicio de semana elegido en Ajustes
+    private var calendar: Calendar {
+        var cal = Calendar.current
+        cal.firstWeekday = weekStartsOnMonday ? 2 : 1 // 1 = domingo, 2 = lunes
+        return cal
+    }
+
+    private var minAllowedDate: Date {
+        if purchases.isProActive { return Date.distantPast }
+        return Calendar.current.date(byAdding: .day, value: -maxFreeHistoryDays, to: Calendar.current.startOfDay(for: Date())) ?? Date()
+    }
+
+    var body: some View {
+        let days = weekDays(for: offset)
+        return HStack(spacing: 6) {
+            ForEach(days, id: \.self) { day in
+                let isSelected = Calendar.current.isDate(day, inSameDayAs: selectedDate)
+                let isToday    = Calendar.current.isDateInToday(day)
+                let hasTask    = dayVM.hasTasks(on: day)
+
+                Button {
+                    if day < minAllowedDate {
+                        showHistoryLimitAlert = true
+                        return
+                    }
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        selectedDate = day
+                    }
+                } label: {
+                    VStack(spacing: 7) {
+                        Text(day.formatted(.dateTime.weekday(.narrow)))
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(
+                                isSelected ? (isToday ? Color.tramiteGreen : .white) :
+                                isToday ? Color.tramiteGreen.opacity(0.7) :
+                                Color(hex: "#48484A")
+                            )
+
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    isSelected
+                                    ? AnyShapeStyle(
+                                        isToday
+                                        ? LinearGradient(colors: [Color.tramiteGreen.opacity(0.9), Color.tramiteGreen], startPoint: .top, endPoint: .bottom)
+                                        : LinearGradient(colors: [.white, .white], startPoint: .top, endPoint: .bottom)
+                                      )
+                                    : AnyShapeStyle(isToday ? Color.tramiteGreen.opacity(0.1) : Color.clear)
+                                )
+                                .frame(width: 38, height: 38)
+                                .overlay(
+                                    Circle()
+                                        .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
+                                        .opacity(isSelected || isToday ? 0 : 1)
+                                )
+                                .shadow(color: isSelected && isToday ? Color.tramiteGreen.opacity(0.35) : .clear, radius: 8, y: 3)
+
+                            Text(day.formatted(.dateTime.day()))
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(
+                                    day < minAllowedDate ? Color(hex: "#48484A") :
+                                    isSelected ? .black :
+                                    isToday ? Color.tramiteGreen :
+                                    .white
+                                )
+
+                            if day < minAllowedDate && !purchases.isProActive {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 7, weight: .bold))
+                                    .foregroundStyle(Color(hex: "#48484A"))
+                                    .offset(x: 12, y: -10)
+                            }
+                        }
+
+                        Circle()
+                            .fill(isSelected ? Color.tramiteGreen : Color.tramiteGreen.opacity(0.4))
+                            .frame(width: 4, height: 4)
+                            .opacity(hasTask ? 1 : 0)
+                    }
+                }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+
+    private func weekDays(for offset: Int) -> [Date] {
+        let cal = calendar
+        let startOfCurrentWeek = cal.date(from: cal.dateComponents(
+            [.yearForWeekOfYear, .weekOfYear], from: Date()
+        )) ?? Date()
+
+        let startOfTargetWeek = cal.date(byAdding: .weekOfYear, value: offset, to: startOfCurrentWeek) ?? startOfCurrentWeek
+
+        return (0..<7).compactMap { cal.date(byAdding: .day, value: $0, to: startOfTargetWeek) }
     }
 }
 
@@ -788,7 +811,7 @@ struct OverdueActionSheet: View {
                                displayedComponents: .date)
                         .datePickerStyle(.graphical)
                         .tint(Color(hex: "#5E5CE6"))
-                        .colorScheme(.dark)
+                        .preferredColorScheme(.dark)
                         .padding()
                 }
                 .navigationTitle("Elegir fecha")
@@ -893,7 +916,7 @@ struct ReschedulePicker: View {
                            displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .tint(Color.tramiteGreen)
-                    .colorScheme(.dark)
+                    .preferredColorScheme(.dark)
                     .padding()
             }
             .navigationTitle("tasks.reschedule")

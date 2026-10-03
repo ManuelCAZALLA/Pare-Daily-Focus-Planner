@@ -110,6 +110,7 @@ struct TaskCard: View {
             }
             .buttonStyle(.plain)
             .disabled(onComplete == nil)
+            .accessibilityLabel("tasks.done")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 13)

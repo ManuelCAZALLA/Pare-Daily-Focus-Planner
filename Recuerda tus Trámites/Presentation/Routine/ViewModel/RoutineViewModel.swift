@@ -178,7 +178,7 @@ final class RoutineViewModel {
     // MARK: - Urgente trámites para briefing
 
     func title(for obligation: LifeObligation) -> String {
-        ObligationTemplate.all.first(where: { $0.id == obligation.templateID })?.title ?? obligation.templateID
+        ObligationTemplate.template(forID: obligation.templateID)?.title ?? obligation.templateID
     }
 
     func routineStatus(for date: Date) -> (morning: Bool, evening: Bool) {

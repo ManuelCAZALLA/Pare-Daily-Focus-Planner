@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(NotificationService.self) private var notificationService
     @Environment(RoutineViewModel.self) private var routineVM
     @Environment(PurchasesService.self) private var purchases   // ← RevenueCat
+    @Environment(CountryStore.self) private var countryStore
     private let viewModel = SettingsViewModel()
 
     // Ajustes persistentes de planificación
@@ -18,10 +19,11 @@ struct SettingsView: View {
         ZStack {
             Color(hex: "#0C0C0E").ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     header
                     proSection              // ← nuevo
+                    countrySection
                     notificationsSection
                     routineSection
                     planningSection
@@ -33,6 +35,7 @@ struct SettingsView: View {
                 .padding(.top, 16)
                 .padding(.bottom, 36)
             }
+            .scrollIndicators(.hidden)
         }
         .task { await notificationService.refreshAuthorizationStatus() }
         .task { await purchases.loadCustomerInfo() }    // ← cargar estado Pro
@@ -44,24 +47,24 @@ struct SettingsView: View {
                 CustomerCenterView()
             } else {
                 Text("Gestión de suscripción no disponible en esta versión")
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding()
                     .background(Color.black.opacity(0.8))
-                    .cornerRadius(12)
+                    .clipShape(.rect(cornerRadius: 12))
             }
 #else
             Text("Gestión de suscripción no disponible en esta versión")
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .background(Color.black.opacity(0.8))
-                .cornerRadius(12)
+                .clipShape(.rect(cornerRadius: 12))
 #endif
 #else
             Text("Gestión de suscripción no disponible en esta versión")
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .padding()
                 .background(Color.black.opacity(0.8))
-                .cornerRadius(12)
+                .clipShape(.rect(cornerRadius: 12))
 #endif
         }
     }
@@ -187,6 +190,35 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - País de los trámites
+
+    private var countrySection: some View {
+        SettingsSection(title: "settings.tramites") {
+            HStack(spacing: 12) {
+                Image(systemName: "globe.europe.africa.fill")
+                    .foregroundStyle(Color.tramiteGreen)
+                    .font(.system(size: 18))
+                    .frame(width: 24, height: 24)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("settings.country.title")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                    Text("settings.country.detail")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                CountryMenuButton(current: countryStore.country, showsLabel: true) { country in
+                    countryStore.set(country)
+                }
+            }
+            .padding(.vertical, 14)
+        }
+    }
+
     // MARK: - Resto de secciones (sin cambios)
 
     private var header: some View {
@@ -260,7 +292,7 @@ struct SettingsView: View {
                     Spacer()
                     DatePicker("", selection: $rVM.morningTime, displayedComponents: .hourAndMinute)
                         .labelsHidden()
-                        .colorScheme(.dark)
+                        .preferredColorScheme(.dark)
                         .tint(Color(hex: "#FF9500"))
                 }
                 .padding(.vertical, 8)
@@ -289,7 +321,7 @@ struct SettingsView: View {
                     Spacer()
                     DatePicker("", selection: $rVM.eveningTime, displayedComponents: .hourAndMinute)
                         .labelsHidden()
-                        .colorScheme(.dark)
+                        .preferredColorScheme(.dark)
                         .tint(Color(hex: "#5E5CE6"))
                 }
                 .padding(.vertical, 8)
